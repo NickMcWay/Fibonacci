@@ -308,4 +308,10 @@ final class WordValidator {
     static func hasMatch(in board: BoardModel) -> Bool {
         !findMatches(in: board).isEmpty
     }
+
+    // Validate an arbitrary sequence of letters (for drawn words).
+    static func isValidWord(_ word: String) -> Bool {
+        let lower = word.lowercased()
+        return threeLetterWordSet.contains(lower) || wordSet.contains(lower)
+    }
 }

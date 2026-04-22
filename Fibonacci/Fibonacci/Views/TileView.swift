@@ -4,22 +4,50 @@
 //   - Bold centered letter
 //   - Spawn scale-in animation (isNew flag)
 //   - Clear pop-out animation (isClearing flag)
-//   - Subtle shadow for depth
+//   - Draw-selection highlight (isSelected flag)
+//   - Pending-confirmation glow pulse (isPending flag)
 
 import SwiftUI
 
 struct TileView: View {
     let tile: Tile
     let size: CGFloat
+    var isSelected: Bool = false
+    var isPending: Bool = false
 
     @State private var scale: CGFloat = 1.0
     @State private var opacity: Double = 1.0
+    @State private var glowOpacity: Double = 0.5
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: size * 0.18)
                 .fill(tileColor(for: tile.letter))
                 .shadow(color: .black.opacity(0.12), radius: 4, x: 0, y: 2)
+
+            // White wash + border while finger is tracing this tile
+            if isSelected {
+                RoundedRectangle(cornerRadius: size * 0.18)
+                    .fill(Color.white.opacity(0.35))
+                RoundedRectangle(cornerRadius: size * 0.18)
+                    .strokeBorder(Color.white, lineWidth: size * 0.07)
+            }
+
+            // Pulsing green ring while word is confirmed but not yet submitted
+            if isPending {
+                RoundedRectangle(cornerRadius: size * 0.18)
+                    .strokeBorder(
+                        Color(red: 0.10, green: 0.75, blue: 0.42),
+                        lineWidth: size * 0.09
+                    )
+                    .opacity(glowOpacity)
+                    .onAppear {
+                        glowOpacity = 0.5
+                        withAnimation(.easeInOut(duration: 0.55).repeatForever(autoreverses: true)) {
+                            glowOpacity = 1.0
+                        }
+                    }
+            }
 
             Text(String(tile.letter).uppercased())
                 .font(.system(size: size * 0.44, weight: .bold, design: .rounded))
@@ -49,23 +77,22 @@ struct TileView: View {
     }
 
     // MARK: - Color Palette
-    // Calm, modern palette — different hue groups per vowel/consonant category.
 
     private func tileColor(for letter: Character) -> Color {
         switch letter.lowercased() {
         case "a", "e", "i", "o", "u":
-            return Color(red: 0.96, green: 0.87, blue: 0.70)  // warm amber — vowels
+            return Color(red: 0.96, green: 0.87, blue: 0.70)
         case "r", "t", "n", "s", "l":
-            return Color(red: 0.75, green: 0.88, blue: 0.96)  // cool blue — common consonants
+            return Color(red: 0.75, green: 0.88, blue: 0.96)
         case "c", "d", "h", "m", "p":
-            return Color(red: 0.82, green: 0.94, blue: 0.82)  // soft green — secondary
+            return Color(red: 0.82, green: 0.94, blue: 0.82)
         default:
-            return Color(red: 0.90, green: 0.83, blue: 0.96)  // lavender — tertiary
+            return Color(red: 0.90, green: 0.83, blue: 0.96)
         }
     }
 
     private func textColor(for letter: Character) -> Color {
-        Color(red: 0.18, green: 0.18, blue: 0.22)  // near-black, highly readable
+        Color(red: 0.18, green: 0.18, blue: 0.22)
     }
 }
 
@@ -76,7 +103,12 @@ struct TileView: View {
         .padding()
 }
 
-#Preview("Tile - Consonant") {
-    TileView(tile: Tile(letter: "T", row: 0, col: 1), size: 72)
+#Preview("Tile - Selected") {
+    TileView(tile: Tile(letter: "C", row: 0, col: 0), size: 72, isSelected: true)
+        .padding()
+}
+
+#Preview("Tile - Pending") {
+    TileView(tile: Tile(letter: "T", row: 0, col: 1), size: 72, isPending: true)
         .padding()
 }

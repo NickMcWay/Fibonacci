@@ -117,6 +117,66 @@ final class GameViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Drawn Word Submission
+
+    /// Called when the user confirms a drawn word path (tap after valid word glow).
+    func submitDrawnWord(path: [(row: Int, col: Int)]) {
+        guard !isAnimating, !isGameOver else { return }
+
+        let pathTiles = path.compactMap { board.tile(row: $0.row, col: $0.col) }
+        guard pathTiles.count == path.count else { return }
+
+        let word = String(pathTiles.map { $0.letter })
+        guard WordValidator.isValidWord(word) else {
+            triggerHaptic(.error)
+            return
+        }
+
+        isAnimating = true
+
+        // Trigger the pop-out animation already wired in TileView
+        for pos in path {
+            board.cells[board.index(pos.row, pos.col)]?.isClearing = true
+        }
+
+        score += GameEngine.baseWordScore
+        if score > bestScore {
+            bestScore = score
+            UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
+        }
+
+        lastWords = [word]
+        comboCount = 0
+
+        withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
+            syncTiles()
+        }
+
+        showWordOverlay = true
+        triggerHaptic(.medium)
+
+        Task {
+            // Wait for the clearing animation (0.2 s) then remove the tiles
+            try? await Task.sleep(nanoseconds: 280_000_000)
+            for pos in path {
+                board.cells[board.index(pos.row, pos.col)] = nil
+            }
+            withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
+                syncTiles()
+            }
+            try? await Task.sleep(nanoseconds: 120_000_000)
+            isAnimating = false
+            if GameEngine.isGameOver(board: board) {
+                isGameOver = true
+            }
+        }
+
+        Task {
+            try? await Task.sleep(nanoseconds: 1_200_000_000)
+            showWordOverlay = false
+        }
+    }
+
     // MARK: - Tile Sync
 
     // Convert board cells to flat tile list for SwiftUI.
