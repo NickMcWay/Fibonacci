@@ -1,13 +1,61 @@
 // WordValidator.swift
-// Curated 4-letter word list and board-scanning logic.
-// Words are stored in a Set for O(1) lookup.
-// Extend the wordSet to add more words — the rest of the engine adapts automatically.
+// Curated word list (3- and 4-letter) and board-scanning logic.
+// Words are stored in Sets for O(1) lookup.
+// Extend either wordSet to add more words — the rest of the engine adapts automatically.
 
 import Foundation
 
 final class WordValidator {
 
-    // MARK: - Dictionary
+    // MARK: - Dictionary (3-letter words)
+    // Common, recognizable 3-letter English words every casual player would know.
+
+    static let threeLetterWordSet: Set<String> = {
+        let words: [String] = [
+            "ace", "act", "add", "age", "ago", "aid", "aim", "air", "ale", "ant",
+            "ape", "arc", "arm", "art", "ask", "awe", "axe",
+            "bay", "bed", "bet", "bid", "big", "bit", "bow", "box", "boy", "bud",
+            "bug", "bus", "but",
+            "cab", "can", "cap", "car", "cat", "cow", "cry", "cub", "cup", "cut",
+            "dad", "dam", "day", "den", "dew", "dig", "dim", "dip", "dog", "dot",
+            "dry", "dug", "dye",
+            "ear", "eat", "egg", "ego", "elf", "elk", "elm", "end", "era", "eve",
+            "fan", "far", "fat", "fed", "fee", "few", "fig", "fin", "fit", "fix",
+            "fly", "fog", "foe", "fox", "fun", "fur",
+            "gap", "gas", "gel", "gem", "get", "gin", "god", "got", "gun", "gut",
+            "guy", "gym",
+            "ham", "has", "hat", "hay", "hen", "hew", "him", "hip", "hit", "hop",
+            "hot", "hub", "hue", "hug", "hum", "hut",
+            "ice", "ill", "imp", "ink", "inn", "ion", "ire", "ivy",
+            "jab", "jam", "jar", "jaw", "jet", "joy", "jug",
+            "keg", "key", "kid", "kin", "kit",
+            "lab", "lag", "lap", "law", "lay", "led", "leg", "let", "lid", "lie",
+            "lip", "lit", "log", "lot", "low",
+            "mad", "man", "map", "mat", "mob", "mom", "mop", "mud", "mug",
+            "nap", "net", "nod", "nor", "not", "now", "nun", "nut",
+            "oak", "oar", "odd", "oil", "old", "opt", "orb", "ore", "our", "out",
+            "owe", "own",
+            "pad", "pal", "paw", "pay", "pea", "peg", "pen", "per", "pet", "pit",
+            "pot", "pro", "pub", "pun", "pup", "put",
+            "ram", "ran", "rap", "rat", "raw", "ray", "red", "ref", "rep", "rid",
+            "rig", "rim", "rip", "rob", "rod", "rot", "row", "rub", "rug", "rum",
+            "run", "rut",
+            "sac", "sad", "sag", "sap", "sat", "saw", "say", "sea", "set", "sew",
+            "shy", "sin", "sip", "sir", "sit", "six", "ski", "sky", "sob", "sod",
+            "son", "sow", "soy", "spa", "spy", "sub", "sum", "sun",
+            "tab", "tap", "tar", "tax", "ten", "tie", "tin", "tip", "toe", "ton",
+            "top", "tow", "toy", "try", "tub", "tug",
+            "urn", "use",
+            "van", "vat", "via", "vow",
+            "wag", "war", "web", "wet", "who", "why", "wig", "win", "wit", "woe",
+            "wok", "wow",
+            "yam", "yap", "yaw", "yep", "yet", "you",
+            "zap", "zen", "zip", "zoo",
+        ]
+        return Set(words.map { $0.lowercased() }.filter { $0.count == 3 })
+    }()
+
+    // MARK: - Dictionary (4-letter words)
     // ~700 common, recognizable 4-letter English words.
     // Organized by category to make expansion easy.
     // No obscure crossword words — every word here a casual player would know.
@@ -199,27 +247,47 @@ final class WordValidator {
         let positions: [(row: Int, col: Int)]
     }
 
-    // Scan board for all valid 4-letter words horizontally and vertically.
+    // Scan board for all valid 3- and 4-letter words horizontally and vertically.
     // Rule: all unique tile positions from all matches are cleared simultaneously.
     // If a tile appears in two overlapping words, both words score and the tile is cleared once.
     static func findMatches(in board: BoardModel) -> [WordMatch] {
         var matches: [WordMatch] = []
 
-        // Horizontal
+        // 4-letter: horizontal
         for r in 0..<BoardModel.size {
             for startC in 0...(BoardModel.size - 4) {
                 let positions = (startC..<startC+4).map { (row: r, col: $0) }
-                if let match = matchAt(positions: positions, board: board) {
+                if let match = matchAt(positions: positions, board: board, set: wordSet) {
                     matches.append(match)
                 }
             }
         }
 
-        // Vertical
+        // 4-letter: vertical
         for c in 0..<BoardModel.size {
             for startR in 0...(BoardModel.size - 4) {
                 let positions = (startR..<startR+4).map { (row: $0, col: c) }
-                if let match = matchAt(positions: positions, board: board) {
+                if let match = matchAt(positions: positions, board: board, set: wordSet) {
+                    matches.append(match)
+                }
+            }
+        }
+
+        // 3-letter: horizontal
+        for r in 0..<BoardModel.size {
+            for startC in 0...(BoardModel.size - 3) {
+                let positions = (startC..<startC+3).map { (row: r, col: $0) }
+                if let match = matchAt(positions: positions, board: board, set: threeLetterWordSet) {
+                    matches.append(match)
+                }
+            }
+        }
+
+        // 3-letter: vertical
+        for c in 0..<BoardModel.size {
+            for startR in 0...(BoardModel.size - 3) {
+                let positions = (startR..<startR+3).map { (row: $0, col: c) }
+                if let match = matchAt(positions: positions, board: board, set: threeLetterWordSet) {
                     matches.append(match)
                 }
             }
@@ -228,11 +296,11 @@ final class WordValidator {
         return matches
     }
 
-    private static func matchAt(positions: [(row: Int, col: Int)], board: BoardModel) -> WordMatch? {
+    private static func matchAt(positions: [(row: Int, col: Int)], board: BoardModel, set: Set<String>) -> WordMatch? {
         let tiles = positions.compactMap { board.tile(row: $0.row, col: $0.col) }
-        guard tiles.count == 4 else { return nil }
+        guard tiles.count == positions.count else { return nil }
         let word = String(tiles.map { $0.letter })
-        guard wordSet.contains(word.lowercased()) else { return nil }
+        guard set.contains(word.lowercased()) else { return nil }
         return WordMatch(word: word, positions: positions)
     }
 
