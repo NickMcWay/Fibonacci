@@ -113,7 +113,7 @@ struct GameView: View {
     // MARK: - Footer Hint
 
     private var footerHint: some View {
-        Text("Swipe to slide · 4 letters in a row = word!")
+        Text("Swipe to slide · 3–4 letters in a row = word!")
             .font(.system(size: 13, weight: .medium, design: .rounded))
             .foregroundColor(.secondary)
     }
