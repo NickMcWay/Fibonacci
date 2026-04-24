@@ -74,34 +74,55 @@ final class WordValidator {
         return Set(words.map { $0.lowercased() }.filter { $0.count == 4 })
     }()
 
-    // MARK: - Board scanning
+    // MARK: - Word Match
+
+    struct WordMatch {
+        let word: String
+        let positions: [(row: Int, col: Int)]
+    }
+
+    // MARK: - Board Scanning
 
     // Returns every word (3- or 4-letter) visible on the board right now.
     static func findMatches(in board: BoardModel) -> [WordMatch] {
         var matches: [WordMatch] = []
-        let sets: [Set<String>] = [threeLetterWordSet, wordSet]
 
-        for set in sets {
-            let length = set.first?.count ?? 0
-            guard length > 0 else { continue }
-
-            // Scan rows
-            for row in 0..<board.rows {
-                for col in 0...(board.cols - length) {
-                    let positions = (col..<(col + length)).map { GridPosition(row: row, col: $0) }
-                    if let match = matchAt(positions: positions, in: board, set: set) {
-                        matches.append(match)
-                    }
+        // Scan 4-letter horizontal windows
+        for r in 0..<BoardModel.size {
+            for startC in 0...(BoardModel.size - 4) {
+                let positions = (startC..<startC+4).map { (row: r, col: $0) }
+                if let match = matchAt(positions: positions, board: board, set: wordSet) {
+                    matches.append(match)
                 }
             }
+        }
 
-            // Scan columns
-            for col in 0..<board.cols {
-                for row in 0...(board.rows - length) {
-                    let positions = (row..<(row + length)).map { GridPosition(row: $0, col: col) }
-                    if let match = matchAt(positions: positions, in: board, set: set) {
-                        matches.append(match)
-                    }
+        // Scan 4-letter vertical windows
+        for c in 0..<BoardModel.size {
+            for startR in 0...(BoardModel.size - 4) {
+                let positions = (startR..<startR+4).map { (row: $0, col: c) }
+                if let match = matchAt(positions: positions, board: board, set: wordSet) {
+                    matches.append(match)
+                }
+            }
+        }
+
+        // Scan 3-letter horizontal windows
+        for r in 0..<BoardModel.size {
+            for startC in 0...(BoardModel.size - 3) {
+                let positions = (startC..<startC+3).map { (row: r, col: $0) }
+                if let match = matchAt(positions: positions, board: board, set: threeLetterWordSet) {
+                    matches.append(match)
+                }
+            }
+        }
+
+        // Scan 3-letter vertical windows
+        for c in 0..<BoardModel.size {
+            for startR in 0...(BoardModel.size - 3) {
+                let positions = (startR..<startR+3).map { (row: $0, col: c) }
+                if let match = matchAt(positions: positions, board: board, set: threeLetterWordSet) {
+                    matches.append(match)
                 }
             }
         }
@@ -109,8 +130,8 @@ final class WordValidator {
         return matches
     }
 
-    private static func matchAt(positions: [GridPosition], in board: BoardModel, set: Set<String>) -> WordMatch? {
-        let tiles = positions.compactMap { board.tile(at: $0) }
+    private static func matchAt(positions: [(row: Int, col: Int)], board: BoardModel, set: Set<String>) -> WordMatch? {
+        let tiles = positions.compactMap { board.tile(row: $0.row, col: $0.col) }
         guard tiles.count == positions.count else { return nil }
         let word = String(tiles.map { $0.letter })
         guard set.contains(word.lowercased()) else { return nil }
