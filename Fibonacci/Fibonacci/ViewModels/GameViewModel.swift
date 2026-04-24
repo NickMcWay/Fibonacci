@@ -20,11 +20,13 @@ final class GameViewModel: ObservableObject {
     @Published var comboCount: Int = 0          // chain multiplier count
     @Published var showWordOverlay: Bool = false
     @Published var isAnimating: Bool = false    // lock swipes during animation
+    @Published var pendingSwipeMatches: [WordValidator.WordMatch] = []
 
     // MARK: - Board (private, source of truth)
 
     private var board: BoardModel = BoardModel()
     private let bestScoreKey = "SlideWords_BestScore"
+    private var pendingSwipeDirection: SwipeDirection = .left
 
     // MARK: - Init
 
@@ -43,6 +45,7 @@ final class GameViewModel: ObservableObject {
         comboCount = 0
         showWordOverlay = false
         isAnimating = false
+        pendingSwipeMatches = []
 
         // Seed board with 2 random tiles (like 2048 start feel)
         for _ in 0..<2 {
@@ -59,6 +62,7 @@ final class GameViewModel: ObservableObject {
         board = preset
         score = 0
         isGameOver = false
+        pendingSwipeMatches = []
         syncTiles()
     }
 
@@ -67,54 +71,85 @@ final class GameViewModel: ObservableObject {
     func handleSwipe(_ direction: SwipeDirection) {
         guard !isAnimating, !isGameOver else { return }
 
-        guard let result = GameEngine.processTurn(board: board, direction: direction) else {
-            // Invalid swipe — haptic feedback (stub)
+        // A new swipe discards any unconfirmed words from the previous swipe
+        pendingSwipeMatches = []
+
+        guard let slideResult = GameEngine.slideAndSpawn(board: board, direction: direction) else {
             triggerHaptic(.error)
             return
         }
 
         isAnimating = true
+        board = slideResult.board
 
-        // Apply new board state
-        board = result.board
-        score += result.pointsEarned
-
-        if score > bestScore {
-            bestScore = score
-            UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
-        }
-
-        lastWords = result.clearedWords
-        comboCount = result.comboCount
-
-        // Sync tiles — SwiftUI animates by tile.id identity
         withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
             syncTiles()
         }
 
-        // Show word overlay if words were cleared
-        if !result.clearedWords.isEmpty {
-            showWordOverlay = true
-            Task {
-                try? await Task.sleep(nanoseconds: 1_200_000_000) // 1.2s
-                showWordOverlay = false
-            }
-        }
+        triggerHaptic(.light)
 
-        // Haptic
-        if result.pointsEarned > 0 {
-            triggerHaptic(result.comboCount > 0 ? .heavy : .medium)
-        } else {
-            triggerHaptic(.light)
-        }
-
-        // Release animation lock
         Task {
-            try? await Task.sleep(nanoseconds: 350_000_000) // 0.35s
+            try? await Task.sleep(nanoseconds: 350_000_000)
             isAnimating = false
-            if result.isGameOver {
-                isGameOver = true
+
+            if slideResult.matches.isEmpty {
+                if GameEngine.isGameOver(board: board) { isGameOver = true }
+            } else {
+                pendingSwipeMatches = slideResult.matches
+                pendingSwipeDirection = direction
             }
+        }
+    }
+
+    /// Called when the user taps to confirm words found after a swipe.
+    func confirmPendingSwipeWords() {
+        guard !pendingSwipeMatches.isEmpty, !isAnimating, !isGameOver else { return }
+        let matches = pendingSwipeMatches
+        let direction = pendingSwipeDirection
+        pendingSwipeMatches = []
+
+        isAnimating = true
+
+        for match in matches {
+            for pos in match.positions {
+                board.cells[board.index(pos.row, pos.col)]?.isClearing = true
+            }
+        }
+        withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
+            syncTiles()
+        }
+
+        Task {
+            try? await Task.sleep(nanoseconds: 280_000_000)
+            let result = GameEngine.clearMatches(board: board, matches: matches, direction: direction)
+
+            board = result.board
+            score += result.pointsEarned
+            if score > bestScore {
+                bestScore = score
+                UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
+            }
+
+            lastWords = result.clearedWords
+            comboCount = result.comboCount
+
+            withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
+                syncTiles()
+            }
+
+            if !result.clearedWords.isEmpty {
+                showWordOverlay = true
+                Task {
+                    try? await Task.sleep(nanoseconds: 1_200_000_000)
+                    showWordOverlay = false
+                }
+            }
+
+            triggerHaptic(result.comboCount > 0 ? .heavy : .medium)
+
+            try? await Task.sleep(nanoseconds: 120_000_000)
+            isAnimating = false
+            if result.isGameOver { isGameOver = true }
         }
     }
 
