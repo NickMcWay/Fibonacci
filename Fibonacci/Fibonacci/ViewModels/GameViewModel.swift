@@ -5,6 +5,7 @@
 
 import SwiftUI
 import Combine
+import UIKit
 
 @MainActor
 final class GameViewModel: ObservableObject {
@@ -185,14 +186,22 @@ final class GameViewModel: ObservableObject {
         tiles = board.cells.compactMap { $0 }
     }
 
-    // MARK: - Haptic Feedback (stubs — wire up UIImpactFeedbackGenerator on iOS)
+    // MARK: - Haptic Feedback
 
     private enum HapticStyle { case light, medium, heavy, error }
 
     private func triggerHaptic(_ style: HapticStyle) {
-        // On a real device, use UIImpactFeedbackGenerator or UINotificationFeedbackGenerator.
-        // Example:
-        // let gen = UIImpactFeedbackGenerator(style: .medium)
-        // gen.impactOccurred()
+        #if os(iOS)
+        switch style {
+        case .light:
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        case .medium:
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        case .heavy:
+            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+        case .error:
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+        }
+        #endif
     }
 }
