@@ -29,6 +29,18 @@ struct GameView: View {
                     .padding(.bottom, 24)
             }
 
+            // Board full warning banner
+            if vm.showBoardFullWarning {
+                VStack {
+                    boardFullWarningBanner
+                        .padding(.top, 80)
+                    Spacer()
+                }
+                .transition(.move(edge: .top).combined(with: .opacity))
+                .animation(.spring(response: 0.4), value: vm.showBoardFullWarning)
+                .zIndex(1)
+            }
+
             // Word cleared overlay
             if vm.showWordOverlay {
                 wordClearedOverlay
@@ -36,11 +48,20 @@ struct GameView: View {
                     .animation(.spring(response: 0.3), value: vm.showWordOverlay)
             }
 
+            // Empty board celebration
+            if vm.showEmptyBoardEffect {
+                clearBoardCelebrationOverlay
+                    .transition(.scale(scale: 0.7).combined(with: .opacity))
+                    .animation(.spring(response: 0.4, dampingFraction: 0.7), value: vm.showEmptyBoardEffect)
+                    .zIndex(2)
+            }
+
             // Game over overlay
             if vm.isGameOver {
                 gameOverOverlay
                     .transition(.opacity)
                     .animation(.easeIn(duration: 0.4), value: vm.isGameOver)
+                    .zIndex(3)
             }
         }
     }
@@ -199,6 +220,56 @@ struct GameView: View {
             )
             .padding(.horizontal, 30)
         }
+    }
+
+    // MARK: - Board Full Warning Banner
+
+    private var boardFullWarningBanner: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundColor(.white)
+            Text("Board full — clear a word to continue!")
+                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                .foregroundColor(.white)
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 11)
+        .background(
+            Capsule()
+                .fill(Color(red: 0.85, green: 0.45, blue: 0.10))
+                .shadow(color: .black.opacity(0.25), radius: 10, x: 0, y: 4)
+        )
+    }
+
+    // MARK: - Empty Board Celebration Overlay
+
+    private var clearBoardCelebrationOverlay: some View {
+        VStack(spacing: 10) {
+            Text("✨")
+                .font(.system(size: 52))
+            Text("Board Cleared!")
+                .font(.system(size: 30, weight: .heavy, design: .rounded))
+                .foregroundColor(.white)
+            Text("A new tile spawns!")
+                .font(.system(size: 16, weight: .medium, design: .rounded))
+                .foregroundColor(.white.opacity(0.85))
+        }
+        .padding(.horizontal, 36)
+        .padding(.vertical, 28)
+        .background(
+            RoundedRectangle(cornerRadius: 24)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(red: 0.18, green: 0.52, blue: 0.88),
+                            Color(red: 0.38, green: 0.22, blue: 0.78)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .shadow(color: .black.opacity(0.30), radius: 24, x: 0, y: 8)
+        )
     }
 
     // MARK: - Debug Menu (DEBUG builds only)

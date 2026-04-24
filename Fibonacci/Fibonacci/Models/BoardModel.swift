@@ -43,6 +43,7 @@ struct BoardModel {
     }
 
     var isFull: Bool { emptyPositions.isEmpty }
+    var isEmpty: Bool { cells.allSatisfy { $0 == nil } }
 
     // MARK: - Slide
 
