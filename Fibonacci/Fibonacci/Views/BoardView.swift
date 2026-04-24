@@ -72,7 +72,6 @@ struct BoardView: View {
 
     // MARK: - Word Preview
 
-    @ViewBuilder
     private func wordPreview(boardSize: CGFloat) -> some View {
         let previewContent: (text: String, isPending: Bool)
 
@@ -95,7 +94,7 @@ struct BoardView: View {
             : Color(red: 0.35, green: 0.35, blue: 0.40)
         let showConfirm = previewContent.isPending
 
-        VStack(spacing: 2) {
+        return VStack(spacing: 2) {
             Text(previewContent.text)
                 .font(.system(size: boardSize * 0.10, weight: .heavy, design: .rounded))
                 .foregroundColor(wordColor)
@@ -307,3 +306,4 @@ struct BoardView: View {
         .padding()
         .background(Color(red: 0.97, green: 0.97, blue: 0.98))
 }
+
