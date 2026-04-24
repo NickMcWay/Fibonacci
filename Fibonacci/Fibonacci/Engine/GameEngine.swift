@@ -54,8 +54,7 @@ enum GameEngine {
         var comboCount = 0
 
         // Loop: find words → clear → re-slide → repeat
-        var continueChain = true
-        while continueChain {
+        while true {
             let matches = WordValidator.findMatches(in: current)
             guard !matches.isEmpty else { break }
 
