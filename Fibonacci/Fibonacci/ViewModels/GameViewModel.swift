@@ -21,6 +21,8 @@ final class GameViewModel: ObservableObject {
     @Published var showWordOverlay: Bool = false
     @Published var isAnimating: Bool = false    // lock swipes during animation
     @Published var pendingSwipeMatches: [WordValidator.WordMatch] = []
+    @Published var showEmptyBoardEffect: Bool = false
+    @Published var showBoardFullWarning: Bool = false
 
     // MARK: - Board (private, source of truth)
 
@@ -46,6 +48,8 @@ final class GameViewModel: ObservableObject {
         showWordOverlay = false
         isAnimating = false
         pendingSwipeMatches = []
+        showEmptyBoardEffect = false
+        showBoardFullWarning = false
 
         // Seed board with 2 random tiles (like 2048 start feel)
         for _ in 0..<2 {
@@ -92,7 +96,18 @@ final class GameViewModel: ObservableObject {
             try? await Task.sleep(nanoseconds: 350_000_000)
             isAnimating = false
 
-            if slideResult.matches.isEmpty {
+            if slideResult.spawnedPosition == nil {
+                // Board was full — no new tile could spawn
+                if GameEngine.isGameOver(board: board) {
+                    isGameOver = true
+                } else {
+                    showBoardFullWarning = true
+                    Task {
+                        try? await Task.sleep(nanoseconds: 3_000_000_000)
+                        showBoardFullWarning = false
+                    }
+                }
+            } else if slideResult.matches.isEmpty {
                 if GameEngine.isGameOver(board: board) { isGameOver = true }
             } else {
                 pendingSwipeMatches = slideResult.matches
@@ -137,6 +152,8 @@ final class GameViewModel: ObservableObject {
                 syncTiles()
             }
 
+            showBoardFullWarning = false
+
             if !result.clearedWords.isEmpty {
                 showWordOverlay = true
                 Task {
@@ -149,7 +166,12 @@ final class GameViewModel: ObservableObject {
 
             try? await Task.sleep(nanoseconds: 120_000_000)
             isAnimating = false
-            if result.isGameOver { isGameOver = true }
+
+            if board.isEmpty {
+                triggerEmptyBoardEffect()
+            } else if result.isGameOver {
+                isGameOver = true
+            }
         }
     }
 
@@ -197,12 +219,16 @@ final class GameViewModel: ObservableObject {
             for pos in path {
                 board.cells[board.index(pos.row, pos.col)] = nil
             }
+            showBoardFullWarning = false
             withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
                 syncTiles()
             }
             try? await Task.sleep(nanoseconds: 120_000_000)
             isAnimating = false
-            if GameEngine.isGameOver(board: board) {
+
+            if board.isEmpty {
+                triggerEmptyBoardEffect()
+            } else if GameEngine.isGameOver(board: board) {
                 isGameOver = true
             }
         }
@@ -210,6 +236,26 @@ final class GameViewModel: ObservableObject {
         Task {
             try? await Task.sleep(nanoseconds: 1_200_000_000)
             showWordOverlay = false
+        }
+    }
+
+    // MARK: - Empty Board Effect
+
+    private func triggerEmptyBoardEffect() {
+        showWordOverlay = false
+        showEmptyBoardEffect = true
+        triggerHaptic(.heavy)
+
+        Task {
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            if let newTile = LetterSpawnEngine.spawnTile(for: board) {
+                board.setTile(newTile, row: newTile.row, col: newTile.col)
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                    syncTiles()
+                }
+            }
+            try? await Task.sleep(nanoseconds: 1_200_000_000)
+            showEmptyBoardEffect = false
         }
     }
 
