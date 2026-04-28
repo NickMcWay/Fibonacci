@@ -29,12 +29,11 @@ struct GameView: View {
 
                 BoardView(vm: vm)
                     .padding(.horizontal, 8)
-
-                Spacer(minLength: 0)
+                    .padding()
 
                 actionBar
-                    .padding(.horizontal, 30)
-                    .padding(.bottom, 28)
+                    .padding(.horizontal, 50)
+                    .padding(.bottom, 56)
             }
             
             if vm.showWordOverlay {
