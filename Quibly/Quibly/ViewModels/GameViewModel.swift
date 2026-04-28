@@ -31,10 +31,9 @@ final class GameViewModel: ObservableObject {
     @Published var showEmptyBoardEffect: Bool = false
     @Published var showBoardFullWarning: Bool = false
     @Published var coins: Int = 125
-    @Published var dayStreak: Int = 3
     @Published var hintCharges: Int = 2
-    @Published var goalTarget: Int = 5
-    @Published var goalProgress: Int = 0
+    @Published var bombCharges: Int = 1
+    @Published var isBombArmed: Bool = false
 
     // Hint system
     @Published var showHintButton: Bool = false       // power-up glows after 5 s
@@ -59,6 +58,7 @@ final class GameViewModel: ObservableObject {
     private var hintTimerTask: Task<Void, Never>?
     private let shuffleCost: Int = 50
     private let hintCost: Int = 25
+    private let coinPerCoinTile: Int = 10
 
     // MARK: - Init
 
@@ -87,7 +87,8 @@ final class GameViewModel: ObservableObject {
         pendingSwipeMatches = []
         showEmptyBoardEffect = false
         showBoardFullWarning = false
-        goalProgress = 0
+        bombCharges = 1
+        isBombArmed = false
         resetHintState()
 
         for _ in 0..<2 {
@@ -104,6 +105,7 @@ final class GameViewModel: ObservableObject {
         score = 0
         isGameOver = false
         pendingSwipeMatches = []
+        isBombArmed = false
         resetHintState()
         syncTiles()
     }
@@ -114,6 +116,7 @@ final class GameViewModel: ObservableObject {
         guard !isAnimating, !isGameOver else { return }
 
         pendingSwipeMatches = []
+        isBombArmed = false
         resetHintState()
 
         guard let slideResult = GameEngine.slideAndSpawn(board: board, direction: direction, language: settings.language) else {
@@ -169,6 +172,9 @@ final class GameViewModel: ObservableObject {
         guard !pendingSwipeMatches.isEmpty, !isAnimating, !isGameOver else { return }
         let matches = pendingSwipeMatches
         let direction = pendingSwipeDirection
+        let coinTilesUsed = matches.flatMap(\.positions).filter { pos in
+            board.tile(row: pos.row, col: pos.col)?.hasCoin == true
+        }.count
         pendingSwipeMatches = []
         resetHintState()
 
@@ -197,7 +203,7 @@ final class GameViewModel: ObservableObject {
 
             lastWords = result.clearedWords
             comboCount = result.comboCount
-            goalProgress = min(goalTarget, goalProgress + result.clearedWords.count)
+            coins += coinTilesUsed * coinPerCoinTile
 
             withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
                 syncTiles()
@@ -235,7 +241,7 @@ final class GameViewModel: ObservableObject {
         let pathTiles = path.compactMap { board.tile(row: $0.row, col: $0.col) }
         guard pathTiles.count == path.count else { return }
 
-        let word = String(pathTiles.map { $0.letter })
+        let word = String(pathTiles.map { $0.isJoker ? "*" : $0.letter })
         guard WordValidator.isValidWord(word, language: settings.language) else {
             triggerHaptic(.error)
             return
@@ -248,7 +254,9 @@ final class GameViewModel: ObservableObject {
         }
 
         let earned = GameEngine.wordScore(word, language: settings.language)
+        let coinTilesUsed = pathTiles.filter(\.hasCoin).count
         score += earned
+        coins += coinTilesUsed * coinPerCoinTile
         lastPointsEarned = earned
         if score > bestScore {
             bestScore = score
@@ -257,7 +265,6 @@ final class GameViewModel: ObservableObject {
 
         lastWords = [word]
         comboCount = 0
-        goalProgress = min(goalTarget, goalProgress + 1)
 
         withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
             syncTiles()
@@ -345,6 +352,7 @@ final class GameViewModel: ObservableObject {
 
     var shufflePrice: Int { shuffleCost }
     var hintPrice: Int { hintCost }
+    var canUseBomb: Bool { bombCharges > 0 && !isAnimating && !isGameOver }
     var canAffordShuffle: Bool { coins >= shuffleCost && !isAnimating && !isGameOver }
     var canAffordHint: Bool { coins >= hintCost && !isAnimating && !isGameOver }
 
@@ -382,6 +390,74 @@ final class GameViewModel: ObservableObject {
             syncTiles()
         }
         triggerHaptic(.medium)
+    }
+
+    func toggleBombArm() {
+        guard canUseBomb else { return }
+        isBombArmed.toggle()
+        triggerHaptic(.light)
+    }
+
+    func triggerBomb(at row: Int, col: Int) {
+        guard canUseBomb, isBombArmed else { return }
+
+        isBombArmed = false
+        bombCharges -= 1
+        isAnimating = true
+
+        var toClear: [(row: Int, col: Int)] = []
+        for c in 0..<board.size where board.tile(row: row, col: c) != nil {
+            toClear.append((row, c))
+        }
+        for r in 0..<board.size where board.tile(row: r, col: col) != nil {
+            if !toClear.contains(where: { $0.row == r && $0.col == col }) {
+                toClear.append((r, col))
+            }
+        }
+
+        for pos in toClear {
+            board.cells[board.index(pos.row, pos.col)]?.isClearing = true
+        }
+
+        let bombScore = toClear.compactMap { board.tile(row: $0.row, col: $0.col) }
+            .reduce(0) { $0 + scrabbleValue(for: $1.letter) }
+        score += bombScore
+        lastPointsEarned = bombScore
+        lastWords = ["Bomb"]
+        showWordOverlay = true
+
+        if score > bestScore {
+            bestScore = score
+            UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
+        }
+
+        withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
+            syncTiles()
+        }
+
+        Task {
+            try? await Task.sleep(nanoseconds: 260_000_000)
+            for pos in toClear {
+                board.cells[board.index(pos.row, pos.col)] = nil
+            }
+            withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
+                syncTiles()
+            }
+            triggerHaptic(.heavy)
+            try? await Task.sleep(nanoseconds: 120_000_000)
+            isAnimating = false
+
+            if board.isEmpty {
+                triggerEmptyBoardEffect()
+            } else if GameEngine.isGameOver(board: board) {
+                isGameOver = true
+            }
+        }
+
+        Task {
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
+            showWordOverlay = false
+        }
     }
 
     // MARK: - Haptic Feedback

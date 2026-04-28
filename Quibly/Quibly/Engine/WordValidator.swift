@@ -329,9 +329,9 @@ final class WordValidator {
     private static func matchAt(positions: [(row: Int, col: Int)], board: BoardModel, set: Set<String>) -> WordMatch? {
         let tiles = positions.compactMap { board.tile(row: $0.row, col: $0.col) }
         guard tiles.count == positions.count else { return nil }
-        let word = String(tiles.map { $0.letter })
-        guard set.contains(word.lowercased()) else { return nil }
-        return WordMatch(word: word, positions: positions)
+        let pattern = String(tiles.map { $0.isJoker ? "*" : $0.letter })
+        guard let resolved = resolveWildcardWord(from: pattern, in: set) else { return nil }
+        return WordMatch(word: resolved, positions: positions)
     }
 
     static func hasMatch(in board: BoardModel, language: GameLanguage = .english) -> Bool {
@@ -342,6 +342,30 @@ final class WordValidator {
     static func isValidWord(_ word: String, language: GameLanguage = .english) -> Bool {
         let lower = word.lowercased()
         let length = lower.count
-        return wordSetForLength(length, language: language).contains(lower)
+        return resolveWildcardWord(from: lower, in: wordSetForLength(length, language: language)) != nil
+    }
+
+    private static func resolveWildcardWord(from pattern: String, in set: Set<String>) -> String? {
+        let lower = pattern.lowercased()
+        if !lower.contains("*") {
+            return set.contains(lower) ? lower : nil
+        }
+
+        let chars = Array(lower)
+        for candidate in set {
+            let candidateChars = Array(candidate)
+            guard candidateChars.count == chars.count else { continue }
+
+            var matches = true
+            for i in chars.indices {
+                let ch = chars[i]
+                if ch != "*" && ch != candidateChars[i] {
+                    matches = false
+                    break
+                }
+            }
+            if matches { return candidate }
+        }
+        return nil
     }
 }
