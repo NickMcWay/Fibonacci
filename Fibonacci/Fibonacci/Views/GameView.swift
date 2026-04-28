@@ -6,6 +6,9 @@ struct GameView: View {
 
     @StateObject private var vm: GameViewModel
     @EnvironmentObject private var audio: AudioManager
+    private let uiTint = Color(red: 0.93, green: 0.88, blue: 0.99)
+    private let uiTintSecondary = Color(red: 0.86, green: 0.93, blue: 0.99)
+    private let uiInk = Color(red: 0.24, green: 0.20, blue: 0.49)
 
     init(settings: GameSettings, onReturnToMenu: @escaping () -> Void) {
         self.settings = settings
@@ -18,10 +21,6 @@ struct GameView: View {
             dreamyBackground
 
             VStack(spacing: 14) {
-                Spacer()
-                    .frame(maxWidth: 320)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .padding(.top, 8)
                 topBar
                     .padding(.horizontal, 16)
                     .padding(.top, 14)
@@ -32,19 +31,16 @@ struct GameView: View {
                 BoardView(vm: vm)
                     .padding(.horizontal, 16)
 
+                if vm.showWordOverlay {
+                    celebrateChip
+                        .padding(.horizontal, 48)
+                }
+
                 Spacer(minLength: 0)
 
                 actionBar
                     .padding(.horizontal, 14)
                     .padding(.bottom, 16)
-                    .overlay(alignment: .top) {
-                        if vm.showWordOverlay {
-                            celebrateChip
-                                .padding(.horizontal, 34)
-                                .offset(y: -90)
-                                .allowsHitTesting(false)
-                        }
-                    }
             }
 
             if vm.isGameOver {
@@ -73,13 +69,14 @@ struct GameView: View {
                     .contentTransition(.numericText())
             }
             .font(.system(size: 26, weight: .heavy, design: .rounded))
-            .foregroundColor(.white)
+            .foregroundColor(uiInk)
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
             .background(
                 Capsule()
-                    .fill(.white.opacity(0.24))
-                    .overlay(Capsule().stroke(.white.opacity(0.6), lineWidth: 1))
+                    .fill(uiTint.opacity(0.95))
+                    .overlay(Capsule().stroke(Color.white.opacity(0.62), lineWidth: 1))
+                    .shadow(color: .black.opacity(0.12), radius: 5, x: 0, y: 3)
             )
             
             Spacer()
@@ -94,7 +91,7 @@ struct GameView: View {
         HStack {
             Label("\(vm.dayStreak) Day Streak", systemImage: "flame.fill")
                 .font(.system(size: 20, weight: .bold, design: .rounded))
-                .foregroundColor(.white)
+                .foregroundColor(uiInk)
 
             Spacer()
 
@@ -102,14 +99,14 @@ struct GameView: View {
                 HStack(spacing: 10) {
                     ForEach(0..<vm.goalTarget, id: \.self) { i in
                         Circle()
-                            .fill(i < vm.goalProgress ? Color.yellow : Color.white.opacity(0.65))
+                            .fill(i < vm.goalProgress ? Color.yellow : uiInk.opacity(0.25))
                             .frame(width: 14, height: 14)
                     }
                 }
             }
             .padding(.horizontal, 18)
             .padding(.vertical, 10)
-            .background(Capsule().fill(.white.opacity(0.9)))
+            .background(Capsule().fill(Color.white.opacity(0.9)))
 
             Spacer()
 
@@ -117,11 +114,11 @@ struct GameView: View {
                 ZStack(alignment: .bottomTrailing) {
                     Image(systemName: "lightbulb.fill")
                         .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(uiInk)
                         .padding(14)
                         .background(
                             Circle()
-                                .fill(.white.opacity(0.28))
+                                .fill(uiTintSecondary.opacity(0.95))
                                 .overlay(Circle().stroke(.white.opacity(0.62), lineWidth: 1))
                         )
 
@@ -134,7 +131,7 @@ struct GameView: View {
             }
         }
         .padding(14)
-        .background(RoundedRectangle(cornerRadius: 24).fill(.white.opacity(0.22)))
+        .background(RoundedRectangle(cornerRadius: 24).fill(uiTint.opacity(0.78)))
         .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.55), lineWidth: 1.1))
     }
 
@@ -178,11 +175,11 @@ struct GameView: View {
             VStack(spacing: 8) {
                 Image(systemName: icon)
                     .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(uiInk)
                     .frame(width: 58, height: 58)
                     .background(
                         Circle()
-                            .fill(Color.white.opacity(0.30))
+                            .fill(uiTintSecondary.opacity(0.96))
                             .overlay(Circle().stroke(.white.opacity(0.6), lineWidth: 1))
                     )
 
@@ -190,14 +187,14 @@ struct GameView: View {
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                 Text(subtitle)
                     .font(.system(size: 13, weight: .heavy, design: .rounded))
-                    .foregroundColor(.yellow)
+                    .foregroundColor(Color(red: 0.56, green: 0.36, blue: 0.08))
             }
-            .foregroundColor(.white)
+            .foregroundColor(uiInk)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
             .background(
                 RoundedRectangle(cornerRadius: 24)
-                    .fill(.white.opacity(0.22))
+                    .fill(uiTint.opacity(0.8))
                     .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.55), lineWidth: 1))
             )
         }
@@ -209,11 +206,11 @@ struct GameView: View {
         Button(action: action) {
             Image(systemName: system)
                 .font(.system(size: 18, weight: .bold))
-                .foregroundColor(.white)
+                .foregroundColor(uiInk)
                 .frame(width: 48, height: 48)
                 .background(
                     Circle()
-                        .fill(.white.opacity(0.24))
+                        .fill(uiTint.opacity(0.92))
                         .overlay(Circle().stroke(.white.opacity(0.55), lineWidth: 1))
                 )
         }
