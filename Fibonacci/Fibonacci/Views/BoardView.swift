@@ -11,8 +11,8 @@
 //   Pending swipe matches are stored in vm.pendingSwipeMatches but tiles only
 //   receive the pulsing green glow (isPending) once vm.showMatchHighlights is true.
 //   Until then the player sees no visual indication of which tiles form a word.
-//   The word preview at the bottom shows "Tap to confirm" (without the word text)
-//   while a match is pending but not yet revealed.
+//   The word preview at the bottom stays minimal while a match is pending
+//   but not yet revealed.
 
 import SwiftUI
 
@@ -57,7 +57,7 @@ struct BoardView: View {
                 }
 
                 // Word preview / confirmation hint at the bottom of the board
-                if !drawPath.isEmpty || !confirmedPath.isEmpty || !vm.pendingSwipeMatches.isEmpty {
+                if !drawPath.isEmpty || !confirmedPath.isEmpty || (vm.showMatchHighlights && !vm.pendingSwipeMatches.isEmpty) {
                     wordPreview(boardSize: boardSize)
                 }
             }
@@ -90,8 +90,8 @@ struct BoardView: View {
                 text = vm.pendingSwipeMatches.map { $0.word.uppercased() }.joined(separator: " · ")
                 isGreen = true
             } else {
-                // Don't reveal word — just prompt the player to tap
-                text = "Tap to confirm"
+                // Don't reveal word yet
+                text = ""
                 isGreen = false
             }
         } else {
@@ -110,17 +110,10 @@ struct BoardView: View {
             ? Color(red: 0.10, green: 0.72, blue: 0.42)
             : Color(red: 0.35, green: 0.35, blue: 0.40)
 
-        let showConfirmHint = isGreen || hasPendingSwipe
-
         return VStack(spacing: 2) {
             Text(text)
                 .font(.system(size: boardSize * 0.10, weight: .heavy, design: .rounded))
                 .foregroundColor(wordColor)
-            if showConfirmHint {
-                Text("tap to confirm")
-                    .font(.system(size: boardSize * 0.055, weight: .semibold, design: .rounded))
-                    .foregroundColor(.secondary)
-            }
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
