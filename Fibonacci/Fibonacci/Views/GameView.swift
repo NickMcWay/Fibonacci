@@ -48,16 +48,10 @@ struct GameView: View {
     }
 
     private var dreamyBackground: some View {
-        LinearGradient(
-            colors: [
-                Color(red: 0.20, green: 0.29, blue: 0.90),
-                Color(red: 0.52, green: 0.38, blue: 0.86),
-                Color(red: 0.98, green: 0.82, blue: 0.74)
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
-        .ignoresSafeArea()
+        Image("Quibly Background")
+            .resizable()
+            .scaledToFill()
+            .ignoresSafeArea()
     }
 
     private var topBar: some View {
@@ -66,10 +60,15 @@ struct GameView: View {
 
             Spacer()
 
-            Text("Quibly")
-                .font(.system(size: 48, weight: .heavy, design: .rounded))
-                .foregroundColor(.white)
-                .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
+            Image("Quibly Background")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 160, height: 52)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(.white.opacity(0.22), lineWidth: 1)
+                )
 
             Spacer()
 
