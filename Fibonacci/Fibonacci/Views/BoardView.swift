@@ -36,6 +36,7 @@ struct BoardView: View {
 
             ZStack {
                 boardBackground(gap: gap, tileSize: tileSize)
+                pendingSwipeConnector(gap: gap, tileSize: tileSize)
 
                 ForEach(vm.tiles) { tile in
                     let sel  = inPath(tile, drawPath)
@@ -63,7 +64,7 @@ struct BoardView: View {
             .frame(width: boardSize, height: boardSize)
             .background(
                 RoundedRectangle(cornerRadius: boardSize * 0.05)
-                    .fill(Color(red: 0.87, green: 0.87, blue: 0.90))
+                    .fill(Color.white.opacity(0.08))
             )
             .gesture(
                 DragGesture(minimumDistance: 0)
@@ -280,7 +281,7 @@ struct BoardView: View {
             ForEach(0..<vm.boardSize, id: \.self) { r in
                 ForEach(0..<vm.boardSize, id: \.self) { c in
                     RoundedRectangle(cornerRadius: tileSize * 0.18)
-                        .fill(Color(red: 0.80, green: 0.80, blue: 0.84).opacity(0.6))
+                        .fill(Color.white.opacity(0.20))
                         .frame(width: tileSize, height: tileSize)
                         .position(
                             x: tileX(col: c, gap: gap, tileSize: tileSize),
@@ -289,6 +290,21 @@ struct BoardView: View {
                 }
             }
         }
+    }
+
+    private func pendingSwipeConnector(gap: CGFloat, tileSize: CGFloat) -> some View {
+        let points: [CGPoint] = vm.showMatchHighlights
+            ? vm.pendingSwipeMatches.flatMap(\.positions).map {
+                CGPoint(x: tileX(col: $0.col, gap: gap, tileSize: tileSize), y: tileY(row: $0.row, gap: gap, tileSize: tileSize))
+            }
+            : []
+
+        return Path { path in
+            guard let first = points.first else { return }
+            path.move(to: first)
+            for point in points.dropFirst() { path.addLine(to: point) }
+        }
+        .stroke(Color.white.opacity(0.85), style: StrokeStyle(lineWidth: tileSize * 0.10, lineCap: .round, lineJoin: .round))
     }
 
     // MARK: - Position Helpers
