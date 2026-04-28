@@ -91,7 +91,7 @@ struct GameView: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
-                        Text("SlideWords")
+                        Text("Quibly")
                             .font(.system(size: 30, weight: .heavy, design: .rounded))
                             .foregroundColor(Color(red: 0.18, green: 0.18, blue: 0.22))
                         Text(settings.language.flag)
