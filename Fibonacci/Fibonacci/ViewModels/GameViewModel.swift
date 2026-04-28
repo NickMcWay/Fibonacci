@@ -30,6 +30,11 @@ final class GameViewModel: ObservableObject {
     @Published var pendingSwipeMatches: [WordValidator.WordMatch] = []
     @Published var showEmptyBoardEffect: Bool = false
     @Published var showBoardFullWarning: Bool = false
+    @Published var coins: Int = 125
+    @Published var dayStreak: Int = 3
+    @Published var hintCharges: Int = 2
+    @Published var goalTarget: Int = 5
+    @Published var goalProgress: Int = 0
 
     // Hint system
     @Published var showHintButton: Bool = false       // power-up glows after 5 s
@@ -52,6 +57,8 @@ final class GameViewModel: ObservableObject {
     private let bestScoreKey = "SlideWords_BestScore"
     private var pendingSwipeDirection: SwipeDirection = .left
     private var hintTimerTask: Task<Void, Never>?
+    private let shuffleCost: Int = 50
+    private let hintCost: Int = 25
 
     // MARK: - Init
 
@@ -80,6 +87,7 @@ final class GameViewModel: ObservableObject {
         pendingSwipeMatches = []
         showEmptyBoardEffect = false
         showBoardFullWarning = false
+        goalProgress = 0
         resetHintState()
 
         for _ in 0..<2 {
@@ -149,9 +157,10 @@ final class GameViewModel: ObservableObject {
 
     /// User taps the hint / power-up button to reveal the word early.
     func usePowerUpHint() {
-        guard !pendingSwipeMatches.isEmpty else { return }
+        guard !pendingSwipeMatches.isEmpty, hintCharges > 0 else { return }
         hintTimerTask?.cancel()
         hintTimerTask = nil
+        hintCharges -= 1
         showMatchHighlights = true
         // Leave showHintButton true (it will dim after highlights are shown)
     }
@@ -188,6 +197,7 @@ final class GameViewModel: ObservableObject {
 
             lastWords = result.clearedWords
             comboCount = result.comboCount
+            goalProgress = min(goalTarget, goalProgress + result.clearedWords.count)
 
             withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
                 syncTiles()
@@ -247,6 +257,7 @@ final class GameViewModel: ObservableObject {
 
         lastWords = [word]
         comboCount = 0
+        goalProgress = min(goalTarget, goalProgress + 1)
 
         withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
             syncTiles()
@@ -330,6 +341,49 @@ final class GameViewModel: ObservableObject {
         tiles = board.cells.compactMap { $0 }
     }
 
+    // MARK: - Economy Actions
+
+    var shufflePrice: Int { shuffleCost }
+    var hintPrice: Int { hintCost }
+    var canAffordShuffle: Bool { coins >= shuffleCost && !isAnimating && !isGameOver }
+    var canAffordHint: Bool { coins >= hintCost && !isAnimating && !isGameOver }
+
+    func buyHints() {
+        guard canAffordHint else { return }
+        coins -= hintCost
+        hintCharges += 1
+        triggerHaptic(.light)
+    }
+
+    func shuffleBoard() {
+        guard canAffordShuffle else { return }
+        let tiles = board.cells.compactMap { $0 }
+        guard tiles.count > 1 else { return }
+
+        coins -= shuffleCost
+        let positions = board.cells.indices.shuffled()
+        var shuffled = board
+        shuffled.cells = Array(repeating: nil, count: board.size * board.size)
+
+        var tileIndex = 0
+        for index in positions where tileIndex < tiles.count {
+            let row = index / board.size
+            let col = index % board.size
+            var tile = tiles[tileIndex]
+            tile.row = row
+            tile.col = col
+            tile.isNew = false
+            shuffled.cells[index] = tile
+            tileIndex += 1
+        }
+
+        board = shuffled
+        withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
+            syncTiles()
+        }
+        triggerHaptic(.medium)
+    }
+
     // MARK: - Haptic Feedback
 
     private enum HapticStyle { case light, medium, heavy, error }
@@ -345,4 +399,3 @@ final class GameViewModel: ObservableObject {
         #endif
     }
 }
-

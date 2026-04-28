@@ -22,24 +22,28 @@ struct TileView: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: size * 0.18)
+            RoundedRectangle(cornerRadius: size * 0.20)
                 .fill(tileColor(for: tile.letter))
-                .shadow(color: .black.opacity(0.12), radius: 4, x: 0, y: 2)
+                .overlay(
+                    RoundedRectangle(cornerRadius: size * 0.20)
+                        .stroke(Color.white.opacity(0.65), lineWidth: 1.5)
+                )
+                .shadow(color: .black.opacity(0.14), radius: 8, x: 0, y: 5)
 
             // White wash + border while finger is tracing this tile
             if isSelected {
-                RoundedRectangle(cornerRadius: size * 0.18)
+                RoundedRectangle(cornerRadius: size * 0.20)
                     .fill(Color.white.opacity(0.35))
-                RoundedRectangle(cornerRadius: size * 0.18)
+                RoundedRectangle(cornerRadius: size * 0.20)
                     .strokeBorder(Color.white, lineWidth: size * 0.07)
             }
 
             // Pulsing green ring for confirmed-but-not-yet-submitted words
             if isPending {
-                RoundedRectangle(cornerRadius: size * 0.18)
+                RoundedRectangle(cornerRadius: size * 0.20)
                     .strokeBorder(
-                        Color(red: 0.10, green: 0.75, blue: 0.42),
-                        lineWidth: size * 0.09
+                        Color(red: 1.00, green: 0.89, blue: 0.38),
+                        lineWidth: size * 0.10
                     )
                     .opacity(glowOpacity)
                     .onAppear {
@@ -52,13 +56,13 @@ struct TileView: View {
 
             Text(String(tile.letter).uppercased())
                 .font(.system(size: size * 0.44, weight: .bold, design: .rounded))
-                .foregroundColor(textColor(for: tile.letter))
+                .foregroundColor(textColor(for: tile.letter, isPending: isPending))
 
             // Scrabble point value — small superscript in top-right corner
             if let value = scrabbleValue {
                 Text("\(value)")
                     .font(.system(size: size * 0.20, weight: .bold, design: .rounded))
-                    .foregroundColor(textColor(for: tile.letter).opacity(0.60))
+                    .foregroundColor(textColor(for: tile.letter, isPending: isPending).opacity(0.60))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                     .padding(.top, size * 0.07)
                     .padding(.trailing, size * 0.07)
@@ -90,20 +94,14 @@ struct TileView: View {
     // MARK: - Color Palette
 
     private func tileColor(for letter: Character) -> Color {
-        switch letter.lowercased() {
-        case "a","e","i","o","u":
-            return Color(red: 0.96, green: 0.87, blue: 0.70)
-        case "r","t","n","s","l":
-            return Color(red: 0.75, green: 0.88, blue: 0.96)
-        case "c","d","h","m","p":
-            return Color(red: 0.82, green: 0.94, blue: 0.82)
-        default:
-            return Color(red: 0.90, green: 0.83, blue: 0.96)
+        if isPending {
+            return Color(red: 0.98, green: 0.82, blue: 0.30)
         }
+        return Color(red: 0.98, green: 0.95, blue: 0.93)
     }
 
-    private func textColor(for letter: Character) -> Color {
-        Color(red: 0.18, green: 0.18, blue: 0.22)
+    private func textColor(for letter: Character, isPending: Bool) -> Color {
+        isPending ? Color(red: 0.44, green: 0.26, blue: 0.11) : Color(red: 0.23, green: 0.20, blue: 0.47)
     }
 }
 
