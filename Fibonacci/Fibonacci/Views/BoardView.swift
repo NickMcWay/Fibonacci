@@ -18,6 +18,7 @@ import SwiftUI
 
 struct BoardView: View {
     @ObservedObject var vm: GameViewModel
+    @EnvironmentObject private var audio: AudioManager
 
     private let swipeThreshold: CGFloat = 20
     private let drawSpeedCap: CGFloat = 900
@@ -200,8 +201,14 @@ struct BoardView: View {
                 vm.tiles.first(where: { $0.row == pos.row && $0.col == pos.col })?.letter
             }
             let word = String(letters)
-            if drawPath.count >= 3 && WordValidator.isValidWord(word, language: vm.language) {
+            let isValidSelection = drawPath.count >= 3 && WordValidator.isValidWord(word, language: vm.language)
+
+            if isValidSelection {
                 confirmedPath = drawPath
+                audio.playCorrectSelectionFeedback()
+            } else if drawPath.count >= 3 {
+                confirmedPath = []
+                audio.playWrongSelectionFeedback()
             }
             drawPath = []
 

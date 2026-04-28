@@ -6,6 +6,7 @@
 import AVFoundation
 import SwiftUI
 import Combine
+import UIKit
 
 @MainActor
 final class AudioManager: ObservableObject {
@@ -18,11 +19,14 @@ final class AudioManager: ObservableObject {
     }
 
     private var player: AVAudioPlayer?
+    private var correctPlayer: AVAudioPlayer?
+    private var wrongPlayer: AVAudioPlayer?
     private let muteKey = "SlideWords_IsMuted"
 
     init() {
         isMuted = UserDefaults.standard.bool(forKey: "SlideWords_IsMuted")
         setupPlayer()
+        setupEffects()
     }
 
     private func setupPlayer() {
@@ -50,6 +54,22 @@ final class AudioManager: ObservableObject {
         try? AVAudioSession.sharedInstance().setActive(true)
     }
 
+    private func setupEffects() {
+        correctPlayer = loadEffect(named: "Correct")
+        wrongPlayer = loadEffect(named: "Wrong")
+    }
+
+    private func loadEffect(named name: String) -> AVAudioPlayer? {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "mp3"),
+              let effectPlayer = try? AVAudioPlayer(contentsOf: url) else {
+            return nil
+        }
+        effectPlayer.numberOfLoops = 0
+        effectPlayer.volume = 0.65
+        effectPlayer.prepareToPlay()
+        return effectPlayer
+    }
+
     func play() {
         guard !isMuted else { return }
         player?.play()
@@ -62,6 +82,29 @@ final class AudioManager: ObservableObject {
     func stop() {
         player?.stop()
         player?.currentTime = 0
+    }
+
+    func playCorrectSelectionFeedback() {
+        playEffect(correctPlayer)
+        playSubtleHaptic(intensity: 0.55)
+    }
+
+    func playWrongSelectionFeedback() {
+        playEffect(wrongPlayer)
+        playSubtleHaptic(intensity: 0.45)
+    }
+
+    private func playEffect(_ effectPlayer: AVAudioPlayer?) {
+        guard !isMuted else { return }
+        guard let effectPlayer else { return }
+        effectPlayer.currentTime = 0
+        effectPlayer.play()
+    }
+
+    private func playSubtleHaptic(intensity: CGFloat) {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.prepare()
+        generator.impactOccurred(intensity: intensity)
     }
 
     func toggleMute() {
