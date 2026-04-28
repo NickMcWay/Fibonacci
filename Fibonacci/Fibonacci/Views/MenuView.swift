@@ -32,56 +32,23 @@ struct MenuView: View {
     }
 
     private var backgroundLayer: some View {
-        ZStack {
-            LinearGradient(
-                colors: [
-                    Color(red: 0.49, green: 0.42, blue: 0.90),
-                    Color(red: 0.89, green: 0.64, blue: 0.80),
-                    Color(red: 0.99, green: 0.90, blue: 0.66)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
+        Image("Quibly Background")
+            .resizable()
+            .scaledToFill()
             .ignoresSafeArea()
-
-            VStack {
-                Spacer()
-                HStack {
-                    Circle()
-                        .fill(Color(red: 0.57, green: 0.41, blue: 0.86).opacity(0.35))
-                        .frame(width: 220)
-                        .blur(radius: 18)
-                        .offset(x: -70, y: 50)
-                    Spacer()
-                    Circle()
-                        .fill(Color(red: 0.31, green: 0.72, blue: 0.72).opacity(0.35))
-                        .frame(width: 190)
-                        .blur(radius: 18)
-                        .offset(x: 70, y: 50)
-                }
-            }
-
-            sparkles
-        }
-    }
-
-    private var sparkles: some View {
-        ZStack {
-            ForEach(0..<18, id: \.self) { index in
-                Circle()
-                    .fill(.white.opacity(index.isMultiple(of: 3) ? 0.75 : 0.45))
-                    .frame(width: index.isMultiple(of: 4) ? 6 : 4, height: index.isMultiple(of: 4) ? 6 : 4)
-                    .offset(x: CGFloat((index * 37) % 320) - 160, y: CGFloat((index * 71) % 700) - 340)
-            }
-        }
-        .blendMode(.screen)
     }
 
     private var titleSection: some View {
-        Text("Quibly")
-            .font(.system(size: 70, weight: .heavy, design: .rounded))
-            .foregroundStyle(cream)
-            .shadow(color: ink.opacity(0.55), radius: 0, x: 0, y: 5)
+        Image("Quibly Background")
+            .resizable()
+            .scaledToFit()
+            .frame(maxWidth: 320)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(.white.opacity(0.25), lineWidth: 1)
+            )
+            .shadow(color: .black.opacity(0.25), radius: 10, x: 0, y: 6)
             .padding(.top, 8)
     }
 
