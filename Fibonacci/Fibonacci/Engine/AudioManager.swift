@@ -1,7 +1,7 @@
 // AudioManager.swift
 // Background music playback with mute toggle.
-// Place a file named "background_music.mp3" (or .wav / .m4a) in the app bundle
-// to enable music. The manager degrades gracefully when no file is found.
+// Plays teacup-metronome.mp3 (bundled in the app target).
+// Falls back gracefully if the file is missing.
 
 import AVFoundation
 import SwiftUI
@@ -25,8 +25,10 @@ final class AudioManager: ObservableObject {
     }
 
     private func setupPlayer() {
-        // Try common audio file names / extensions in the main bundle
+        // Primary track — teacup metronome loop bundled with the app.
+        // Falls back to any other audio file found in the bundle.
         let candidates = [
+            ("teacup-metronome", "mp3"),
             ("background_music", "mp3"),
             ("background_music", "wav"),
             ("background_music", "m4a"),
