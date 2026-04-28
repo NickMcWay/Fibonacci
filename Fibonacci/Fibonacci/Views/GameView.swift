@@ -24,6 +24,9 @@ struct GameView: View {
                 topBar
                     .padding(.horizontal, 26)
                     .padding(.top, 20)
+
+                scoreBar
+                    .padding(.horizontal, 26)
                 
                 Spacer(minLength: 8)
 
@@ -83,6 +86,38 @@ struct GameView: View {
             RoundedRectangle(cornerRadius: 30)
                 .fill(LinearGradient(colors: [Color.blue.opacity(0.85), Color.purple.opacity(0.9)], startPoint: .leading, endPoint: .trailing))
         )
+    }
+
+    private var scoreBar: some View {
+        HStack(spacing: 16) {
+            scoreStat(label: "Score", value: "\(vm.score)")
+            Divider()
+                .overlay(uiInk.opacity(0.25))
+            scoreStat(label: "Best", value: "\(vm.bestScore)")
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 18)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(uiTint.opacity(0.88))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18)
+                        .stroke(.white.opacity(0.6), lineWidth: 1)
+                )
+        )
+    }
+
+    private func scoreStat(label: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .foregroundColor(uiInk.opacity(0.75))
+            Text(value)
+                .font(.system(size: 24, weight: .heavy, design: .rounded))
+                .foregroundColor(uiInk)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var actionBar: some View {
