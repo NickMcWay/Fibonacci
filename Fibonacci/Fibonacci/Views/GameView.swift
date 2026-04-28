@@ -22,16 +22,13 @@ struct GameView: View {
 
             VStack(spacing: 14) {
                 topBar
-                    .padding(.horizontal, 16)
-                    .padding(.top, 14)
+                    .padding(.horizontal, 26)
+                    .padding(.top, 20)
                 
-                Spacer()
-                    .frame(maxWidth: 320)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .padding(.top, 8)
+                Spacer(minLength: 8)
 
                 BoardView(vm: vm)
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 8)
 
                 if vm.showWordOverlay {
                     celebrateChip
@@ -41,8 +38,8 @@ struct GameView: View {
                 Spacer(minLength: 0)
 
                 actionBar
-                    .padding(.horizontal, 14)
-                    .padding(.bottom, 16)
+                    .padding(.horizontal, 30)
+                    .padding(.bottom, 28)
             }
 
             if vm.isGameOver {
@@ -109,11 +106,11 @@ struct GameView: View {
 
     private func actionPill(title: String, subtitle: String, icon: String, enabled: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 8) {
+            VStack(spacing: 6) {
                 Image(systemName: icon)
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: 20, weight: .bold))
                     .foregroundColor(uiInk)
-                    .frame(width: 58, height: 58)
+                    .frame(width: 48, height: 48)
                     .background(
                         Circle()
                             .fill(uiTintSecondary.opacity(0.96))
@@ -121,18 +118,18 @@ struct GameView: View {
                     )
 
                 Text(title)
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
                 Text(subtitle)
-                    .font(.system(size: 13, weight: .heavy, design: .rounded))
+                    .font(.system(size: 12, weight: .heavy, design: .rounded))
                     .foregroundColor(Color(red: 0.56, green: 0.36, blue: 0.08))
             }
             .foregroundColor(uiInk)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
+            .padding(.vertical, 9)
             .background(
-                RoundedRectangle(cornerRadius: 24)
+                RoundedRectangle(cornerRadius: 20)
                     .fill(uiTint.opacity(0.8))
-                    .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.55), lineWidth: 1))
+                    .overlay(RoundedRectangle(cornerRadius: 20).stroke(.white.opacity(0.55), lineWidth: 1))
             )
         }
         .disabled(!enabled)
@@ -142,9 +139,9 @@ struct GameView: View {
     private func circleButton(system: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: system)
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 16, weight: .bold))
                 .foregroundColor(uiInk)
-                .frame(width: 48, height: 48)
+                .frame(width: 42, height: 42)
                 .background(
                     Circle()
                         .fill(uiTint.opacity(0.92))
