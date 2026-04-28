@@ -59,6 +59,7 @@ final class GameViewModel: ObservableObject {
     private var hintTimerTask: Task<Void, Never>?
     private let shuffleCost: Int = 50
     private let hintCost: Int = 25
+    private let emptyBoardBonus: Int = 25
 
     // MARK: - Init
 
@@ -219,6 +220,7 @@ final class GameViewModel: ObservableObject {
             isAnimating = false
 
             if board.isEmpty {
+                awardEmptyBoardBonus()
                 triggerEmptyBoardEffect()
             } else if result.isGameOver {
                 isGameOver = true
@@ -277,6 +279,7 @@ final class GameViewModel: ObservableObject {
             isAnimating = false
 
             if board.isEmpty {
+                awardEmptyBoardBonus()
                 triggerEmptyBoardEffect()
             } else if GameEngine.isGameOver(board: board) {
                 isGameOver = true
@@ -316,6 +319,16 @@ final class GameViewModel: ObservableObject {
     }
 
     // MARK: - Empty Board Effect
+
+    private func awardEmptyBoardBonus() {
+        score += emptyBoardBonus
+        lastPointsEarned += emptyBoardBonus
+
+        if score > bestScore {
+            bestScore = score
+            UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
+        }
+    }
 
     private func triggerEmptyBoardEffect() {
         showWordOverlay = false
