@@ -137,26 +137,33 @@ final class WordValidator {
 
     static let dutchThreeLetterWordSet: Set<String> = {
         let words = [
-            "AAL","AAP","BAD","BAK","BAL","BAN","BAR","BED","BEL","BES","BOK","BOL","BOM","BOS","BOT","BUS",
-            "DAG","DAK","DAS","DIK","DOE","DOP","DUO",
-            "EEN","EER","ELF",
-            "GAS","GEL","GOD","GOM","GUM",
-            "HAL","HAM","HEM","HEN","HET","HIT","HOE","HOF","HOP","HOT","HUT",
-            "IJS",
-            "JAK","JAS",
-            "KAN","KAR","KAT","KIN","KIP","KOE","KOK","KOP","KUS",
-            "LAK","LAM","LAP","LAT","LEG","LEI","LEK","LID","LIP","LOS","LOT",
-            "MAG","MAL","MAN","MAT","MES","MET","MOE","MOL","MOP",
-            "NAP","NAT","NEE","NET","NUL","NUT",
-            "OOM","OOR",
-            "PAD","PAK","PAN","PAS","PAT","PEN","PET","PIL","PIT","POP","POT","PUB","PUT",
-            "RAM","RAT","RIB","RUG",
-            "SAP","SET","SIP","SIT","SOB","SPA","SUB",
-            "TAB","TAN","TAP","TIN","TIP","TOE","TOP","TUB",
-            "VAL","VAN","VET","VIS","VOS",
-            "WAL","WAS","WAT","WEG","WIE","WIG","WIT",
-            "ZON","ZUS",
-        ]
+            "aai","aak","aal","aan","aap","aar","aas",
+            "ach","als",
+            "bad","bag","bal","bam","ban","bar","bas","bed","bek","bel","ben","bes","beu","bij","bil",
+            "boa","bob","bod","boe","bol","bom","bon","bos","bot","bui","bus",
+            "cel","cis","col","con","cop","cor","cos",
+            "dag","dak","dal","dam","dan","das","dat","dek","del","den","der","des","die","dij","dik","dim","din","dip","dis","dit","doe","dog","dok","dol","dom","don","dop","dor","dos","dot","dui","duk","dun","duo","dus",
+            "een","eer","eet","ego","eis","elf","elk","els","ene","eng","ent","era","erg","ets",
+            "fan","fee","fel","fen","fik","fit","fok","fop","for",
+            "gap","gas","gat","gek","gel","gen","ger","ges","get","gif","gin","git","god","gom","gun",
+            "ham","han","hap","har","has","hat","heb","hek","hel","hem","hen","her","het","heu","hik","hip","hit","hoe","hof","hok","hol","hom","hop","hot","hou","hui","hul","hum","hut",
+            "ijs","ink","ins",
+            "jam","jan","jas","jet","jeu","job","joe","jog","jon","jos","jou","juk","jun",
+            "kab","kam","kan","kap","kar","kas","kat","kef","kei","ken","kid","kil","kin","kip","kit","kof","kok","kol","kom","kon","kop","kor","kos","kou","kub","kud","kui","kul","kun","kus",
+            "lab","lad","lag","lam","lan","lap","las","lat","led","lee","leg","lei","lek","les","let","leu","lid","lig","lij","lik","lip","lob","lof","log","lok","los","lot","lub","lui","luk","lus",
+            "mad","mag","mak","mal","man","map","mar","mas","mat","mei","mel","men","mes","met","mij","mik","mil","min","mis","mob","mod","moe","mok","mol","mom","mon","mos","mot","mug","mui","mul","mus",
+            "nap","nat","nee","net","nip","nis","not","nul","nut",
+            "ode","oef","off","oft","ohm","oke","okt","olm","oma","oms","ons","oog","oom","oor","opa","opt","ork","oud",
+            "pad","pak","pal","pan","pap","par","pas","pat","pek","pen","per","pet","pik","pil","pin","pip","pit","pol","pop","pot","pro","puk","pul","pus",
+            "rad","rak","ram","rap","ras","rat","red","ree","rek","rem","ren","rib","rij","rik","ril","rit","rob","rok","rol","rom","rot","rug","rui","ruk","rum","run","rus",
+            "sap","sas","sat","sek","sel","sen","ser","set","sim","sin","sit","sla","slo","sok","sol","som","son","sop","spa","spe","sta","ste","sti","sto","sub","suf","suk","sum","sup",
+            "tab","tak","tam","tan","tap","tas","tax","tee","tel","ten","ter","tig","til","tin","tip","toe","tof","tol","tom","ton","top","tor","tot","tuk","tul","tum","tur","tut",
+            "uil","uit","uni",
+            "vak","val","van","var","vat","vee","vel","ven","ver","vet","via","vie","vis","vla","vol","vos","vul","vut",
+            "wak","wal","wan","war","was","wat","web","wed","weg","wei","wel","wen","wer","wet","wie","wig","wil","win","wis","wit","wol","won","wou",
+            "yak","yam","yen",
+            "zak","zal","zap","zat","zee","zei","zes","zet","zig","zij","zin","zit","zon","zot","zou","zui","zul","zus"
+            ]
         return Set(words.map { $0.lowercased() })
     }()
 

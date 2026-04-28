@@ -41,7 +41,8 @@ final class GameViewModel: ObservableObject {
     var language: GameLanguage { settings.language }
 
     func scrabbleValue(for letter: Character) -> Int {
-        settings.language.scrabbleValues[letter.lowercased() as Character] ?? 1
+        let lower = Character(String(letter).lowercased())
+        return settings.language.scrabbleValues[lower] ?? 1
     }
 
     // MARK: - Private
@@ -54,11 +55,15 @@ final class GameViewModel: ObservableObject {
 
     // MARK: - Init
 
-    init(settings: GameSettings = .default) {
+    init(settings: GameSettings) {
         self.settings = settings
         self.board = BoardModel(size: settings.boardVariant.rawValue)
         self.bestScore = UserDefaults.standard.integer(forKey: "SlideWords_BestScore")
         startNewGame()
+    }
+
+    convenience init() {
+        self.init(settings: .default)
     }
 
     // MARK: - Game Lifecycle
@@ -340,3 +345,4 @@ final class GameViewModel: ObservableObject {
         #endif
     }
 }
+
