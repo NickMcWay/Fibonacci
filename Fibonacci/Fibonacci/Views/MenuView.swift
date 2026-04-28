@@ -21,9 +21,9 @@ struct MenuView: View {
                 playButton
                 bottomActions
             }
-            .padding(.horizontal, 22)
-            .padding(.top, 24)
-            .padding(.bottom, 30)
+            .padding(.horizontal, 28)
+            .padding(.top, 26)
+            .padding(.bottom, 36)
         }
         .onAppear { audio.play() }
         .sheet(item: $activePage) { page in
@@ -62,20 +62,21 @@ struct MenuView: View {
                 }
             }
         }
-        .padding(12)
+        .padding(10)
+        .frame(maxWidth: 338)
         .background(
             RoundedRectangle(cornerRadius: 28)
-                .fill(Color.white.opacity(0.23))
+                .fill(Color.white.opacity(0.34))
                 .overlay(
                     RoundedRectangle(cornerRadius: 28)
-                        .stroke(Color.white.opacity(0.35), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.72), lineWidth: 1.2)
                 )
-                .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: 7)
+                .shadow(color: .black.opacity(0.18), radius: 14, x: 0, y: 7)
         )
         .overlay(alignment: .center) {
             HStack(spacing: 48) {
-                Circle().fill(Color.white.opacity(0.65)).frame(width: 10, height: 10)
-                Circle().fill(Color.white.opacity(0.65)).frame(width: 10, height: 10)
+                Circle().fill(Color.white.opacity(0.82)).frame(width: 9, height: 9)
+                Circle().fill(Color.white.opacity(0.82)).frame(width: 9, height: 9)
             }
             .offset(x: 19, y: 37)
         }
@@ -95,20 +96,20 @@ struct MenuView: View {
                 .font(.system(size: 30, weight: .heavy, design: .rounded))
                 .foregroundStyle(highlighted ? Color(red: 0.42, green: 0.28, blue: 0.12) : ink)
         }
-        .frame(width: 74, height: 74)
+        .frame(width: 66, height: 66)
     }
 
     private var playButton: some View {
         Button(action: startGame) {
             HStack(spacing: 10) {
                 Image(systemName: "play.fill")
-                    .font(.system(size: 21, weight: .bold))
+                    .font(.system(size: 18, weight: .bold))
                 Text("Play")
-                    .font(.system(size: 49, weight: .heavy, design: .rounded))
+                    .font(.system(size: 42, weight: .heavy, design: .rounded))
             }
             .foregroundStyle(.white)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
+            .frame(maxWidth: 338)
+            .padding(.vertical, 13)
             .background(
                 RoundedRectangle(cornerRadius: 32)
                     .fill(
@@ -120,7 +121,7 @@ struct MenuView: View {
                     )
                     .overlay(
                         RoundedRectangle(cornerRadius: 32)
-                            .stroke(Color.white.opacity(0.36), lineWidth: 1)
+                            .stroke(Color.white.opacity(0.7), lineWidth: 1.2)
                     )
                     .shadow(color: Color(red: 0.72, green: 0.40, blue: 0.15).opacity(0.45), radius: 8, x: 0, y: 6)
             )
@@ -140,22 +141,22 @@ struct MenuView: View {
         Button(action: { activePage = page }) {
             VStack(spacing: 8) {
                 Image(systemName: symbol)
-                    .font(.system(size: 31, weight: .semibold))
+                    .font(.system(size: 27, weight: .semibold))
                     .foregroundStyle(iconColor)
                 Text(title)
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.black.opacity(0.65))
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 104)
+            .frame(height: 90)
             .background(
                 RoundedRectangle(cornerRadius: 24)
                     .fill(tint)
                     .overlay(
                         RoundedRectangle(cornerRadius: 24)
-                            .stroke(Color.white.opacity(0.45), lineWidth: 1)
+                            .stroke(Color.white.opacity(0.75), lineWidth: 1.1)
                     )
-                    .shadow(color: .black.opacity(0.12), radius: 6, x: 0, y: 4)
+                    .shadow(color: .black.opacity(0.16), radius: 7, x: 0, y: 4)
             )
         }
         .buttonStyle(.plain)
