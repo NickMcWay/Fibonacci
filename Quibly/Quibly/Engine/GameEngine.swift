@@ -2,7 +2,7 @@
 // Orchestrates a complete turn: slide → spawn → detect words → clear → collapse → repeat.
 //
 // Scoring uses Scrabble letter values (passed via GameLanguage) so that rare letters
-// reward more points. Each word's score = sum of its letter values × combo multiplier.
+// reward more points. Each word's score = (sum of its letter values × letter count) × combo multiplier.
 //
 // Post-clear rule:
 //   After clearing matched word tiles the board re-slides in the SAME direction as the
@@ -26,7 +26,9 @@ enum GameEngine {
 
     static func wordScore(_ word: String, language: GameLanguage) -> Int {
         let values = language.scrabbleValues
-        return word.lowercased().reduce(0) { $0 + (values[Character(String($1))] ?? 1) }
+        let baseScore = word.lowercased().reduce(0) { $0 + (values[Character(String($1))] ?? 1) }
+        let letterMultiplier = max(1, word.count)
+        return baseScore * letterMultiplier
     }
 
     // MARK: - Main Turn Entry Point
