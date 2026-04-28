@@ -231,8 +231,3 @@ struct GameView: View {
         }
     }
 }
-
-#Preview {
-    GameView(settings: .default, onReturnToMenu: {})
-        .environmentObject(AudioManager())
-}
