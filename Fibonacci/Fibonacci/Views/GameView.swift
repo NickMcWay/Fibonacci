@@ -98,10 +98,6 @@ struct GameView: View {
             Spacer()
 
             VStack(spacing: 8) {
-                Text("Find the word!")
-                    .font(.system(size: 34, weight: .heavy, design: .rounded))
-                    .foregroundColor(Color(red: 0.27, green: 0.22, blue: 0.63))
-
                 HStack(spacing: 10) {
                     ForEach(0..<vm.goalTarget, id: \.self) { i in
                         Circle()

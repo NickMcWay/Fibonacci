@@ -39,24 +39,17 @@ struct MenuView: View {
     }
 
     private var titleSection: some View {
-        Image("Quibly Background")
-            .resizable()
-            .scaledToFit()
+        Spacer()
             .frame(maxWidth: 320)
             .clipShape(RoundedRectangle(cornerRadius: 20))
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(.white.opacity(0.25), lineWidth: 1)
-            )
-            .shadow(color: .black.opacity(0.25), radius: 10, x: 0, y: 6)
             .padding(.top, 8)
     }
 
     private var boardPreview: some View {
         let letters: [[String]] = [
             ["Q", "U", "I", "B"],
-            ["L", "E", "A", "R"],
-            ["P", "L", "A", "Y"],
+            ["L", "P", "A", "R"],
+            ["E", "L", "A", "Y"],
             ["W", "O", "R", "D"]
         ]
 
