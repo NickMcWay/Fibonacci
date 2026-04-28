@@ -65,7 +65,7 @@ final class AudioManager: ObservableObject {
             return nil
         }
         effectPlayer.numberOfLoops = 0
-        effectPlayer.volume = 0.65
+        effectPlayer.volume = 2.0
         effectPlayer.prepareToPlay()
         return effectPlayer
     }

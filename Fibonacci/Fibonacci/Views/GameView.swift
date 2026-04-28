@@ -24,15 +24,19 @@ struct GameView: View {
                 topBar
                     .padding(.horizontal, 26)
                     .padding(.top, 20)
-
-                scoreBar
-                    .padding(.horizontal, 26)
                 
                 Spacer(minLength: 8)
 
-                BoardView(vm: vm)
-                    .padding(.horizontal, 8)
-                    .padding()
+                VStack(spacing: 14) {
+                    scoreBar
+                        .padding(.horizontal, 26)
+                    
+                    BoardView(vm: vm)
+                        .padding(.horizontal, 8)
+                        .padding()
+                }
+                .padding(.horizontal)
+                .padding(.top)
 
                 actionBar
                     .padding(.horizontal, 50)
@@ -95,7 +99,7 @@ struct GameView: View {
                 .overlay(uiInk.opacity(0.25))
             scoreStat(label: "Best", value: "\(vm.bestScore)")
         }
-        .frame(maxWidth: .infinity)
+        .frame(height: 50)
         .padding(.horizontal, 18)
         .padding(.vertical, 12)
         .background(
@@ -111,10 +115,10 @@ struct GameView: View {
     private func scoreStat(label: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label)
-                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .font(.system(size: 10, weight: .bold, design: .rounded))
                 .foregroundColor(uiInk.opacity(0.75))
             Text(value)
-                .font(.system(size: 24, weight: .heavy, design: .rounded))
+                .font(.system(size: 20, weight: .heavy, design: .rounded))
                 .foregroundColor(uiInk)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
