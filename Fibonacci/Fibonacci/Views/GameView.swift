@@ -24,9 +24,11 @@ struct GameView: View {
                 topBar
                     .padding(.horizontal, 16)
                     .padding(.top, 14)
-
-                progressCard
-                    .padding(.horizontal, 16)
+                
+                Spacer()
+                    .frame(maxWidth: 320)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .padding(.top, 8)
 
                 BoardView(vm: vm)
                     .padding(.horizontal, 16)
@@ -60,24 +62,6 @@ struct GameView: View {
     private var topBar: some View {
         HStack(spacing: 12) {
             circleButton(system: "arrow.left", action: onReturnToMenu)
-
-            Spacer()
-
-            HStack(spacing: 8) {
-                Image(systemName: "star.circle.fill")
-                Text("\(vm.coins)")
-                    .contentTransition(.numericText())
-            }
-            .font(.system(size: 26, weight: .heavy, design: .rounded))
-            .foregroundColor(uiInk)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .background(
-                Capsule()
-                    .fill(uiTint.opacity(0.95))
-                    .overlay(Capsule().stroke(Color.white.opacity(0.62), lineWidth: 1))
-                    .shadow(color: .black.opacity(0.12), radius: 5, x: 0, y: 3)
-            )
             
             Spacer()
 
@@ -85,54 +69,7 @@ struct GameView: View {
                 audio.toggleMute()
             }
         }
-    }
-
-    private var progressCard: some View {
-        HStack {
-            Label("\(vm.dayStreak) Day Streak", systemImage: "flame.fill")
-                .font(.system(size: 20, weight: .bold, design: .rounded))
-                .foregroundColor(uiInk)
-
-            Spacer()
-
-            VStack(spacing: 8) {
-                HStack(spacing: 10) {
-                    ForEach(0..<vm.goalTarget, id: \.self) { i in
-                        Circle()
-                            .fill(i < vm.goalProgress ? Color.yellow : uiInk.opacity(0.25))
-                            .frame(width: 14, height: 14)
-                    }
-                }
-            }
-            .padding(.horizontal, 18)
-            .padding(.vertical, 10)
-            .background(Capsule().fill(Color.white.opacity(0.9)))
-
-            Spacer()
-
-            Button(action: { vm.buyHints() }) {
-                ZStack(alignment: .bottomTrailing) {
-                    Image(systemName: "lightbulb.fill")
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(uiInk)
-                        .padding(14)
-                        .background(
-                            Circle()
-                                .fill(uiTintSecondary.opacity(0.95))
-                                .overlay(Circle().stroke(.white.opacity(0.62), lineWidth: 1))
-                        )
-
-                    Text("\(vm.hintCharges)")
-                        .font(.system(size: 16, weight: .heavy, design: .rounded))
-                        .foregroundColor(.black.opacity(0.7))
-                        .padding(7)
-                        .background(Circle().fill(Color.yellow))
-                }
-            }
-        }
-        .padding(14)
-        .background(RoundedRectangle(cornerRadius: 24).fill(uiTint.opacity(0.78)))
-        .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.55), lineWidth: 1.1))
+        .padding(.top, 12)
     }
 
     private var celebrateChip: some View {
