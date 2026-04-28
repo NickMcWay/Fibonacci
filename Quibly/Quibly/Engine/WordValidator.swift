@@ -1,6 +1,6 @@
 // WordValidator.swift
-// Curated word lists (3–10 letters) for English and Dutch, plus board-scanning logic.
-// findMatches(in:language:) automatically scans all window sizes from 3 up to board.size.
+// Curated word lists (2–10 letters) for Dutch and (3–6 letters) for English, plus board-scanning logic.
+// findMatches(in:language:) automatically scans all window sizes from the language minimum up to board.size.
 
 import Foundation
 
@@ -132,8 +132,31 @@ final class WordValidator {
         return Set(words.map { $0.lowercased() }.filter { $0.count == 6 })
     }()
 
-    // MARK: - Dutch word sets (3–10 letters)
+    // MARK: - Dutch word sets (2–10 letters)
     // Common Dutch words recognisable to casual Dutch speakers.
+
+    static let dutchTwoLetterWordSet: Set<String> = {
+        let words = [
+            "ad","af","al","as",
+            "be","bi","bo",
+            "de","do",
+            "en","er",
+            "ga","ge",
+            "ha","he","ho",
+            "ik","in","is",
+            "ja","je","ju",
+            "ka",
+            "na","nu",
+            "of","om","op",
+            "re",
+            "te","to",
+            "ui","uw",
+            "va","ve",
+            "we","wo",
+            "ze","zo",
+        ]
+        return Set(words.map { $0.lowercased() })
+    }()
 
     static let dutchThreeLetterWordSet: Set<String> = {
         let words = [
@@ -297,12 +320,13 @@ final class WordValidator {
     // MARK: - Board Scanning
 
     /// Returns all word matches on the board for the given language.
-    /// Scans horizontal and vertical windows of length 3 up to board.size.
+    /// Scans horizontal and vertical windows from the language minimum length up to board.size.
     static func findMatches(in board: BoardModel, language: GameLanguage = .english) -> [WordMatch] {
         var matches: [WordMatch] = []
         let size = board.size
+        let minimumLength = minimumWindowLength(for: language)
 
-        for windowSize in 3...max(3, size) {
+        for windowSize in minimumLength...max(minimumLength, size) {
             let set = wordSetForLength(windowSize, language: language)
             guard !set.isEmpty else { continue }
 
@@ -331,6 +355,7 @@ final class WordValidator {
         switch language {
         case .dutch:
             switch length {
+            case 2:  return dutchTwoLetterWordSet
             case 3:  return dutchThreeLetterWordSet
             case 4:  return dutchFourLetterWordSet
             case 5:  return dutchFiveLetterWordSet
@@ -349,6 +374,13 @@ final class WordValidator {
             case 6: return sixLetterWordSet
             default: return []
             }
+        }
+    }
+
+    private static func minimumWindowLength(for language: GameLanguage) -> Int {
+        switch language {
+        case .dutch: return 2
+        default: return 3
         }
     }
 
