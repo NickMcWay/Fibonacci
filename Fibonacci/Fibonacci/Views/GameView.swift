@@ -1,15 +1,31 @@
 // GameView.swift
-// Main game screen. Composes: title, score panels, board, word overlay, game over overlay.
+// Main game screen. Composes: title, score panels, board, overlays, hint button.
 // All game state comes from GameViewModel. This view is purely presentational.
+//
+// Hint power-up:
+//   A lightbulb button sits in the footer. For the first 5 s after a word is found
+//   it is dim/disabled. At 5 s it starts pulsing (vm.showHintButton = true).
+//   Tapping it immediately reveals the matching tiles (vm.showMatchHighlights).
 
 import SwiftUI
 
 struct GameView: View {
-    @StateObject private var vm = GameViewModel()
+    let settings: GameSettings
+    let onReturnToMenu: () -> Void
+
+    @StateObject private var vm: GameViewModel
+    @EnvironmentObject private var audio: AudioManager
+
+    @State private var hintGlow: Double = 0.6
+
+    init(settings: GameSettings, onReturnToMenu: @escaping () -> Void) {
+        self.settings = settings
+        self.onReturnToMenu = onReturnToMenu
+        _vm = StateObject(wrappedValue: GameViewModel(settings: settings))
+    }
 
     var body: some View {
         ZStack {
-            // Background
             Color(red: 0.97, green: 0.97, blue: 0.98)
                 .ignoresSafeArea()
 
@@ -23,13 +39,14 @@ struct GameView: View {
                 BoardView(vm: vm)
                     .padding(.horizontal, 16)
 
-                Spacer(minLength: 16)
+                Spacer(minLength: 12)
 
-                footerHint
+                footerRow
+                    .padding(.horizontal, 20)
                     .padding(.bottom, 24)
             }
 
-            // Board full warning banner
+            // Board full warning
             if vm.showBoardFullWarning {
                 VStack {
                     boardFullWarningBanner
@@ -64,6 +81,7 @@ struct GameView: View {
                     .zIndex(3)
             }
         }
+        .onAppear { audio.play() }
     }
 
     // MARK: - Header
@@ -71,35 +89,56 @@ struct GameView: View {
     private var headerSection: some View {
         VStack(spacing: 12) {
             HStack(alignment: .top) {
-                // Title
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("SlideWords")
-                        .font(.system(size: 32, weight: .heavy, design: .rounded))
-                        .foregroundColor(Color(red: 0.18, green: 0.18, blue: 0.22))
-                    Text("slide tiles · form words")
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                    HStack(spacing: 6) {
+                        Text("SlideWords")
+                            .font(.system(size: 30, weight: .heavy, design: .rounded))
+                            .foregroundColor(Color(red: 0.18, green: 0.18, blue: 0.22))
+                        Text(settings.language.flag)
+                            .font(.system(size: 22))
+                    }
+                    Text("\(settings.boardVariant.displayName) · \(settings.language.rawValue)")
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundColor(.secondary)
                 }
                 Spacer()
-                // Score cards
                 HStack(spacing: 10) {
                     scoreCard(title: "SCORE", value: vm.score)
                     scoreCard(title: "BEST", value: vm.bestScore)
                 }
             }
 
-            // New game button
             HStack {
                 Spacer()
+                // Mute toggle
+                Button(action: { audio.toggleMute() }) {
+                    Image(systemName: audio.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(.secondary)
+                        .padding(8)
+                        .background(
+                            Circle()
+                                .fill(Color(red: 0.92, green: 0.92, blue: 0.95))
+                        )
+                }
+                // New game button
                 Button(action: { withAnimation { vm.startNewGame() } }) {
                     Label("New Game", systemImage: "arrow.counterclockwise")
                         .font(.system(size: 14, weight: .semibold, design: .rounded))
                         .foregroundColor(.white)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
+                        .background(Capsule().fill(Color(red: 0.40, green: 0.55, blue: 0.85)))
+                }
+                // Return to menu
+                Button(action: onReturnToMenu) {
+                    Image(systemName: "house.fill")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(.secondary)
+                        .padding(8)
                         .background(
-                            Capsule()
-                                .fill(Color(red: 0.40, green: 0.55, blue: 0.85))
+                            Circle()
+                                .fill(Color(red: 0.92, green: 0.92, blue: 0.95))
                         )
                 }
                 #if DEBUG
@@ -131,12 +170,59 @@ struct GameView: View {
         )
     }
 
-    // MARK: - Footer Hint
+    // MARK: - Footer Row (hint + instructions)
 
-    private var footerHint: some View {
-        Text("Swipe to slide tiles · press & drag letters to draw a word")
-            .font(.system(size: 13, weight: .medium, design: .rounded))
-            .foregroundColor(.secondary)
+    private var footerRow: some View {
+        HStack(alignment: .center, spacing: 12) {
+            Text("Swipe to slide · drag slowly to draw a word")
+                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .foregroundColor(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+
+            Spacer()
+
+            hintButton
+        }
+    }
+
+    // MARK: - Hint Power-Up Button
+
+    private var hintButton: some View {
+        let available = vm.showHintButton && !vm.pendingSwipeMatches.isEmpty && !vm.showMatchHighlights
+        let hasPending = !vm.pendingSwipeMatches.isEmpty && !vm.showMatchHighlights
+
+        return Button(action: {
+            guard available else { return }
+            vm.usePowerUpHint()
+        }) {
+            ZStack {
+                Circle()
+                    .fill(available
+                          ? Color(red: 0.95, green: 0.75, blue: 0.20)
+                          : Color(red: 0.88, green: 0.88, blue: 0.92))
+                    .frame(width: 42, height: 42)
+
+                if available {
+                    Circle()
+                        .fill(Color(red: 0.95, green: 0.75, blue: 0.20).opacity(0.35))
+                        .frame(width: 52, height: 52)
+                        .opacity(hintGlow)
+                        .onAppear {
+                            withAnimation(.easeInOut(duration: 0.7).repeatForever(autoreverses: true)) {
+                                hintGlow = 1.0
+                            }
+                        }
+                        .onDisappear { hintGlow = 0.6 }
+                }
+
+                Image(systemName: "lightbulb.fill")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(available ? .white : Color(red: 0.70, green: 0.70, blue: 0.75))
+            }
+        }
+        .disabled(!hasPending)
+        .animation(.spring(response: 0.25), value: available)
     }
 
     // MARK: - Word Cleared Overlay
@@ -148,14 +234,12 @@ struct GameView: View {
                     .font(.system(size: 18, weight: .heavy, design: .rounded))
                     .foregroundColor(Color(red: 0.95, green: 0.65, blue: 0.15))
             }
-
             ForEach(vm.lastWords, id: \.self) { word in
                 Text(word.uppercased())
                     .font(.system(size: 28, weight: .heavy, design: .rounded))
                     .foregroundColor(.white)
             }
-
-            Text("+\(pointsDisplay()) pts")
+            Text("+\(vm.lastPointsEarned) pts")
                 .font(.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundColor(.white.opacity(0.85))
         }
@@ -169,20 +253,11 @@ struct GameView: View {
         .padding(.horizontal, 40)
     }
 
-    private func pointsDisplay() -> String {
-        // Show the last scored amount — pulled from score delta isn't tracked separately,
-        // so we show word count × base × combo as a display hint.
-        let base = vm.lastWords.count * GameEngine.baseWordScore
-        let multiplier = vm.comboCount > 0 ? vm.comboCount + 1 : 1
-        return "\(base * multiplier)"
-    }
-
     // MARK: - Game Over Overlay
 
     private var gameOverOverlay: some View {
         ZStack {
-            Color.black.opacity(0.55)
-                .ignoresSafeArea()
+            Color.black.opacity(0.55).ignoresSafeArea()
 
             VStack(spacing: 20) {
                 Text("Game Over")
@@ -211,7 +286,12 @@ struct GameView: View {
                         )
                 }
                 .padding(.horizontal, 40)
-                .padding(.top, 8)
+
+                Button(action: onReturnToMenu) {
+                    Text("Main Menu")
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .foregroundColor(.white.opacity(0.75))
+                }
             }
             .padding(32)
             .background(
@@ -222,12 +302,11 @@ struct GameView: View {
         }
     }
 
-    // MARK: - Board Full Warning Banner
+    // MARK: - Board Full Warning
 
     private var boardFullWarningBanner: some View {
         HStack(spacing: 8) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundColor(.white)
+            Image(systemName: "exclamationmark.triangle.fill").foregroundColor(.white)
             Text("Board full — clear a word to continue!")
                 .font(.system(size: 14, weight: .semibold, design: .rounded))
                 .foregroundColor(.white)
@@ -241,12 +320,11 @@ struct GameView: View {
         )
     }
 
-    // MARK: - Empty Board Celebration Overlay
+    // MARK: - Clear Board Celebration
 
     private var clearBoardCelebrationOverlay: some View {
         VStack(spacing: 10) {
-            Text("✨")
-                .font(.system(size: 52))
+            Text("✨").font(.system(size: 52))
             Text("Board Cleared!")
                 .font(.system(size: 30, weight: .heavy, design: .rounded))
                 .foregroundColor(.white)
@@ -293,11 +371,6 @@ struct GameView: View {
 // MARK: - Preview
 
 #Preview("Game Screen") {
-    GameView()
-}
-
-#Preview("Near Word State") {
-    let vm = GameViewModel()
-    vm.loadDebugBoard("nearWord")
-    return GameView()
+    GameView(settings: .default, onReturnToMenu: {})
+        .environmentObject(AudioManager())
 }

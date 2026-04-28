@@ -1,7 +1,7 @@
 // TileView.swift
 // Renders a single letter tile with:
-//   - Rounded rectangle background
-//   - Bold centered letter
+//   - Rounded rectangle background (colour keyed to letter category)
+//   - Scrabble point value badge in the top-right corner
 //   - Spawn scale-in animation (isNew flag)
 //   - Clear pop-out animation (isClearing flag)
 //   - Draw-selection highlight (isSelected flag)
@@ -14,6 +14,7 @@ struct TileView: View {
     let size: CGFloat
     var isSelected: Bool = false
     var isPending: Bool = false
+    var scrabbleValue: Int? = nil   // shown as a small badge; nil hides it
 
     @State private var scale: CGFloat = 1.0
     @State private var opacity: Double = 1.0
@@ -33,7 +34,7 @@ struct TileView: View {
                     .strokeBorder(Color.white, lineWidth: size * 0.07)
             }
 
-            // Pulsing green ring while word is confirmed but not yet submitted
+            // Pulsing green ring for confirmed-but-not-yet-submitted words
             if isPending {
                 RoundedRectangle(cornerRadius: size * 0.18)
                     .strokeBorder(
@@ -52,6 +53,16 @@ struct TileView: View {
             Text(String(tile.letter).uppercased())
                 .font(.system(size: size * 0.44, weight: .bold, design: .rounded))
                 .foregroundColor(textColor(for: tile.letter))
+
+            // Scrabble point value — small superscript in top-right corner
+            if let value = scrabbleValue {
+                Text("\(value)")
+                    .font(.system(size: size * 0.20, weight: .bold, design: .rounded))
+                    .foregroundColor(textColor(for: tile.letter).opacity(0.60))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .padding(.top, size * 0.07)
+                    .padding(.trailing, size * 0.07)
+            }
         }
         .frame(width: size, height: size)
         .scaleEffect(scale)
@@ -80,11 +91,11 @@ struct TileView: View {
 
     private func tileColor(for letter: Character) -> Color {
         switch letter.lowercased() {
-        case "a", "e", "i", "o", "u":
+        case "a","e","i","o","u":
             return Color(red: 0.96, green: 0.87, blue: 0.70)
-        case "r", "t", "n", "s", "l":
+        case "r","t","n","s","l":
             return Color(red: 0.75, green: 0.88, blue: 0.96)
-        case "c", "d", "h", "m", "p":
+        case "c","d","h","m","p":
             return Color(red: 0.82, green: 0.94, blue: 0.82)
         default:
             return Color(red: 0.90, green: 0.83, blue: 0.96)
@@ -96,19 +107,19 @@ struct TileView: View {
     }
 }
 
-// MARK: - Preview
+// MARK: - Previews
 
-#Preview("Tile - Vowel") {
-    TileView(tile: Tile(letter: "A", row: 0, col: 0), size: 72)
+#Preview("Tile - Vowel with value") {
+    TileView(tile: Tile(letter: "A", row: 0, col: 0), size: 72, scrabbleValue: 1)
         .padding()
 }
 
 #Preview("Tile - Selected") {
-    TileView(tile: Tile(letter: "C", row: 0, col: 0), size: 72, isSelected: true)
+    TileView(tile: Tile(letter: "C", row: 0, col: 0), size: 72, isSelected: true, scrabbleValue: 3)
         .padding()
 }
 
 #Preview("Tile - Pending") {
-    TileView(tile: Tile(letter: "T", row: 0, col: 1), size: 72, isPending: true)
+    TileView(tile: Tile(letter: "T", row: 0, col: 1), size: 72, isPending: true, scrabbleValue: 1)
         .padding()
 }
