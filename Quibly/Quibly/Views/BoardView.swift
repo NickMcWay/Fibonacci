@@ -47,7 +47,7 @@ struct BoardView: View {
                         size: tileSize,
                         isSelected: sel,
                         isPending: pend,
-                        scrabbleValue: vm.scrabbleValue(for: tile.letter)
+                        scrabbleValue: tile.isJoker ? nil : vm.scrabbleValue(for: tile.letter)
                     )
                     .position(
                         x: tileX(col: tile.col, gap: gap, tileSize: tileSize),
@@ -223,6 +223,11 @@ struct BoardView: View {
             drawPath = []
 
             if tapDist <= swipeThreshold {
+                if vm.isBombArmed, let tapped = tileAt(v.location, gap: gap, tileSize: tileSize) {
+                    confirmedPath = []
+                    vm.triggerBomb(at: tapped.row, col: tapped.col)
+                    return
+                }
                 if !confirmedPath.isEmpty {
                     let path = confirmedPath
                     confirmedPath = []

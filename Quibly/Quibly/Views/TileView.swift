@@ -54,9 +54,18 @@ struct TileView: View {
                     }
             }
 
-            Text(String(tile.letter).uppercased())
+            Text(tile.isJoker ? "★" : String(tile.letter).uppercased())
                 .font(.system(size: size * 0.44, weight: .bold, design: .rounded))
                 .foregroundColor(textColor(for: tile.letter, isPending: isPending))
+
+            if tile.hasCoin {
+                Image(systemName: "centsign.circle.fill")
+                    .font(.system(size: size * 0.22, weight: .bold))
+                    .foregroundColor(Color(red: 0.93, green: 0.70, blue: 0.12))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                    .padding(.bottom, size * 0.08)
+                    .padding(.trailing, size * 0.08)
+            }
 
             // Scrabble point value — small superscript in top-right corner
             if let value = scrabbleValue {

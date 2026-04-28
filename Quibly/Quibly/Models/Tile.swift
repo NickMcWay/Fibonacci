@@ -9,6 +9,8 @@ struct Tile: Identifiable, Equatable {
     var letter: Character
     var row: Int
     var col: Int
+    var hasCoin: Bool = false
+    var isJoker: Bool = false
 
     // Animation state flags — set by the engine, read by the view
     var isNew: Bool = false        // just spawned → scale-in animation

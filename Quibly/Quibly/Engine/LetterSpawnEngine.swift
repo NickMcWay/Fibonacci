@@ -49,6 +49,8 @@ enum LetterSpawnEngine {
         let letter = chooseLetter(for: board)
         let position = choosePosition(for: board, letter: letter)
         var tile = Tile(letter: letter, row: position.row, col: position.col)
+        tile.hasCoin = Double.random(in: 0..<1) < 0.18
+        tile.isJoker = Double.random(in: 0..<1) < 0.08
         tile.isNew = true
         return tile
     }
