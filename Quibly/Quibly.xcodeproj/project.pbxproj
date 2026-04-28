@@ -6,87 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		A1B2C3D4E5F60002A2B3 /* teacup-metronome.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001A2B3 /* teacup-metronome.mp3 */; };
-/* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		C3BF41E82F9925FC0027BAB0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C3BF41CD2F9925FB0027BAB0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C3BF41D42F9925FB0027BAB0;
-			remoteInfo = Fibonacci;
-		};
-		C3BF41F22F9925FC0027BAB0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C3BF41CD2F9925FB0027BAB0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C3BF41D42F9925FB0027BAB0;
-			remoteInfo = Fibonacci;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		A1B2C3D4E5F60001A2B3 /* teacup-metronome.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "teacup-metronome.mp3"; sourceTree = "<group>"; };
 		C3BF41D52F9925FB0027BAB0 /* Quibly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Quibly.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C3BF41E72F9925FC0027BAB0 /* QuiblyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuiblyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C3BF41F12F9925FC0027BAB0 /* QuiblyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuiblyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		C3BF42302F9926280027BAB0 /* Exceptions for "Quibly" folder in "QuiblyTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Assets.xcassets,
-				Engine/GameEngine.swift,
-				Engine/LetterSpawnEngine.swift,
-				Engine/WordValidator.swift,
-				Models/BoardModel.swift,
-				Models/Tile.swift,
-				ViewModels/GameViewModel.swift,
-				Views/BoardView.swift,
-				Views/GameView.swift,
-				Views/TileView.swift,
-			);
-			target = C3BF41E62F9925FC0027BAB0 /* QuiblyTests */;
-		};
-		C3BF42312F9926280027BAB0 /* Exceptions for "Quibly" folder in "QuiblyUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Assets.xcassets,
-				Engine/GameEngine.swift,
-				Engine/LetterSpawnEngine.swift,
-				Engine/WordValidator.swift,
-				Models/BoardModel.swift,
-				Models/Tile.swift,
-				ViewModels/GameViewModel.swift,
-				Views/BoardView.swift,
-				Views/GameView.swift,
-				Views/TileView.swift,
-			);
-			target = C3BF41F02F9925FC0027BAB0 /* QuiblyUITests */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C3BF41D72F9925FB0027BAB0 /* Quibly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C3BF42302F9926280027BAB0 /* Exceptions for "Quibly" folder in "QuiblyTests" target */,
-				C3BF42312F9926280027BAB0 /* Exceptions for "Quibly" folder in "QuiblyUITests" target */,
-			);
 			path = Quibly;
-			sourceTree = "<group>";
-		};
-		C3BF41EA2F9925FC0027BAB0 /* FibonacciTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = FibonacciTests;
-			sourceTree = "<group>";
-		};
-		C3BF41F42F9925FC0027BAB0 /* FibonacciUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = FibonacciUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -99,39 +26,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C3BF41E42F9925FC0027BAB0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C3BF41EE2F9925FC0027BAB0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A1B2C3D4E5F60003A2B3 /* Audio */ = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F60001A2B3 /* teacup-metronome.mp3 */,
-			);
-			name = Audio;
-			path = Fibonacci;
-			sourceTree = "<group>";
-		};
 		C3BF41CC2F9925FB0027BAB0 = {
 			isa = PBXGroup;
 			children = (
 				C3BF41D72F9925FB0027BAB0 /* Quibly */,
-				A1B2C3D4E5F60003A2B3 /* Audio */,
-				C3BF41EA2F9925FC0027BAB0 /* FibonacciTests */,
-				C3BF41F42F9925FC0027BAB0 /* FibonacciUITests */,
 				C3BF41D62F9925FB0027BAB0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -140,8 +41,6 @@
 			isa = PBXGroup;
 			children = (
 				C3BF41D52F9925FB0027BAB0 /* Quibly.app */,
-				C3BF41E72F9925FC0027BAB0 /* QuiblyTests.xctest */,
-				C3BF41F12F9925FC0027BAB0 /* QuiblyUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -171,52 +70,6 @@
 			productReference = C3BF41D52F9925FB0027BAB0 /* Quibly.app */;
 			productType = "com.apple.product-type.application";
 		};
-		C3BF41E62F9925FC0027BAB0 /* QuiblyTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C3BF41FE2F9925FC0027BAB0 /* Build configuration list for PBXNativeTarget "QuiblyTests" */;
-			buildPhases = (
-				C3BF41E32F9925FC0027BAB0 /* Sources */,
-				C3BF41E42F9925FC0027BAB0 /* Frameworks */,
-				C3BF41E52F9925FC0027BAB0 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C3BF41E92F9925FC0027BAB0 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				C3BF41EA2F9925FC0027BAB0 /* FibonacciTests */,
-			);
-			name = QuiblyTests;
-			packageProductDependencies = (
-			);
-			productName = FibonacciTests;
-			productReference = C3BF41E72F9925FC0027BAB0 /* QuiblyTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		C3BF41F02F9925FC0027BAB0 /* QuiblyUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C3BF42012F9925FC0027BAB0 /* Build configuration list for PBXNativeTarget "QuiblyUITests" */;
-			buildPhases = (
-				C3BF41ED2F9925FC0027BAB0 /* Sources */,
-				C3BF41EE2F9925FC0027BAB0 /* Frameworks */,
-				C3BF41EF2F9925FC0027BAB0 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C3BF41F32F9925FC0027BAB0 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				C3BF41F42F9925FC0027BAB0 /* FibonacciUITests */,
-			);
-			name = QuiblyUITests;
-			packageProductDependencies = (
-			);
-			productName = FibonacciUITests;
-			productReference = C3BF41F12F9925FC0027BAB0 /* QuiblyUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -229,14 +82,6 @@
 				TargetAttributes = {
 					C3BF41D42F9925FB0027BAB0 = {
 						CreatedOnToolsVersion = 26.2;
-					};
-					C3BF41E62F9925FC0027BAB0 = {
-						CreatedOnToolsVersion = 26.2;
-						TestTargetID = C3BF41D42F9925FB0027BAB0;
-					};
-					C3BF41F02F9925FC0027BAB0 = {
-						CreatedOnToolsVersion = 26.2;
-						TestTargetID = C3BF41D42F9925FB0027BAB0;
 					};
 				};
 			};
@@ -255,29 +100,12 @@
 			projectRoot = "";
 			targets = (
 				C3BF41D42F9925FB0027BAB0 /* Quibly */,
-				C3BF41E62F9925FC0027BAB0 /* QuiblyTests */,
-				C3BF41F02F9925FC0027BAB0 /* QuiblyUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C3BF41D32F9925FB0027BAB0 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A1B2C3D4E5F60002A2B3 /* teacup-metronome.mp3 in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C3BF41E52F9925FC0027BAB0 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C3BF41EF2F9925FC0027BAB0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -294,34 +122,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C3BF41E32F9925FC0027BAB0 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C3BF41ED2F9925FC0027BAB0 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		C3BF41E92F9925FC0027BAB0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C3BF41D42F9925FB0027BAB0 /* Quibly */;
-			targetProxy = C3BF41E82F9925FC0027BAB0 /* PBXContainerItemProxy */;
-		};
-		C3BF41F32F9925FC0027BAB0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C3BF41D42F9925FB0027BAB0 /* Quibly */;
-			targetProxy = C3BF41F22F9925FC0027BAB0 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		C3BF41F92F9925FC0027BAB0 /* Debug */ = {
@@ -509,90 +310,6 @@
 			};
 			name = Release;
 		};
-		C3BF41FF2F9925FC0027BAB0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = S3N3T9CV6Q;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nielsweggeman.FibonacciTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Quibly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Quibly";
-			};
-			name = Debug;
-		};
-		C3BF42002F9925FC0027BAB0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = S3N3T9CV6Q;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nielsweggeman.FibonacciTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Quibly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Quibly";
-			};
-			name = Release;
-		};
-		C3BF42022F9925FC0027BAB0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = S3N3T9CV6Q;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nielsweggeman.FibonacciUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Fibonacci;
-			};
-			name = Debug;
-		};
-		C3BF42032F9925FC0027BAB0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = S3N3T9CV6Q;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nielsweggeman.FibonacciUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Fibonacci;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -610,24 +327,6 @@
 			buildConfigurations = (
 				C3BF41FC2F9925FC0027BAB0 /* Debug */,
 				C3BF41FD2F9925FC0027BAB0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C3BF41FE2F9925FC0027BAB0 /* Build configuration list for PBXNativeTarget "QuiblyTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C3BF41FF2F9925FC0027BAB0 /* Debug */,
-				C3BF42002F9925FC0027BAB0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C3BF42012F9925FC0027BAB0 /* Build configuration list for PBXNativeTarget "QuiblyUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C3BF42022F9925FC0027BAB0 /* Debug */,
-				C3BF42032F9925FC0027BAB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
