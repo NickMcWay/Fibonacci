@@ -76,7 +76,11 @@ struct GameView: View {
             .foregroundColor(.white)
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
-            .background(Capsule().fill(.white.opacity(0.16)))
+            .background(
+                Capsule()
+                    .fill(.white.opacity(0.24))
+                    .overlay(Capsule().stroke(.white.opacity(0.6), lineWidth: 1))
+            )
             
             Spacer()
 
@@ -115,7 +119,11 @@ struct GameView: View {
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(.white)
                         .padding(14)
-                        .background(Circle().fill(.white.opacity(0.22)))
+                        .background(
+                            Circle()
+                                .fill(.white.opacity(0.28))
+                                .overlay(Circle().stroke(.white.opacity(0.62), lineWidth: 1))
+                        )
 
                     Text("\(vm.hintCharges)")
                         .font(.system(size: 16, weight: .heavy, design: .rounded))
@@ -126,8 +134,8 @@ struct GameView: View {
             }
         }
         .padding(14)
-        .background(RoundedRectangle(cornerRadius: 24).fill(.white.opacity(0.14)))
-        .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.25), lineWidth: 1))
+        .background(RoundedRectangle(cornerRadius: 24).fill(.white.opacity(0.22)))
+        .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.55), lineWidth: 1.1))
     }
 
     private var celebrateChip: some View {
@@ -172,7 +180,11 @@ struct GameView: View {
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(.white)
                     .frame(width: 58, height: 58)
-                    .background(Circle().fill(Color.white.opacity(0.22)))
+                    .background(
+                        Circle()
+                            .fill(Color.white.opacity(0.30))
+                            .overlay(Circle().stroke(.white.opacity(0.6), lineWidth: 1))
+                    )
 
                 Text(title)
                     .font(.system(size: 16, weight: .bold, design: .rounded))
@@ -183,7 +195,11 @@ struct GameView: View {
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
-            .background(RoundedRectangle(cornerRadius: 24).fill(.white.opacity(0.15)))
+            .background(
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(.white.opacity(0.22))
+                    .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.55), lineWidth: 1))
+            )
         }
         .disabled(!enabled)
         .opacity(enabled ? 1 : 0.65)
@@ -195,7 +211,11 @@ struct GameView: View {
                 .font(.system(size: 18, weight: .bold))
                 .foregroundColor(.white)
                 .frame(width: 48, height: 48)
-                .background(Circle().fill(.white.opacity(0.15)))
+                .background(
+                    Circle()
+                        .fill(.white.opacity(0.24))
+                        .overlay(Circle().stroke(.white.opacity(0.55), lineWidth: 1))
+                )
         }
     }
 
