@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A1B2C3D4E5F60002A2B3 /* teacup-metronome.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001A2B3 /* teacup-metronome.mp3 */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		C3BF41E82F9925FC0027BAB0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,15 +28,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A1B2C3D4E5F60001A2B3 /* teacup-metronome.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "teacup-metronome.mp3"; sourceTree = "<group>"; };
 		C3BF41D52F9925FB0027BAB0 /* Fibonacci.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fibonacci.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3BF41E72F9925FC0027BAB0 /* FibonacciTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FibonacciTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3BF41F12F9925FC0027BAB0 /* FibonacciUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FibonacciUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1B2C3D4E5F60001A2B3 /* teacup-metronome.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "teacup-metronome.mp3"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXBuildFile section */
-		A1B2C3D4E5F60002A2B3 /* teacup-metronome.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001A2B3 /* teacup-metronome.mp3 */; };
-/* End PBXBuildFile section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		C3BF42302F9926280027BAB0 /* Exceptions for "Fibonacci" folder in "FibonacciTests" target */ = {
