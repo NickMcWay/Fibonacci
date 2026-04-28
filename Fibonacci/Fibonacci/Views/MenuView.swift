@@ -1,7 +1,3 @@
-// MenuView.swift
-// Game start screen: language selection and board size variant.
-// Tapping "Start Game" returns a configured GameSettings to the caller.
-
 import SwiftUI
 
 struct MenuView: View {
@@ -10,205 +6,272 @@ struct MenuView: View {
     @EnvironmentObject private var audio: AudioManager
     @State private var selectedLanguage: GameLanguage = .english
     @State private var selectedVariant: BoardVariant = .small
+    @State private var activePage: MenuPage?
 
-    private let bgColor = Color(red: 0.97, green: 0.97, blue: 0.98)
-    private let accentBlue = Color(red: 0.30, green: 0.42, blue: 0.70)
-    private let cardBlue = Color(red: 0.40, green: 0.55, blue: 0.85)
+    private let cream = Color(red: 0.98, green: 0.94, blue: 0.88)
+    private let ink = Color(red: 0.31, green: 0.23, blue: 0.57)
 
     var body: some View {
         ZStack {
-            bgColor.ignoresSafeArea()
+            backgroundLayer
 
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 32) {
-                    // Title
-                    titleSection
-
-                    // Language picker
-                    sectionCard(title: "Language") {
-                        VStack(spacing: 10) {
-                            ForEach(GameLanguage.allCases) { lang in
-                                languageRow(lang)
-                            }
-                        }
-                    }
-
-                    // Board variant picker
-                    sectionCard(title: "Board Size") {
-                        HStack(spacing: 12) {
-                            ForEach(BoardVariant.allCases) { variant in
-                                variantButton(variant)
-                            }
-                        }
-                    }
-
-                    // Scrabble values preview
-                    sectionCard(title: "Letter Values (\(selectedLanguage.rawValue))") {
-                        scrabblePreview
-                    }
-
-                    // Start button
-                    startButton
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 28)
+            VStack(spacing: 18) {
+                titleSection
+                boardPreview
+                playButton
+                bottomActions
             }
+            .padding(.horizontal, 22)
+            .padding(.top, 24)
+            .padding(.bottom, 30)
         }
         .onAppear { audio.play() }
-    }
-
-    // MARK: - Title
-
-    private var titleSection: some View {
-        VStack(spacing: 6) {
-            Text("SlideWords")
-                .font(.system(size: 42, weight: .heavy, design: .rounded))
-                .foregroundColor(Color(red: 0.18, green: 0.18, blue: 0.22))
-            Text("slide tiles · form words · score big")
-                .font(.system(size: 14, weight: .medium, design: .rounded))
-                .foregroundColor(.secondary)
+        .sheet(item: $activePage) { page in
+            MenuDetailsPage(page: page, selectedLanguage: $selectedLanguage, selectedVariant: $selectedVariant)
         }
-        .padding(.top, 10)
     }
 
-    // MARK: - Section Card
+    private var backgroundLayer: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color(red: 0.49, green: 0.42, blue: 0.90),
+                    Color(red: 0.89, green: 0.64, blue: 0.80),
+                    Color(red: 0.99, green: 0.90, blue: 0.66)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
 
-    private func sectionCard<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text(title.uppercased())
-                .font(.system(size: 11, weight: .bold, design: .rounded))
-                .foregroundColor(.secondary)
-                .padding(.leading, 4)
-            content()
-        }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color.white)
-                .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 3)
-        )
-    }
-
-    // MARK: - Language Row
-
-    private func languageRow(_ lang: GameLanguage) -> some View {
-        let selected = selectedLanguage == lang
-        return Button(action: { selectedLanguage = lang }) {
-            HStack(spacing: 14) {
-                Text(lang.flag)
-                    .font(.system(size: 26))
-                Text(lang.rawValue)
-                    .font(.system(size: 16, weight: .semibold, design: .rounded))
-                    .foregroundColor(selected ? .white : Color(red: 0.18, green: 0.18, blue: 0.22))
+            VStack {
                 Spacer()
-                if selected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.white)
-                        .font(.system(size: 18))
+                HStack {
+                    Circle()
+                        .fill(Color(red: 0.57, green: 0.41, blue: 0.86).opacity(0.35))
+                        .frame(width: 220)
+                        .blur(radius: 18)
+                        .offset(x: -70, y: 50)
+                    Spacer()
+                    Circle()
+                        .fill(Color(red: 0.31, green: 0.72, blue: 0.72).opacity(0.35))
+                        .frame(width: 190)
+                        .blur(radius: 18)
+                        .offset(x: 70, y: 50)
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(selected ? accentBlue : Color(red: 0.95, green: 0.95, blue: 0.97))
-            )
+
+            sparkles
         }
-        .buttonStyle(.plain)
-        .animation(.spring(response: 0.2), value: selected)
     }
 
-    // MARK: - Board Variant Button
-
-    private func variantButton(_ variant: BoardVariant) -> some View {
-        let selected = selectedVariant == variant
-        return Button(action: { selectedVariant = variant }) {
-            VStack(spacing: 6) {
-                Text(variant.displayName)
-                    .font(.system(size: 17, weight: .heavy, design: .rounded))
-                    .foregroundColor(selected ? .white : accentBlue)
-                Text(variant.label)
-                    .font(.system(size: 11, weight: .semibold, design: .rounded))
-                    .foregroundColor(selected ? .white.opacity(0.85) : .secondary)
+    private var sparkles: some View {
+        ZStack {
+            ForEach(0..<18, id: \.self) { index in
+                Circle()
+                    .fill(.white.opacity(index.isMultiple(of: 3) ? 0.75 : 0.45))
+                    .frame(width: index.isMultiple(of: 4) ? 6 : 4, height: index.isMultiple(of: 4) ? 6 : 4)
+                    .offset(x: CGFloat((index * 37) % 320) - 160, y: CGFloat((index * 71) % 700) - 340)
             }
+        }
+        .blendMode(.screen)
+    }
+
+    private var titleSection: some View {
+        Text("Quibly")
+            .font(.system(size: 70, weight: .heavy, design: .rounded))
+            .foregroundStyle(cream)
+            .shadow(color: ink.opacity(0.55), radius: 0, x: 0, y: 5)
+            .padding(.top, 8)
+    }
+
+    private var boardPreview: some View {
+        let letters: [[String]] = [
+            ["Q", "U", "I", "B"],
+            ["L", "E", "A", "R"],
+            ["P", "L", "A", "Y"],
+            ["W", "O", "R", "D"]
+        ]
+
+        return VStack(spacing: 8) {
+            ForEach(Array(letters.enumerated()), id: \.offset) { rowIndex, row in
+                HStack(spacing: 8) {
+                    ForEach(Array(row.enumerated()), id: \.offset) { columnIndex, letter in
+                        tile(letter: letter, highlighted: isHighlighted(row: rowIndex, col: columnIndex))
+                    }
+                }
+            }
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 28)
+                .fill(Color.white.opacity(0.23))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 28)
+                        .stroke(Color.white.opacity(0.35), lineWidth: 1)
+                )
+                .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: 7)
+        )
+        .overlay(alignment: .center) {
+            HStack(spacing: 48) {
+                Circle().fill(Color.white.opacity(0.65)).frame(width: 10, height: 10)
+                Circle().fill(Color.white.opacity(0.65)).frame(width: 10, height: 10)
+            }
+            .offset(x: 19, y: 37)
+        }
+    }
+
+    private func isHighlighted(row: Int, col: Int) -> Bool {
+        (row == 1 && col == 1) || (row == 2 && (1...3).contains(col))
+    }
+
+    private func tile(letter: String, highlighted: Bool) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 17)
+                .fill(highlighted ? Color(red: 0.99, green: 0.87, blue: 0.34) : cream)
+                .shadow(color: .black.opacity(0.10), radius: 5, x: 0, y: 3)
+
+            Text(letter)
+                .font(.system(size: 30, weight: .heavy, design: .rounded))
+                .foregroundStyle(highlighted ? Color(red: 0.42, green: 0.28, blue: 0.12) : ink)
+        }
+        .frame(width: 74, height: 74)
+    }
+
+    private var playButton: some View {
+        Button(action: startGame) {
+            HStack(spacing: 10) {
+                Image(systemName: "play.fill")
+                    .font(.system(size: 21, weight: .bold))
+                Text("Play")
+                    .font(.system(size: 49, weight: .heavy, design: .rounded))
+            }
+            .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
             .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(selected ? cardBlue : Color(red: 0.93, green: 0.95, blue: 1.0))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14)
-                            .strokeBorder(selected ? cardBlue : Color(red: 0.80, green: 0.84, blue: 0.95), lineWidth: 1.5)
+                RoundedRectangle(cornerRadius: 32)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color(red: 0.99, green: 0.87, blue: 0.34), Color(red: 0.97, green: 0.68, blue: 0.20)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
                     )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 32)
+                            .stroke(Color.white.opacity(0.36), lineWidth: 1)
+                    )
+                    .shadow(color: Color(red: 0.72, green: 0.40, blue: 0.15).opacity(0.45), radius: 8, x: 0, y: 6)
             )
         }
         .buttonStyle(.plain)
-        .animation(.spring(response: 0.2), value: selected)
     }
 
-    // MARK: - Scrabble Values Preview
-
-    private var scrabblePreview: some View {
-        let values = selectedLanguage.scrabbleValues
-        // Show a compact grid of letter values (only the letters in our spawn alphabet)
-        let letters: [Character] = ["a","e","i","o","r","t","n","s","l","c","d","h","m","p","b","f","g","k","w"]
-
-        return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 5), spacing: 8) {
-            ForEach(letters, id: \.self) { letter in
-                VStack(spacing: 2) {
-                    Text(String(letter).uppercased())
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
-                        .foregroundColor(Color(red: 0.18, green: 0.18, blue: 0.22))
-                    Text("\(values[letter] ?? 1)")
-                        .font(.system(size: 10, weight: .semibold, design: .rounded))
-                        .foregroundColor(.secondary)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(letterColor(letter))
-                )
-            }
+    private var bottomActions: some View {
+        HStack(spacing: 14) {
+            menuButton(page: .daily, tint: Color(red: 0.90, green: 0.82, blue: 0.97), symbol: "calendar", title: "Daily", iconColor: Color(red: 0.50, green: 0.36, blue: 0.84))
+            menuButton(page: .modes, tint: Color(red: 0.78, green: 0.87, blue: 0.99), symbol: "square.grid.2x2.fill", title: "Modes", iconColor: Color(red: 0.14, green: 0.44, blue: 0.79))
+            menuButton(page: .stats, tint: Color(red: 0.88, green: 0.95, blue: 0.82), symbol: "chart.bar.fill", title: "Stats", iconColor: Color(red: 0.23, green: 0.63, blue: 0.50))
         }
     }
 
-    private func letterColor(_ letter: Character) -> Color {
-        switch letter {
-        case "a","e","i","o": return Color(red: 0.96, green: 0.87, blue: 0.70)
-        case "r","t","n","s","l": return Color(red: 0.75, green: 0.88, blue: 0.96)
-        default: return Color(red: 0.90, green: 0.94, blue: 0.90)
-        }
-    }
-
-    // MARK: - Start Button
-
-    private var startButton: some View {
-        Button(action: {
-            let settings = GameSettings(language: selectedLanguage, boardVariant: selectedVariant)
-            onStart(settings)
-        }) {
-            HStack(spacing: 10) {
-                Image(systemName: "play.fill")
-                Text("Start Game")
+    private func menuButton(page: MenuPage, tint: Color, symbol: String, title: String, iconColor: Color) -> some View {
+        Button(action: { activePage = page }) {
+            VStack(spacing: 8) {
+                Image(systemName: symbol)
+                    .font(.system(size: 31, weight: .semibold))
+                    .foregroundStyle(iconColor)
+                Text(title)
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.black.opacity(0.65))
             }
-            .font(.system(size: 20, weight: .heavy, design: .rounded))
-            .foregroundColor(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 18)
+            .frame(height: 104)
             .background(
-                RoundedRectangle(cornerRadius: 18)
-                    .fill(
-                        LinearGradient(
-                            colors: [cardBlue, accentBlue],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(tint)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 24)
+                            .stroke(Color.white.opacity(0.45), lineWidth: 1)
                     )
-                    .shadow(color: accentBlue.opacity(0.45), radius: 12, x: 0, y: 5)
+                    .shadow(color: .black.opacity(0.12), radius: 6, x: 0, y: 4)
             )
         }
-        .padding(.bottom, 8)
+        .buttonStyle(.plain)
+    }
+
+    private func startGame() {
+        let settings = GameSettings(language: selectedLanguage, boardVariant: selectedVariant)
+        onStart(settings)
+    }
+}
+
+private enum MenuPage: String, Identifiable {
+    case daily = "Daily"
+    case modes = "Modes"
+    case stats = "Stats"
+
+    var id: String { rawValue }
+}
+
+private struct MenuDetailsPage: View {
+    let page: MenuPage
+    @Binding var selectedLanguage: GameLanguage
+    @Binding var selectedVariant: BoardVariant
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                switch page {
+                case .daily:
+                    Section("Today's Challenge") {
+                        Label("Find 12 words in one run", systemImage: "target")
+                        Label("Use at least one 5-letter word", systemImage: "textformat.abc")
+                        Label("Bonus: clear a full row", systemImage: "sparkles")
+                    }
+                case .modes:
+                    Section("Language") {
+                        Picker("Language", selection: $selectedLanguage) {
+                            ForEach(GameLanguage.allCases) { lang in
+                                Text("\(lang.flag) \(lang.rawValue)").tag(lang)
+                            }
+                        }
+                    }
+
+                    Section("Board Size") {
+                        Picker("Board Size", selection: $selectedVariant) {
+                            ForEach(BoardVariant.allCases) { variant in
+                                Text("\(variant.displayName) (\(variant.label))").tag(variant)
+                            }
+                        }
+                    }
+                case .stats:
+                    Section("Profile") {
+                        statRow("Best Score", value: "0")
+                        statRow("Games Played", value: "0")
+                        statRow("Longest Word", value: "—")
+                    }
+                }
+            }
+            .navigationTitle(page.rawValue)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+    }
+
+    private func statRow(_ label: String, value: String) -> some View {
+        HStack {
+            Text(label)
+            Spacer()
+            Text(value)
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+        }
     }
 }
 
