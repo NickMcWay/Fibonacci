@@ -60,18 +60,6 @@ struct GameView: View {
 
             Spacer()
 
-            Image("Quibly Background")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 160, height: 52)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(.white.opacity(0.22), lineWidth: 1)
-                )
-
-            Spacer()
-
             HStack(spacing: 8) {
                 Image(systemName: "star.circle.fill")
                 Text("\(vm.coins)")
@@ -82,6 +70,8 @@ struct GameView: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
             .background(Capsule().fill(.white.opacity(0.16)))
+            
+            Spacer()
 
             circleButton(system: audio.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill") {
                 audio.toggleMute()
