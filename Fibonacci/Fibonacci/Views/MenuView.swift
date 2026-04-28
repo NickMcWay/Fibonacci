@@ -7,6 +7,7 @@ import SwiftUI
 struct MenuView: View {
     var onStart: (GameSettings) -> Void
 
+    @EnvironmentObject private var audio: AudioManager
     @State private var selectedLanguage: GameLanguage = .english
     @State private var selectedVariant: BoardVariant = .small
 
@@ -53,6 +54,7 @@ struct MenuView: View {
                 .padding(.vertical, 28)
             }
         }
+        .onAppear { audio.play() }
     }
 
     // MARK: - Title
@@ -212,4 +214,5 @@ struct MenuView: View {
 
 #Preview("Menu") {
     MenuView(onStart: { _ in })
+        .environmentObject(AudioManager())
 }
