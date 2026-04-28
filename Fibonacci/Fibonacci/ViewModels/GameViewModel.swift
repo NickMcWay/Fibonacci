@@ -33,8 +33,8 @@ final class GameViewModel: ObservableObject {
     @Published var coins: Int = 125
     @Published var dayStreak: Int = 3
     @Published var hintCharges: Int = 2
-    @Published var goalTarget: Int = 5
-    @Published var goalProgress: Int = 0
+    @Published var bombCharges: Int = 1
+    @Published var isBombArmed: Bool = false
 
     // Hint system
     @Published var showHintButton: Bool = false       // power-up glows after 5 s
@@ -46,6 +46,7 @@ final class GameViewModel: ObservableObject {
     var language: GameLanguage { settings.language }
 
     func scrabbleValue(for letter: Character) -> Int {
+        if letter == LetterSpawnEngine.jokerLetter { return 0 }
         let lower = Character(String(letter).lowercased())
         return settings.language.scrabbleValues[lower] ?? 1
     }
@@ -59,6 +60,8 @@ final class GameViewModel: ObservableObject {
     private var hintTimerTask: Task<Void, Never>?
     private let shuffleCost: Int = 50
     private let hintCost: Int = 25
+    private let bombCost: Int = 60
+    private let earnedCoinValue: Int = 10
 
     // MARK: - Init
 
@@ -87,7 +90,7 @@ final class GameViewModel: ObservableObject {
         pendingSwipeMatches = []
         showEmptyBoardEffect = false
         showBoardFullWarning = false
-        goalProgress = 0
+        isBombArmed = false
         resetHintState()
 
         for _ in 0..<2 {
@@ -189,6 +192,7 @@ final class GameViewModel: ObservableObject {
                                                   direction: direction, language: settings.language)
             board = result.board
             score += result.pointsEarned
+            coins += (result.coinsEarned * earnedCoinValue)
             lastPointsEarned = result.pointsEarned
             if score > bestScore {
                 bestScore = score
@@ -197,7 +201,6 @@ final class GameViewModel: ObservableObject {
 
             lastWords = result.clearedWords
             comboCount = result.comboCount
-            goalProgress = min(goalTarget, goalProgress + result.clearedWords.count)
 
             withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
                 syncTiles()
@@ -247,17 +250,19 @@ final class GameViewModel: ObservableObject {
             board.cells[board.index(pos.row, pos.col)]?.isClearing = true
         }
 
-        let earned = GameEngine.wordScore(word, language: settings.language)
+        let resolvedWord = WordValidator.resolvedWord(word, language: settings.language) ?? word.lowercased()
+        let earned = GameEngine.wordScore(resolvedWord, language: settings.language)
         score += earned
+        let coinsEarned = pathTiles.filter(\.hasCoin).count
+        coins += coinsEarned * earnedCoinValue
         lastPointsEarned = earned
         if score > bestScore {
             bestScore = score
             UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
         }
 
-        lastWords = [word]
+        lastWords = [resolvedWord]
         comboCount = 0
-        goalProgress = min(goalTarget, goalProgress + 1)
 
         withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
             syncTiles()
@@ -345,8 +350,10 @@ final class GameViewModel: ObservableObject {
 
     var shufflePrice: Int { shuffleCost }
     var hintPrice: Int { hintCost }
+    var bombPrice: Int { bombCost }
     var canAffordShuffle: Bool { coins >= shuffleCost && !isAnimating && !isGameOver }
     var canAffordHint: Bool { coins >= hintCost && !isAnimating && !isGameOver }
+    var canUseBomb: Bool { (bombCharges > 0 || coins >= bombCost) && !isAnimating && !isGameOver }
 
     func buyHints() {
         guard canAffordHint else { return }
@@ -382,6 +389,62 @@ final class GameViewModel: ObservableObject {
             syncTiles()
         }
         triggerHaptic(.medium)
+    }
+
+    func toggleBombArm() {
+        guard canUseBomb else { return }
+        if bombCharges == 0 {
+            coins -= bombCost
+            bombCharges += 1
+        }
+        isBombArmed.toggle()
+        resetHintState()
+        pendingSwipeMatches = []
+        triggerHaptic(.light)
+    }
+
+    func useBomb(at row: Int, col: Int) {
+        guard isBombArmed, bombCharges > 0, !isAnimating, !isGameOver else { return }
+        guard board.tile(row: row, col: col) != nil else { return }
+
+        isAnimating = true
+        isBombArmed = false
+        bombCharges -= 1
+
+        let blastPositions = crossPositions(centerRow: row, centerCol: col)
+        for pos in blastPositions {
+            board.cells[board.index(pos.row, pos.col)]?.isClearing = true
+        }
+
+        withAnimation(.spring(response: 0.24, dampingFraction: 0.78)) {
+            syncTiles()
+        }
+        triggerHaptic(.heavy)
+
+        Task {
+            try? await Task.sleep(nanoseconds: 260_000_000)
+            for pos in blastPositions {
+                board.cells[board.index(pos.row, pos.col)] = nil
+            }
+            withAnimation(.spring(response: 0.22, dampingFraction: 0.82)) {
+                syncTiles()
+            }
+            try? await Task.sleep(nanoseconds: 120_000_000)
+            isAnimating = false
+
+            if board.isEmpty {
+                triggerEmptyBoardEffect()
+            } else if GameEngine.isGameOver(board: board) {
+                isGameOver = true
+            }
+        }
+    }
+
+    private func crossPositions(centerRow: Int, centerCol: Int) -> [(row: Int, col: Int)] {
+        var positions: [(row: Int, col: Int)] = []
+        for r in 0..<board.size { positions.append((r, centerCol)) }
+        for c in 0..<board.size where c != centerCol { positions.append((centerRow, c)) }
+        return positions
     }
 
     // MARK: - Haptic Feedback

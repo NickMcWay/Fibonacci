@@ -99,17 +99,22 @@ enum GameEngine {
 
     static func clearMatches(board: BoardModel, matches: [WordValidator.WordMatch],
                               direction: SwipeDirection, language: GameLanguage = .english)
-        -> (board: BoardModel, clearedWords: [String], pointsEarned: Int, comboCount: Int, isGameOver: Bool)
+        -> (board: BoardModel, clearedWords: [String], pointsEarned: Int, comboCount: Int, isGameOver: Bool, coinsEarned: Int)
     {
         var current = board
         var totalPoints = 0
         var allWords: [String] = []
         var comboCount = 0
+        var coinCount = 0
 
         var toRemove = Set<Int>()
         for match in matches {
             allWords.append(match.word)
-            for pos in match.positions { toRemove.insert(current.index(pos.row, pos.col)) }
+            for pos in match.positions {
+                let idx = current.index(pos.row, pos.col)
+                if current.cells[idx]?.hasCoin == true { coinCount += 1 }
+                toRemove.insert(idx)
+            }
         }
         let firstRoundScore = matches.reduce(0) { $0 + wordScore($1.word, language: language) }
         totalPoints += firstRoundScore * (comboCount + 1)
@@ -125,7 +130,11 @@ enum GameEngine {
             var chainRemove = Set<Int>()
             for match in chain {
                 allWords.append(match.word)
-                for pos in match.positions { chainRemove.insert(current.index(pos.row, pos.col)) }
+                for pos in match.positions {
+                    let idx = current.index(pos.row, pos.col)
+                    if current.cells[idx]?.hasCoin == true { coinCount += 1 }
+                    chainRemove.insert(idx)
+                }
             }
             let chainScore = chain.reduce(0) { $0 + wordScore($1.word, language: language) }
             totalPoints += chainScore * (comboCount + 1)
@@ -136,7 +145,7 @@ enum GameEngine {
         }
 
         let isOver = isGameOver(board: current)
-        return (current, allWords, totalPoints, max(0, comboCount - 1), isOver)
+        return (current, allWords, totalPoints, max(0, comboCount - 1), isOver, coinCount)
     }
 
     // MARK: - Game Over Detection

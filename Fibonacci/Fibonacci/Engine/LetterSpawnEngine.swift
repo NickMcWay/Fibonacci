@@ -9,6 +9,9 @@
 import Foundation
 
 enum LetterSpawnEngine {
+    static let jokerLetter: Character = "*"
+    private static let jokerChance = 0.08
+    private static let coinChance = 0.18
 
     // MARK: - Alphabet
 
@@ -46,9 +49,14 @@ enum LetterSpawnEngine {
 
     static func spawnTile(for board: BoardModel) -> Tile? {
         guard !board.emptyPositions.isEmpty else { return nil }
-        let letter = chooseLetter(for: board)
+        let letter: Character = Double.random(in: 0..<1) < jokerChance ? jokerLetter : chooseLetter(for: board)
         let position = choosePosition(for: board, letter: letter)
-        var tile = Tile(letter: letter, row: position.row, col: position.col)
+        var tile = Tile(
+            letter: letter,
+            row: position.row,
+            col: position.col,
+            hasCoin: letter != jokerLetter && Double.random(in: 0..<1) < coinChance
+        )
         tile.isNew = true
         return tile
     }
@@ -80,6 +88,7 @@ enum LetterSpawnEngine {
     }
 
     private static func scoreLetterAtPosition(letter: Character, row: Int, col: Int, board: BoardModel) -> Int {
+        if letter == jokerLetter { return 120 }
         var score = 0
         var testBoard = board
         let testTile = Tile(letter: letter, row: row, col: col)

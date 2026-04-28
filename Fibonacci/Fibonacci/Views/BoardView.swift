@@ -223,6 +223,11 @@ struct BoardView: View {
             drawPath = []
 
             if tapDist <= swipeThreshold {
+                if vm.isBombArmed, let hit = tileAt(v.location, gap: gap, tileSize: tileSize) {
+                    confirmedPath = []
+                    vm.useBomb(at: hit.row, col: hit.col)
+                    return
+                }
                 if !confirmedPath.isEmpty {
                     let path = confirmedPath
                     confirmedPath = []

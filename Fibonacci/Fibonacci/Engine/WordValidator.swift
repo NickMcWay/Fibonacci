@@ -355,8 +355,8 @@ final class WordValidator {
     private static func matchAt(positions: [(row: Int, col: Int)], board: BoardModel, set: Set<String>) -> WordMatch? {
         let tiles = positions.compactMap { board.tile(row: $0.row, col: $0.col) }
         guard tiles.count == positions.count else { return nil }
-        let word = String(tiles.map { $0.letter })
-        guard set.contains(word.lowercased()) else { return nil }
+        let pattern = String(tiles.map { $0.letter })
+        guard let word = resolvePattern(pattern.lowercased(), in: set) else { return nil }
         return WordMatch(word: word, positions: positions)
     }
 
@@ -368,6 +368,35 @@ final class WordValidator {
     static func isValidWord(_ word: String, language: GameLanguage = .english) -> Bool {
         let lower = word.lowercased()
         let length = lower.count
-        return wordSetForLength(length, language: language).contains(lower)
+        let set = wordSetForLength(length, language: language)
+        return resolvePattern(lower, in: set) != nil
+    }
+
+    static func resolvedWord(_ wordPattern: String, language: GameLanguage = .english) -> String? {
+        let lower = wordPattern.lowercased()
+        let set = wordSetForLength(lower.count, language: language)
+        return resolvePattern(lower, in: set)
+    }
+
+    private static func resolvePattern(_ pattern: String, in set: Set<String>) -> String? {
+        if !pattern.contains("*") {
+            return set.contains(pattern) ? pattern : nil
+        }
+
+        let patternChars = Array(pattern)
+        for candidate in set {
+            let chars = Array(candidate)
+            guard chars.count == patternChars.count else { continue }
+            var fits = true
+            for idx in patternChars.indices {
+                let p = patternChars[idx]
+                if p != "*" && p != chars[idx] {
+                    fits = false
+                    break
+                }
+            }
+            if fits { return candidate }
+        }
+        return nil
     }
 }

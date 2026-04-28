@@ -58,6 +58,21 @@ struct TileView: View {
                 .font(.system(size: size * 0.44, weight: .bold, design: .rounded))
                 .foregroundColor(textColor(for: tile.letter, isPending: isPending))
 
+            if tile.hasCoin {
+                ZStack {
+                    Circle()
+                        .fill(Color.yellow.opacity(0.95))
+                    Circle()
+                        .stroke(Color.white.opacity(0.7), lineWidth: 1)
+                    Text("🪙")
+                        .font(.system(size: size * 0.16))
+                }
+                .frame(width: size * 0.28, height: size * 0.28)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .padding(.top, size * 0.08)
+                .padding(.leading, size * 0.08)
+            }
+
             // Scrabble point value — small superscript in top-right corner
             if let value = scrabbleValue {
                 Text("\(value)")
@@ -96,6 +111,9 @@ struct TileView: View {
     private func tileColor(for letter: Character) -> Color {
         if isPending {
             return Color(red: 0.98, green: 0.82, blue: 0.30)
+        }
+        if tile.isJoker {
+            return Color(red: 0.76, green: 0.69, blue: 0.98)
         }
         return Color(red: 0.98, green: 0.95, blue: 0.93)
     }

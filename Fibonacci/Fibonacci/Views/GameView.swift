@@ -98,6 +98,9 @@ struct GameView: View {
             Divider()
                 .overlay(uiInk.opacity(0.25))
             scoreStat(label: "Best", value: "\(vm.bestScore)")
+            Divider()
+                .overlay(uiInk.opacity(0.25))
+            scoreStat(label: "Coins", value: "🪙 \(vm.coins)")
         }
         .frame(height: 50)
         .padding(.horizontal, 18)
@@ -126,7 +129,9 @@ struct GameView: View {
 
     private var actionBar: some View {
         HStack(spacing: 12) {
-            actionPill(title: "Goal", subtitle: "\(vm.goalProgress)/\(vm.goalTarget)", icon: "target", enabled: false) {}
+            actionPill(title: "Bomb", subtitle: vm.bombCharges > 0 ? "💣 \(vm.bombCharges)" : "🪙 \(vm.bombPrice)", icon: vm.isBombArmed ? "flame.fill" : "burst.fill", enabled: vm.canUseBomb) {
+                vm.toggleBombArm()
+            }
 
             actionPill(title: "Shuffle", subtitle: "⭐️ \(vm.shufflePrice)", icon: "shuffle", enabled: vm.canAffordShuffle) {
                 vm.shuffleBoard()
