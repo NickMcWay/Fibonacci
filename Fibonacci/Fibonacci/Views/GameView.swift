@@ -18,6 +18,10 @@ struct GameView: View {
             dreamyBackground
 
             VStack(spacing: 14) {
+                Spacer()
+                    .frame(maxWidth: 320)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .padding(.top, 8)
                 topBar
                     .padding(.horizontal, 16)
                     .padding(.top, 14)
