@@ -28,16 +28,19 @@ struct GameView: View {
                 BoardView(vm: vm)
                     .padding(.horizontal, 16)
 
-                if vm.showWordOverlay {
-                    celebrateChip
-                        .padding(.horizontal, 48)
-                }
-
                 Spacer(minLength: 0)
 
                 actionBar
                     .padding(.horizontal, 14)
                     .padding(.bottom, 16)
+                    .overlay(alignment: .top) {
+                        if vm.showWordOverlay {
+                            celebrateChip
+                                .padding(.horizontal, 34)
+                                .offset(y: -90)
+                                .allowsHitTesting(false)
+                        }
+                    }
             }
 
             if vm.isGameOver {
