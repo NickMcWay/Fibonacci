@@ -21,9 +21,9 @@ struct MenuView: View {
                 playButton
                 bottomActions
             }
-            .padding(.horizontal, 28)
-            .padding(.top, 26)
-            .padding(.bottom, 36)
+            .padding(.horizontal, 42)
+            .padding(.top, 38)
+            .padding(.bottom, 52)
         }
         .onAppear { audio.play() }
         .sheet(item: $activePage) { page in
@@ -62,8 +62,8 @@ struct MenuView: View {
                 }
             }
         }
-        .padding(10)
-        .frame(maxWidth: 338)
+        .padding(8)
+        .frame(maxWidth: 282)
         .background(
             RoundedRectangle(cornerRadius: 28)
                 .fill(Color.white.opacity(0.34))
@@ -74,11 +74,11 @@ struct MenuView: View {
                 .shadow(color: .black.opacity(0.18), radius: 14, x: 0, y: 7)
         )
         .overlay(alignment: .center) {
-            HStack(spacing: 48) {
-                Circle().fill(Color.white.opacity(0.82)).frame(width: 9, height: 9)
-                Circle().fill(Color.white.opacity(0.82)).frame(width: 9, height: 9)
+            HStack(spacing: 40) {
+                Circle().fill(Color.white.opacity(0.82)).frame(width: 8, height: 8)
+                Circle().fill(Color.white.opacity(0.82)).frame(width: 8, height: 8)
             }
-            .offset(x: 19, y: 37)
+            .offset(x: 16, y: 32)
         }
     }
 
@@ -93,23 +93,23 @@ struct MenuView: View {
                 .shadow(color: .black.opacity(0.10), radius: 5, x: 0, y: 3)
 
             Text(letter)
-                .font(.system(size: 30, weight: .heavy, design: .rounded))
+                .font(.system(size: 24, weight: .heavy, design: .rounded))
                 .foregroundStyle(highlighted ? Color(red: 0.42, green: 0.28, blue: 0.12) : ink)
         }
-        .frame(width: 66, height: 66)
+        .frame(width: 54, height: 54)
     }
 
     private var playButton: some View {
         Button(action: startGame) {
             HStack(spacing: 10) {
                 Image(systemName: "play.fill")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 16, weight: .bold))
                 Text("Play")
-                    .font(.system(size: 42, weight: .heavy, design: .rounded))
+                    .font(.system(size: 34, weight: .heavy, design: .rounded))
             }
             .foregroundStyle(.white)
-            .frame(maxWidth: 338)
-            .padding(.vertical, 13)
+            .frame(maxWidth: 282)
+            .padding(.vertical, 10)
             .background(
                 RoundedRectangle(cornerRadius: 32)
                     .fill(
@@ -141,14 +141,14 @@ struct MenuView: View {
         Button(action: { activePage = page }) {
             VStack(spacing: 8) {
                 Image(systemName: symbol)
-                    .font(.system(size: 27, weight: .semibold))
+                    .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(iconColor)
                 Text(title)
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.black.opacity(0.65))
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 90)
+            .frame(height: 78)
             .background(
                 RoundedRectangle(cornerRadius: 24)
                     .fill(tint)
