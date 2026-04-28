@@ -136,25 +136,7 @@ final class WordValidator {
     // Common Dutch words recognisable to casual Dutch speakers.
 
     static let dutchTwoLetterWordSet: Set<String> = {
-        let words = [
-            "ad","af","al","as",
-            "be","bi","bo",
-            "de","do",
-            "en","er",
-            "ga","ge",
-            "ha","he","ho",
-            "ik","in","is",
-            "ja","je","ju",
-            "ka",
-            "na","nu",
-            "of","om","op",
-            "re",
-            "te","to",
-            "ui","uw",
-            "va","ve",
-            "we","wo",
-            "ze","zo",
-        ]
+        let words = ["ad","af","ah","ai","al","am","ar","as","at","au","bi","bo","br","co","de","do","eb","ei","el","en","er","es","ex","ga","go","ho","ia","id","ik","in","io","is","it","ja","je","ju","ka","ku","la","li","ma","me","mi","mu","na","no","nu","of","oh","oi","om","on","op","os","pa","pf","pi","po","pu","ra","re","sa","si","te","ti","tu","uh","ui","uk","up","ut","uw","va","we","yo","ze","zo"]
         return Set(words.map { $0.lowercased() })
     }()
 
