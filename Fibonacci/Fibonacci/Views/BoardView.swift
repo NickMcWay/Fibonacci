@@ -1,20 +1,18 @@
 // BoardView.swift
-// Renders the 4×4 game board with two interaction modes:
+// Renders the game board with two interaction modes:
 //
 //   Swipe  — fast drag anywhere → slides all tiles in that direction.
 //   Draw   — slow press-and-drag through adjacent tiles → spells a word.
-//            Valid words glow and wait for a single tap anywhere on the
-//            board before clearing. Invalid paths are silently discarded.
 //
-// Disambiguation uses DragGesture.Value.velocity (iOS 17+):
-//   speed < 900 px/s when crossing into an adjacent tile → draw mode
-//   speed ≥ 900 px/s                                    → slide mode
+// Board size is read from vm.boardSize (4, 5, or 6) so the same view handles all
+// board variants.
 //
-// Drawing rules:
-//   • Path may only pass through cells that actually contain a tile.
-//   • Each cell may be visited at most once.
-//   • Backtracking (returning to the previous cell) removes the last step.
-//   • Minimum word length for acceptance: 3 letters.
+// Hint / word-highlight behaviour:
+//   Pending swipe matches are stored in vm.pendingSwipeMatches but tiles only
+//   receive the pulsing green glow (isPending) once vm.showMatchHighlights is true.
+//   Until then the player sees no visual indication of which tiles form a word.
+//   The word preview at the bottom shows "Tap to confirm" (without the word text)
+//   while a match is pending but not yet revealed.
 
 import SwiftUI
 
@@ -22,36 +20,42 @@ struct BoardView: View {
     @ObservedObject var vm: GameViewModel
 
     private let swipeThreshold: CGFloat = 20
-    private let drawSpeedCap: CGFloat = 900   // px/s; above this = slide
+    private let drawSpeedCap: CGFloat = 900
 
     private enum DragMode { case undecided, draw, slide }
     @State private var dragMode: DragMode = .undecided
-    /// Tiles highlighted while the finger is actively tracing.
     @State private var drawPath: [(row: Int, col: Int)] = []
-    /// A valid word the user has drawn; glowing and waiting for a confirmation tap.
     @State private var confirmedPath: [(row: Int, col: Int)] = []
 
     var body: some View {
         GeometryReader { geo in
             let boardSize = min(geo.size.width, geo.size.height)
             let gap: CGFloat = boardSize * 0.03
-            let tileSize = (boardSize - gap * CGFloat(BoardModel.size + 1)) / CGFloat(BoardModel.size)
+            let n = CGFloat(vm.boardSize)
+            let tileSize = (boardSize - gap * (n + 1)) / n
 
             ZStack {
                 boardBackground(gap: gap, tileSize: tileSize)
 
                 ForEach(vm.tiles) { tile in
                     let sel  = inPath(tile, drawPath)
-                    let pend = inPath(tile, confirmedPath) || isPendingSwipeTile(tile)
-                    TileView(tile: tile, size: tileSize, isSelected: sel, isPending: pend)
-                        .position(
-                            x: tileX(col: tile.col, gap: gap, tileSize: tileSize),
-                            y: tileY(row: tile.row, gap: gap, tileSize: tileSize)
-                        )
-                        .animation(.spring(response: 0.22, dampingFraction: 0.78), value: tile.col)
-                        .animation(.spring(response: 0.22, dampingFraction: 0.78), value: tile.row)
+                    let pend = (inPath(tile, confirmedPath) || isPendingSwipeTile(tile))
+                    TileView(
+                        tile: tile,
+                        size: tileSize,
+                        isSelected: sel,
+                        isPending: pend,
+                        scrabbleValue: vm.scrabbleValue(for: tile.letter)
+                    )
+                    .position(
+                        x: tileX(col: tile.col, gap: gap, tileSize: tileSize),
+                        y: tileY(row: tile.row, gap: gap, tileSize: tileSize)
+                    )
+                    .animation(.spring(response: 0.22, dampingFraction: 0.78), value: tile.col)
+                    .animation(.spring(response: 0.22, dampingFraction: 0.78), value: tile.row)
                 }
 
+                // Word preview / confirmation hint at the bottom of the board
                 if !drawPath.isEmpty || !confirmedPath.isEmpty || !vm.pendingSwipeMatches.isEmpty {
                     wordPreview(boardSize: boardSize)
                 }
@@ -73,11 +77,22 @@ struct BoardView: View {
     // MARK: - Word Preview
 
     private func wordPreview(boardSize: CGFloat) -> some View {
-        let previewContent: (text: String, isPending: Bool)
+        let hasPendingSwipe = !vm.pendingSwipeMatches.isEmpty
+        let revealed = vm.showMatchHighlights
 
-        if !vm.pendingSwipeMatches.isEmpty {
-            let words = vm.pendingSwipeMatches.map { $0.word.uppercased() }.joined(separator: " · ")
-            previewContent = (words, true)
+        let text: String
+        let isGreen: Bool
+
+        if hasPendingSwipe {
+            if revealed {
+                // Show the actual word(s) once highlights are active
+                text = vm.pendingSwipeMatches.map { $0.word.uppercased() }.joined(separator: " · ")
+                isGreen = true
+            } else {
+                // Don't reveal word — just prompt the player to tap
+                text = "Tap to confirm"
+                isGreen = false
+            }
         } else {
             let activePath = confirmedPath.isEmpty ? drawPath : confirmedPath
             let letters = activePath.compactMap { pos in
@@ -85,20 +100,22 @@ struct BoardView: View {
             }
             let word = String(letters).uppercased()
             let isDrawPending = !confirmedPath.isEmpty
-            let isValid = WordValidator.isValidWord(word.lowercased())
-            previewContent = (word, isDrawPending || isValid)
+            let isValid = WordValidator.isValidWord(word.lowercased(), language: vm.language)
+            text = word
+            isGreen = isDrawPending || isValid
         }
 
-        let wordColor: Color = previewContent.isPending
+        let wordColor: Color = isGreen
             ? Color(red: 0.10, green: 0.72, blue: 0.42)
             : Color(red: 0.35, green: 0.35, blue: 0.40)
-        let showConfirm = previewContent.isPending
+
+        let showConfirmHint = isGreen || hasPendingSwipe
 
         return VStack(spacing: 2) {
-            Text(previewContent.text)
+            Text(text)
                 .font(.system(size: boardSize * 0.10, weight: .heavy, design: .rounded))
                 .foregroundColor(wordColor)
-            if showConfirm {
+            if showConfirmHint {
                 Text("tap to confirm")
                     .font(.system(size: boardSize * 0.055, weight: .semibold, design: .rounded))
                     .foregroundColor(.secondary)
@@ -123,7 +140,6 @@ struct BoardView: View {
 
         let distance = hypot(v.translation.width, v.translation.height)
 
-        // Any real movement cancels a pending (glowing) confirmation
         if !confirmedPath.isEmpty && distance > swipeThreshold * 0.5 {
             confirmedPath = []
         }
@@ -136,20 +152,17 @@ struct BoardView: View {
         switch dragMode {
 
         case .undecided:
-            // Highlight the pressed tile immediately so there's instant feedback
             if drawPath.isEmpty, let s = startCell {
                 drawPath = [s]
             }
 
             guard let s = startCell else {
-                // Started in a gap — switch to slide once moved enough
                 if distance > swipeThreshold { dragMode = .slide }
                 return
             }
 
             guard let c = currentCell, !(c.row == s.row && c.col == s.col) else { return }
 
-            // Finger crossed into a different tile — use velocity to decide mode
             let speed = hypot(v.velocity.width, v.velocity.height)
             if adjacent(s, c) && speed < drawSpeedCap {
                 dragMode = .draw
@@ -164,7 +177,6 @@ struct BoardView: View {
             guard let c = currentCell, let last = drawPath.last else { return }
             guard !(c.row == last.row && c.col == last.col) else { return }
 
-            // Backtrack: moving back to the second-to-last tile removes the last
             if drawPath.count >= 2 {
                 let prev = drawPath[drawPath.count - 2]
                 if c.row == prev.row && c.col == prev.col {
@@ -194,8 +206,8 @@ struct BoardView: View {
                 vm.tiles.first(where: { $0.row == pos.row && $0.col == pos.col })?.letter
             }
             let word = String(letters)
-            if drawPath.count >= 3 && WordValidator.isValidWord(word) {
-                confirmedPath = drawPath   // hand off to glow state
+            if drawPath.count >= 3 && WordValidator.isValidWord(word, language: vm.language) {
+                confirmedPath = drawPath
             }
             drawPath = []
 
@@ -206,7 +218,6 @@ struct BoardView: View {
             vm.handleSwipe(swipeDir(v.translation))
 
         case .undecided:
-            // No real movement — treat as a tap
             let tapDist = hypot(v.translation.width, v.translation.height)
             drawPath = []
 
@@ -219,7 +230,6 @@ struct BoardView: View {
                     vm.confirmPendingSwipeWords()
                 }
             } else {
-                // Tiny slide that never locked into a mode
                 confirmedPath = []
                 guard !vm.isAnimating, !vm.isGameOver else { return }
                 vm.handleSwipe(swipeDir(v.translation))
@@ -229,18 +239,14 @@ struct BoardView: View {
 
     // MARK: - Hit Testing
 
-    /// Returns the (row, col) of the tile physically located at `point`.
-    /// Returns nil if the point is in a gap or the cell is empty (no tile).
     private func tileAt(_ point: CGPoint, gap: CGFloat, tileSize: CGFloat) -> (row: Int, col: Int)? {
         let c = Int((point.x - gap) / (tileSize + gap))
         let r = Int((point.y - gap) / (tileSize + gap))
-        guard r >= 0, r < BoardModel.size, c >= 0, c < BoardModel.size else { return nil }
-        // Reject points that fall inside the gap between tiles
+        guard r >= 0, r < vm.boardSize, c >= 0, c < vm.boardSize else { return nil }
         let left = gap + CGFloat(c) * (tileSize + gap)
         let top  = gap + CGFloat(r) * (tileSize + gap)
         guard point.x >= left, point.x <= left + tileSize,
               point.y >= top,  point.y <= top  + tileSize else { return nil }
-        // Only accept cells that actually hold a letter tile
         guard vm.tiles.contains(where: { $0.row == r && $0.col == c }) else { return nil }
         return (r, c)
     }
@@ -252,7 +258,8 @@ struct BoardView: View {
     }
 
     private func isPendingSwipeTile(_ tile: Tile) -> Bool {
-        vm.pendingSwipeMatches.contains { match in
+        guard vm.showMatchHighlights else { return false }
+        return vm.pendingSwipeMatches.contains { match in
             match.positions.contains { $0.row == tile.row && $0.col == tile.col }
         }
     }
@@ -270,8 +277,8 @@ struct BoardView: View {
 
     private func boardBackground(gap: CGFloat, tileSize: CGFloat) -> some View {
         ZStack {
-            ForEach(0..<BoardModel.size, id: \.self) { r in
-                ForEach(0..<BoardModel.size, id: \.self) { c in
+            ForEach(0..<vm.boardSize, id: \.self) { r in
+                ForEach(0..<vm.boardSize, id: \.self) { c in
                     RoundedRectangle(cornerRadius: tileSize * 0.18)
                         .fill(Color(red: 0.80, green: 0.80, blue: 0.84).opacity(0.6))
                         .frame(width: tileSize, height: tileSize)
@@ -301,9 +308,14 @@ struct BoardView: View {
     }
 }
 
-#Preview("Board") {
-    BoardView(vm: GameViewModel())
+#Preview("Board 4×4") {
+    BoardView(vm: GameViewModel(settings: .default))
         .padding()
         .background(Color(red: 0.97, green: 0.97, blue: 0.98))
 }
 
+#Preview("Board 5×5") {
+    BoardView(vm: GameViewModel(settings: GameSettings(language: .english, boardVariant: .medium)))
+        .padding()
+        .background(Color(red: 0.97, green: 0.97, blue: 0.98))
+}

@@ -1,7 +1,13 @@
 // GameViewModel.swift
-// ObservableObject that sits between GameEngine (pure logic) and SwiftUI views.
-// All game state exposed to the UI lives here.
-// Animation sequencing is managed here using async delays.
+// ObservableObject between GameEngine (pure logic) and SwiftUI views.
+//
+// Hint system:
+//   After a swipe finds word(s) the tiles are stored in pendingSwipeMatches but NOT
+//   highlighted. A hint timer starts:
+//     5 s  → showHintButton = true  (the power-up button starts pulsing)
+//    10 s  → showMatchHighlights = true  (tile glows + word preview appear)
+//   The player can tap the hint button at any time after 5 s to reveal early.
+//   Any new swipe/draw/confirmation cancels and resets the timer.
 
 import SwiftUI
 import Combine
@@ -12,46 +18,65 @@ final class GameViewModel: ObservableObject {
 
     // MARK: - Published State
 
-    @Published var tiles: [Tile] = []           // flat list of all live tiles
+    @Published var tiles: [Tile] = []
     @Published var score: Int = 0
     @Published var bestScore: Int = 0
     @Published var isGameOver: Bool = false
-    @Published var lastWords: [String] = []     // words found this turn (for overlay)
-    @Published var comboCount: Int = 0          // chain multiplier count
+    @Published var lastWords: [String] = []
+    @Published var lastPointsEarned: Int = 0
+    @Published var comboCount: Int = 0
     @Published var showWordOverlay: Bool = false
-    @Published var isAnimating: Bool = false    // lock swipes during animation
+    @Published var isAnimating: Bool = false
     @Published var pendingSwipeMatches: [WordValidator.WordMatch] = []
     @Published var showEmptyBoardEffect: Bool = false
     @Published var showBoardFullWarning: Bool = false
 
-    // MARK: - Board (private, source of truth)
+    // Hint system
+    @Published var showHintButton: Bool = false       // power-up glows after 5 s
+    @Published var showMatchHighlights: Bool = false  // tile glows after 10 s
 
-    private var board: BoardModel = BoardModel()
+    // MARK: - Accessors for Views
+
+    var boardSize: Int { board.size }
+    var language: GameLanguage { settings.language }
+
+    func scrabbleValue(for letter: Character) -> Int {
+        settings.language.scrabbleValues[letter.lowercased() as Character] ?? 1
+    }
+
+    // MARK: - Private
+
+    private let settings: GameSettings
+    private var board: BoardModel
     private let bestScoreKey = "SlideWords_BestScore"
     private var pendingSwipeDirection: SwipeDirection = .left
+    private var hintTimerTask: Task<Void, Never>?
 
     // MARK: - Init
 
-    init() {
-        bestScore = UserDefaults.standard.integer(forKey: bestScoreKey)
+    init(settings: GameSettings = .default) {
+        self.settings = settings
+        self.board = BoardModel(size: settings.boardVariant.rawValue)
+        self.bestScore = UserDefaults.standard.integer(forKey: "SlideWords_BestScore")
         startNewGame()
     }
 
     // MARK: - Game Lifecycle
 
     func startNewGame() {
-        board = BoardModel()
+        board = BoardModel(size: settings.boardVariant.rawValue)
         score = 0
         isGameOver = false
         lastWords = []
+        lastPointsEarned = 0
         comboCount = 0
         showWordOverlay = false
         isAnimating = false
         pendingSwipeMatches = []
         showEmptyBoardEffect = false
         showBoardFullWarning = false
+        resetHintState()
 
-        // Seed board with 2 random tiles (like 2048 start feel)
         for _ in 0..<2 {
             if let t = LetterSpawnEngine.spawnTile(for: board) {
                 board.setTile(t, row: t.row, col: t.col)
@@ -60,13 +85,13 @@ final class GameViewModel: ObservableObject {
         syncTiles()
     }
 
-    // Inject a debug board preset by name
     func loadDebugBoard(_ name: String) {
         guard let preset = GameEngine.debugBoards[name] else { return }
         board = preset
         score = 0
         isGameOver = false
         pendingSwipeMatches = []
+        resetHintState()
         syncTiles()
     }
 
@@ -75,10 +100,10 @@ final class GameViewModel: ObservableObject {
     func handleSwipe(_ direction: SwipeDirection) {
         guard !isAnimating, !isGameOver else { return }
 
-        // A new swipe discards any unconfirmed words from the previous swipe
         pendingSwipeMatches = []
+        resetHintState()
 
-        guard let slideResult = GameEngine.slideAndSpawn(board: board, direction: direction) else {
+        guard let slideResult = GameEngine.slideAndSpawn(board: board, direction: direction, language: settings.language) else {
             triggerHaptic(.error)
             return
         }
@@ -97,7 +122,6 @@ final class GameViewModel: ObservableObject {
             isAnimating = false
 
             if slideResult.spawnedPosition == nil {
-                // Board was full — no new tile could spawn
                 if GameEngine.isGameOver(board: board) {
                     isGameOver = true
                 } else {
@@ -110,18 +134,29 @@ final class GameViewModel: ObservableObject {
             } else if slideResult.matches.isEmpty {
                 if GameEngine.isGameOver(board: board) { isGameOver = true }
             } else {
+                // Store matches but don't reveal them yet — start the hint timer
                 pendingSwipeMatches = slideResult.matches
                 pendingSwipeDirection = direction
+                startHintTimer()
             }
         }
     }
 
-    /// Called when the user taps to confirm words found after a swipe.
+    /// User taps the hint / power-up button to reveal the word early.
+    func usePowerUpHint() {
+        guard !pendingSwipeMatches.isEmpty else { return }
+        hintTimerTask?.cancel()
+        hintTimerTask = nil
+        showMatchHighlights = true
+        // Leave showHintButton true (it will dim after highlights are shown)
+    }
+
     func confirmPendingSwipeWords() {
         guard !pendingSwipeMatches.isEmpty, !isAnimating, !isGameOver else { return }
         let matches = pendingSwipeMatches
         let direction = pendingSwipeDirection
         pendingSwipeMatches = []
+        resetHintState()
 
         isAnimating = true
 
@@ -136,10 +171,11 @@ final class GameViewModel: ObservableObject {
 
         Task {
             try? await Task.sleep(nanoseconds: 280_000_000)
-            let result = GameEngine.clearMatches(board: board, matches: matches, direction: direction)
-
+            let result = GameEngine.clearMatches(board: board, matches: matches,
+                                                  direction: direction, language: settings.language)
             board = result.board
             score += result.pointsEarned
+            lastPointsEarned = result.pointsEarned
             if score > bestScore {
                 bestScore = score
                 UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
@@ -177,27 +213,28 @@ final class GameViewModel: ObservableObject {
 
     // MARK: - Drawn Word Submission
 
-    /// Called when the user confirms a drawn word path (tap after valid word glow).
     func submitDrawnWord(path: [(row: Int, col: Int)]) {
         guard !isAnimating, !isGameOver else { return }
+        resetHintState()
 
         let pathTiles = path.compactMap { board.tile(row: $0.row, col: $0.col) }
         guard pathTiles.count == path.count else { return }
 
         let word = String(pathTiles.map { $0.letter })
-        guard WordValidator.isValidWord(word) else {
+        guard WordValidator.isValidWord(word, language: settings.language) else {
             triggerHaptic(.error)
             return
         }
 
         isAnimating = true
 
-        // Trigger the pop-out animation already wired in TileView
         for pos in path {
             board.cells[board.index(pos.row, pos.col)]?.isClearing = true
         }
 
-        score += GameEngine.baseWordScore
+        let earned = GameEngine.wordScore(word, language: settings.language)
+        score += earned
+        lastPointsEarned = earned
         if score > bestScore {
             bestScore = score
             UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
@@ -214,11 +251,8 @@ final class GameViewModel: ObservableObject {
         triggerHaptic(.medium)
 
         Task {
-            // Wait for the clearing animation (0.2 s) then remove the tiles
             try? await Task.sleep(nanoseconds: 280_000_000)
-            for pos in path {
-                board.cells[board.index(pos.row, pos.col)] = nil
-            }
+            for pos in path { board.cells[board.index(pos.row, pos.col)] = nil }
             showBoardFullWarning = false
             withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
                 syncTiles()
@@ -237,6 +271,32 @@ final class GameViewModel: ObservableObject {
             try? await Task.sleep(nanoseconds: 1_200_000_000)
             showWordOverlay = false
         }
+    }
+
+    // MARK: - Hint Timer
+
+    private func startHintTimer() {
+        hintTimerTask?.cancel()
+        showHintButton = false
+        showMatchHighlights = false
+
+        hintTimerTask = Task {
+            do {
+                try await Task.sleep(nanoseconds: 5_000_000_000)   // 5 s
+                showHintButton = true
+                try await Task.sleep(nanoseconds: 5_000_000_000)   // 10 s total
+                showMatchHighlights = true
+            } catch {
+                // Task cancelled — leave state as-is (resetHintState will clean up)
+            }
+        }
+    }
+
+    private func resetHintState() {
+        hintTimerTask?.cancel()
+        hintTimerTask = nil
+        showHintButton = false
+        showMatchHighlights = false
     }
 
     // MARK: - Empty Board Effect
@@ -261,8 +321,6 @@ final class GameViewModel: ObservableObject {
 
     // MARK: - Tile Sync
 
-    // Convert board cells to flat tile list for SwiftUI.
-    // Using tile.id as stable identity lets SwiftUI track movement.
     private func syncTiles() {
         tiles = board.cells.compactMap { $0 }
     }
@@ -274,14 +332,10 @@ final class GameViewModel: ObservableObject {
     private func triggerHaptic(_ style: HapticStyle) {
         #if os(iOS)
         switch style {
-        case .light:
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        case .medium:
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        case .heavy:
-            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-        case .error:
-            UINotificationFeedbackGenerator().notificationOccurred(.error)
+        case .light:  UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        case .medium: UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        case .heavy:  UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+        case .error:  UINotificationFeedbackGenerator().notificationOccurred(.error)
         }
         #endif
     }
