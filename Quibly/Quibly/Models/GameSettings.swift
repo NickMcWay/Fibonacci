@@ -63,9 +63,11 @@ enum GameLanguage: String, CaseIterable, Identifiable {
         }
     }
 
-    /// Sum of scrabble letter values for a word (combo multiplier applied elsewhere).
+    /// Sum of scrabble letter values for a word, multiplied by the word's letter count.
     func wordScore(for word: String) -> Int {
-        word.lowercased().reduce(0) { $0 + (scrabbleValues[Character(String($1))] ?? 1) }
+        let baseScore = word.lowercased().reduce(0) { $0 + (scrabbleValues[Character(String($1))] ?? 1) }
+        let letterMultiplier = max(1, word.count)
+        return baseScore * letterMultiplier
     }
 }
 
