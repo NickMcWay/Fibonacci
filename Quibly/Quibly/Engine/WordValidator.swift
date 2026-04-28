@@ -1,6 +1,6 @@
 // WordValidator.swift
-// Curated word lists (3–10 letters) for English and Dutch, plus board-scanning logic.
-// findMatches(in:language:) automatically scans all window sizes from 3 up to board.size.
+// Curated word lists (2–10 letters) for Dutch and (3–6 letters) for English, plus board-scanning logic.
+// findMatches(in:language:) automatically scans all window sizes from the language minimum up to board.size.
 
 import Foundation
 
@@ -132,8 +132,31 @@ final class WordValidator {
         return Set(words.map { $0.lowercased() }.filter { $0.count == 6 })
     }()
 
-    // MARK: - Dutch word sets (3–10 letters)
+    // MARK: - Dutch word sets (2–10 letters)
     // Common Dutch words recognisable to casual Dutch speakers.
+
+    static let dutchTwoLetterWordSet: Set<String> = {
+        let words = [
+            "ad","af","al","as",
+            "be","bi","bo",
+            "de","do",
+            "en","er",
+            "ga","ge",
+            "ha","he","ho",
+            "ik","in","is",
+            "ja","je","ju",
+            "ka",
+            "na","nu",
+            "of","om","op",
+            "re",
+            "te","to",
+            "ui","uw",
+            "va","ve",
+            "we","wo",
+            "ze","zo",
+        ]
+        return Set(words.map { $0.lowercased() })
+    }()
 
     static let dutchThreeLetterWordSet: Set<String> = {
         let words = ["aai","aak","aal","aan","aap","aar","aas","abt","ace","act","aft","aha","aio","air","alg","alk","alm","alp","als","alt","ara","are","ark","arm","art","aso","ast","ave","bad","baf","bah","bak","bal","ban","bar","bas","bat","bed","bef","bei","bek","bel","ben","beo","bes","bet","beu","bib","bic","bid","bie","big","bij","bik","bil","bio","bis","bit","blo","boa","bob","bod","boe","bof","bok","bol","bom","bon","bos","bot","box","boy","bug","bui","buk","bul","bun","bus","bye","cap","cel","ces","cis","col","cox","cru","cue","cup","dab","dag","dak","dal","dam","dan","dar","das","dat","dek","del","den","dep","der","des","dia","die","dij","dik","dim","dip","dis","dit","doe","dof","dog","dok","dol","dom","don","dop","dor","dos","dot","dra","dry","dub","duf","dun","duo","dus","dut","duw","dux","ebt","ecu","eed","eek","een","eer","eet","ego","egt","eik","eis","elf","elk","els","end","ene","eng","enk","ent","epo","era","ere","erf","erg","esp","ets","eva","fan","fat","fax","fee","fel","fep","fes","fez","fik","fis","fit","fix","fok","fop","fox","fut","gaf","gag","gal","gap","gas","gat","gay","gei","gek","gel","gen","ges","gif","gig","gij","gil","gin","gis","git","god","goh","goj","gok","gom","gul","gum","gun","gup","gut","gym","had","haf","hak","hal","ham","hap","har","heb","hef","heg","hei","hek","hel","hem","hen","her","hes","het","hex","hij","hik","hip","hit","hiv","hoe","hof","hoi","hok","hol","hom","hop","hor","hos","hot","hou","hub","hui","huk","hul","hum","hun","hup","hut","huw","iel","iep","iet","ijk","ijl","ijs","int","ion","jak","jam","jan","jap","jas","jat","jee","jen","jet","jeu","jid","jij","job","jog","joh","jok","jol","jon","jou","juf","juk","jus","jut","kaf","kak","kal","kam","kan","kap","kar","kas","kat","kef","keg","kei","kek","ken","keu","kid","kif","kik","kil","kim","kin","kip","kir","kis","kit","koe","kof","kog","kok","kol","kom","kon","kop","kor","kot","kou","kul","kun","kur","kus","kut","lab","laf","lag","lak","lal","lam","lap","las","lat","leb","led","lef","leg","lei","lek","lel","lep","les","let","lex","lid","lig","lij","lik","lil","lip","lis","lob","loc","lof","log","lok","lol","lom","lor","los","lot","lub","lui","luk","lul","lus","luw","lux","maf","mag","mak","mal","mam","man","map","mar","mat","max","mee","mei","mem","men","mep","mes","met","mie","mij","mik","min","mis","mix","moe","mof","mok","mol","mom","mop","mor","mos","mot","mud","muf","mug","mui","mul","mus","nae","nam","nap","nar","nas","nat","neb","nee","neg","nek","nel","nep","nes","net","ney","nik","nip","nis","nix","nog","nok","nol","non","nop","nor","nou","nuf","nuk","nul","nut","och","ode","oef","oei","oen","oer","ohm","oho","oio","oir","oke","olm","oma","ome","ons","oog","ooi","ook","oom","oor","opa","ore","oud","out","pad","paf","pak","pal","pan","pap","par","pas","pat","pax","pee","peg","pek","pel","pen","pep","per","pet","pij","pik","pil","pin","pip","pis","pit","plu","pof","pok","pol","pom","pon","pop","por","pos","pot","pre","pro","pst","pub","puf","pui","puk","pul","pup","pur","pus","put","qat","qua","rad","rag","rai","rak","ral","ram","rap","ras","rat","red","ree","rei","rek","rel","rem","ren","rep","reu","rex","rib","rif","rij","rik","ril","rip","ris","rit","rob","roe","rog","rok","rol","rop","ros","rot","rug","rui","ruk","rul","rum","run","rus","rut","ruw","sak","sap","sar","sas","sax","sec","set","sic","sik","sim","sip","sis","ska","ski","sla","soa","sof","sok","sol","som","sop","sou","spa","sta","sub","suf","sul","sus","tab","taf","tag","tak","tal","tam","tap","tas","tel","tem","ten","ter","tet","tic","tig","tij","tik","til","tin","tip","tja","tob","tod","toe","tof","tok","tol","ton","top","tor","tos","tot","tra","tri","try","tuf","tui","tuk","tul","tut","typ","ufo","uil","uit","ulo","ups","ure","urm","urn","uso","uur","uzi","vak","val","van","var","vat","vee","vei","vel","ven","ver","vet","via","vil","vim","vin","vip","vis","vit","vla","vlo","vod","vol","vos","vul","vut","wad","waf","wak","wal","wam","wan","war","was","wat","wax","web","wed","wee","weg","wei","wek","wel","wem","wen","wet","wie","wig","wij","wik","wil","win","wip","wis","wit","wok","wol","won","wou","wow","wui","yam","yel","yen","yes","yin","yup","zag","zak","zap","zat","zee","zeg","zei","zen","zes","zet","zie","zij","zin","zip","zit","zog","zon","zoo","zot","zou","zul","zus"]
@@ -271,12 +294,13 @@ final class WordValidator {
     // MARK: - Board Scanning
 
     /// Returns all word matches on the board for the given language.
-    /// Scans horizontal and vertical windows of length 3 up to board.size.
+    /// Scans horizontal and vertical windows from the language minimum length up to board.size.
     static func findMatches(in board: BoardModel, language: GameLanguage = .english) -> [WordMatch] {
         var matches: [WordMatch] = []
         let size = board.size
+        let minimumLength = minimumWindowLength(for: language)
 
-        for windowSize in 3...max(3, size) {
+        for windowSize in minimumLength...max(minimumLength, size) {
             let set = wordSetForLength(windowSize, language: language)
             guard !set.isEmpty else { continue }
 
@@ -305,6 +329,7 @@ final class WordValidator {
         switch language {
         case .dutch:
             switch length {
+            case 2:  return dutchTwoLetterWordSet
             case 3:  return dutchThreeLetterWordSet
             case 4:  return dutchFourLetterWordSet
             case 5:  return dutchFiveLetterWordSet
@@ -323,6 +348,13 @@ final class WordValidator {
             case 6: return sixLetterWordSet
             default: return []
             }
+        }
+    }
+
+    private static func minimumWindowLength(for language: GameLanguage) -> Int {
+        switch language {
+        case .dutch: return 2
+        default: return 3
         }
     }
 
