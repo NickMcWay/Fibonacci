@@ -371,6 +371,10 @@ final class WordValidator {
         resolveWord(for: word, language: language) != nil
     }
 
+    static func minimumWordLength(for language: GameLanguage = .english) -> Int {
+        minimumWindowLength(for: language)
+    }
+
     static func resolveWord(for pattern: String, language: GameLanguage = .english) -> String? {
         let lower = pattern.lowercased()
         let chars = Array(lower)
