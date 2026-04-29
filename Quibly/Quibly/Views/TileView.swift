@@ -15,6 +15,7 @@ struct TileView: View {
     var isSelected: Bool = false
     var isPending: Bool = false
     var scrabbleValue: Int? = nil   // shown as a small badge; nil hides it
+    var temporaryResolvedLetter: Character? = nil
 
     @State private var scale: CGFloat = 1.0
     @State private var opacity: Double = 1.0
@@ -102,14 +103,14 @@ struct TileView: View {
     }
 
     private var displayedLetter: String {
-        if tile.isJoker, let resolved = tile.jokerResolvedLetter {
+        if tile.isJoker, let resolved = (tile.jokerResolvedLetter ?? temporaryResolvedLetter) {
             return String(resolved).uppercased()
         }
         return tile.isJoker ? "★" : String(tile.letter).uppercased()
     }
 
     private var jokerLetterOpacity: Double {
-        (tile.isJoker && tile.jokerResolvedLetter != nil) ? 0.6 : 1.0
+        (tile.isJoker && (tile.jokerResolvedLetter != nil || temporaryResolvedLetter != nil)) ? 0.6 : 1.0
     }
 
     // MARK: - Color Palette
