@@ -43,11 +43,6 @@ struct GameView: View {
                     .padding(.bottom, 56)
             }
             
-            if vm.showWordOverlay {
-                celebrateChip
-                    .padding(.horizontal, 48)
-            }
-
             if vm.isGameOver {
                 gameOverOverlay
             }
@@ -73,23 +68,6 @@ struct GameView: View {
             }
         }
         .padding(.top, 12)
-    }
-
-    private var celebrateChip: some View {
-        VStack(spacing: 0) {
-            Text(vm.lastWords.isEmpty ? "Great!" : vm.lastWords.joined(separator: " · ").uppercased())
-                .font(.system(size: 24, weight: .heavy, design: .rounded))
-            Text("+\(vm.lastPointsEarned)")
-                .font(.system(size: 16, weight: .bold, design: .rounded))
-                .foregroundColor(.yellow)
-        }
-        .foregroundColor(.white)
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 14)
-        .background(
-            RoundedRectangle(cornerRadius: 30)
-                .fill(LinearGradient(colors: [Color.blue.opacity(0.85), Color.purple.opacity(0.9)], startPoint: .leading, endPoint: .trailing))
-        )
     }
 
     private var scoreBar: some View {

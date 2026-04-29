@@ -277,7 +277,6 @@ final class GameViewModel: ObservableObject {
             syncTiles()
         }
 
-        showWordOverlay = true
         triggerHaptic(.medium)
 
         Task {
@@ -296,13 +295,16 @@ final class GameViewModel: ObservableObject {
                 isGameOver = true
             }
         }
-
-        Task {
-            try? await Task.sleep(nanoseconds: 1_200_000_000)
-            showWordOverlay = false
-        }
     }
 
+
+    func pointsForDrawnWord(path: [(row: Int, col: Int)]) -> Int? {
+        let pathTiles = path.compactMap { board.tile(row: $0.row, col: $0.col) }
+        guard pathTiles.count == path.count else { return nil }
+        let word = String(pathTiles.map { $0.isJoker ? "*" : $0.letter })
+        guard WordValidator.isValidWord(word, language: settings.language) else { return nil }
+        return scoreForDrawnWord(pathTiles: pathTiles, validatedWord: word)
+    }
 
     private func scoreForDrawnWord(pathTiles: [Tile], validatedWord: String) -> Int {
         let values = settings.language.scrabbleValues
@@ -448,7 +450,6 @@ final class GameViewModel: ObservableObject {
         score += bombScore
         lastPointsEarned = bombScore
         lastWords = ["Bomb"]
-        showWordOverlay = true
 
         if score > bestScore {
             bestScore = score

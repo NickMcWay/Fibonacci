@@ -27,6 +27,9 @@ struct BoardView: View {
     @State private var dragMode: DragMode = .undecided
     @State private var drawPath: [(row: Int, col: Int)] = []
     @State private var confirmedPath: [(row: Int, col: Int)] = []
+    @State private var acceptedWord: String?
+    @State private var acceptedScore: Int?
+    @State private var acceptedWordTask: Task<Void, Never>?
 
     var body: some View {
         GeometryReader { geo in
@@ -60,7 +63,7 @@ struct BoardView: View {
                 pendingSwipeConnector(gap: gap, tileSize: tileSize)
 
                 // Word preview / confirmation hint at the bottom of the board
-                if !drawPath.isEmpty || !confirmedPath.isEmpty || (vm.showMatchHighlights && !vm.pendingSwipeMatches.isEmpty) {
+                if !drawPath.isEmpty || !confirmedPath.isEmpty || acceptedWord != nil || (vm.showMatchHighlights && !vm.pendingSwipeMatches.isEmpty) {
                     wordPreview(boardSize: boardSize)
                 }
             }
@@ -87,13 +90,14 @@ struct BoardView: View {
         let text: String
         let isGreen: Bool
 
-        if hasPendingSwipe {
+        if let acceptedWord, let acceptedScore {
+            text = "\(acceptedWord)  +\(acceptedScore)"
+            isGreen = true
+        } else if hasPendingSwipe {
             if revealed {
-                // Show the actual word(s) once highlights are active
                 text = vm.pendingSwipeMatches.map { $0.word.uppercased() }.joined(separator: " · ")
                 isGreen = true
             } else {
-                // Don't reveal word yet
                 text = ""
                 isGreen = false
             }
@@ -206,13 +210,29 @@ struct BoardView: View {
             let isValidSelection = drawPath.count >= 3 && WordValidator.isValidWord(word, language: vm.language)
 
             if isValidSelection {
-                confirmedPath = drawPath
+                let path = drawPath
+                let letters = path.compactMap { pos in
+                    vm.tiles.first(where: { $0.row == pos.row && $0.col == pos.col })?.letter
+                }
+                acceptedWord = String(letters).uppercased()
+                acceptedScore = vm.pointsForDrawnWord(path: path)
                 audio.playCorrectSelectionFeedback()
+                confirmedPath = []
+                drawPath = []
+                vm.submitDrawnWord(path: path)
+                acceptedWordTask?.cancel()
+                acceptedWordTask = Task {
+                    try? await Task.sleep(nanoseconds: 2_000_000_000)
+                    acceptedWord = nil
+                    acceptedScore = nil
+                }
             } else if drawPath.count >= 3 {
                 confirmedPath = []
                 audio.playWrongSelectionFeedback()
+                drawPath = []
+            } else {
+                drawPath = []
             }
-            drawPath = []
 
         case .slide:
             confirmedPath = []
@@ -230,11 +250,7 @@ struct BoardView: View {
                     vm.triggerBomb(at: tapped.row, col: tapped.col)
                     return
                 }
-                if !confirmedPath.isEmpty {
-                    let path = confirmedPath
-                    confirmedPath = []
-                    vm.submitDrawnWord(path: path)
-                } else if vm.showMatchHighlights && !vm.pendingSwipeMatches.isEmpty {
+                if vm.showMatchHighlights && !vm.pendingSwipeMatches.isEmpty {
                     vm.confirmPendingSwipeWords()
                 }
             } else {
