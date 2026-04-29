@@ -6,6 +6,8 @@ struct MenuView: View {
     @EnvironmentObject private var audio: AudioManager
     @AppStorage("SlideWords_BestScore") private var bestScore: Int = 0
     @AppStorage("SlideWords_Coins") private var coins: Int = 125
+    @AppStorage("SlideWords_SelectedLanguage") private var selectedLanguageRawValue: String = GameLanguage.english.rawValue
+    @AppStorage("SlideWords_SelectedVariant") private var selectedVariantRawValue: Int = BoardVariant.small.rawValue
     @State private var selectedLanguage: GameLanguage = .english
     @State private var selectedVariant: BoardVariant = .small
     @State private var activePage: MenuPage?
@@ -28,7 +30,17 @@ struct MenuView: View {
             .padding(.top, 38)
             .padding(.bottom, 52)
         }
-        .onAppear { audio.play() }
+        .onAppear {
+            audio.play()
+            selectedLanguage = GameLanguage(rawValue: selectedLanguageRawValue) ?? .english
+            selectedVariant = BoardVariant(rawValue: selectedVariantRawValue) ?? .small
+        }
+        .onChange(of: selectedLanguage) { _, newLanguage in
+            selectedLanguageRawValue = newLanguage.rawValue
+        }
+        .onChange(of: selectedVariant) { _, newVariant in
+            selectedVariantRawValue = newVariant.rawValue
+        }
         .sheet(item: $activePage) { page in
             MenuDetailsPage(page: page, selectedLanguage: $selectedLanguage, selectedVariant: $selectedVariant)
         }
