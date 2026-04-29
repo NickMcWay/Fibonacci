@@ -99,7 +99,7 @@ final class GameViewModel: ObservableObject {
         resetHintState()
 
         for _ in 0..<2 {
-            if let t = LetterSpawnEngine.spawnTile(for: board) {
+            if let t = LetterSpawnEngine.spawnTile(for: board, language: settings.language) {
                 board.setTile(t, row: t.row, col: t.col)
             }
         }
@@ -364,7 +364,7 @@ final class GameViewModel: ObservableObject {
 
         Task {
             try? await Task.sleep(nanoseconds: 500_000_000)
-            if let newTile = LetterSpawnEngine.spawnTile(for: board) {
+            if let newTile = LetterSpawnEngine.spawnTile(for: board, language: settings.language) {
                 board.setTile(newTile, row: newTile.row, col: newTile.col)
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                     syncTiles()
