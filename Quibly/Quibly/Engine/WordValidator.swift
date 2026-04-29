@@ -343,8 +343,9 @@ final class WordValidator {
     private static func matchAt(positions: [(row: Int, col: Int)], board: BoardModel, set: Set<String>) -> WordMatch? {
         let tiles = positions.compactMap { board.tile(row: $0.row, col: $0.col) }
         guard tiles.count == positions.count else { return nil }
-        let pattern = String(tiles.map { $0.isJoker ? "*" : $0.letter })
-        guard let resolved = resolveWildcardWord(from: pattern, in: set) else { return nil }
+        let letters = tiles.map(\.letter)
+        let jokerIndexes = Set(tiles.enumerated().compactMap { $0.element.isJoker ? $0.offset : nil })
+        guard let resolved = resolveWord(for: letters, jokerIndexes: jokerIndexes, in: set) else { return nil }
         return WordMatch(word: resolved, positions: positions)
     }
 
@@ -359,24 +360,27 @@ final class WordValidator {
 
     static func resolveWord(for pattern: String, language: GameLanguage = .english) -> String? {
         let lower = pattern.lowercased()
-        return resolveWildcardWord(from: lower, in: wordSetForLength(lower.count, language: language))
+        let chars = Array(lower)
+        let jokerIndexes = Set(chars.enumerated().compactMap { $0.element == "*" ? $0.offset : nil })
+        return resolveWord(for: chars, jokerIndexes: jokerIndexes, in: wordSetForLength(lower.count, language: language))
     }
 
-    private static func resolveWildcardWord(from pattern: String, in set: Set<String>) -> String? {
-        let lower = pattern.lowercased()
-        if !lower.contains("*") {
-            return set.contains(lower) ? lower : nil
+    private static func resolveWord(for letters: [Character], jokerIndexes: Set<Int>, in set: Set<String>) -> String? {
+        if jokerIndexes.isEmpty {
+            let exact = String(letters).lowercased()
+            return set.contains(exact) ? exact : nil
         }
 
-        let chars = Array(lower)
+        let lowerLetters = letters.map { Character(String($0).lowercased()) }
+
         for candidate in set {
             let candidateChars = Array(candidate)
-            guard candidateChars.count == chars.count else { continue }
+            guard candidateChars.count == lowerLetters.count else { continue }
 
             var matches = true
-            for i in chars.indices {
-                let ch = chars[i]
-                if ch != "*" && ch != candidateChars[i] {
+            for i in lowerLetters.indices {
+                if jokerIndexes.contains(i) { continue }
+                if lowerLetters[i] != candidateChars[i] {
                     matches = false
                     break
                 }

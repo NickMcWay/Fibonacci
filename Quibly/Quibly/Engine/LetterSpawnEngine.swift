@@ -55,6 +55,9 @@ enum LetterSpawnEngine {
         var tile = Tile(letter: letter, row: position.row, col: position.col)
         tile.hasCoin = Double.random(in: 0..<1) < 0.18
         tile.isJoker = Double.random(in: 0..<1) < 0.08
+        if tile.isJoker {
+            tile.letter = "*"
+        }
         tile.isNew = true
         return tile
     }
