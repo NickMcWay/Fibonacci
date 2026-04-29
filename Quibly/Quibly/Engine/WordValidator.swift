@@ -135,6 +135,18 @@ final class WordValidator {
     // MARK: - Dutch word sets (2–10 letters)
     // Common Dutch words recognisable to casual Dutch speakers.
 
+
+    static let englishTwoLetterWordSet: Set<String> = {
+        let words = [
+            "aa","ab","ad","ae","ag","ah","ai","al","am","an","ar","as","at","aw","ax","ay",
+            "ba","be","bi","bo","by","da","de","do","ed","ef","eh","el","em","en","er","es","et","ew","ex",
+            "fa","fe","go","ha","he","hi","hm","ho","id","if","in","is","it","jo","ka","ki","la","li","lo",
+            "ma","me","mi","mm","mo","mu","my","na","ne","no","nu","od","oe","of","oh","oi","ok","om","on","op","or","os","ow","ox","oy",
+            "pa","pe","pi","po","qi","re","sh","si","so","ta","te","ti","to","uh","um","un","up","us","ut","we","wo","xi","xu","ya","ye","yo","za"
+        ]
+        return Set(words)
+    }()
+
     static let dutchTwoLetterWordSet: Set<String> = {
         let words = ["af","al","ar","as","at","au","bi","bo","br","co","de","do","eb","ei","el","en","er","es","ex","ga","go","ho","ia","id","ik","in","io","is","it","ja","je","ju","ka","la","ma","me","mi","mu","na","nu","of","om","on","op","os","pa","pi","po","ra","te","ti","tu","uh","ui","uk","uw","we","yo","ze","zo"]
         return Set(words.map { $0.lowercased() })
@@ -324,6 +336,7 @@ final class WordValidator {
             }
         default: // English (and other languages fall back to English for now)
             switch length {
+            case 2: return englishTwoLetterWordSet
             case 3: return threeLetterWordSet
             case 4: return wordSet
             case 5: return fiveLetterWordSet
@@ -336,7 +349,7 @@ final class WordValidator {
     private static func minimumWindowLength(for language: GameLanguage) -> Int {
         switch language {
         case .dutch: return 2
-        default: return 3
+        default: return 2
         }
     }
 
