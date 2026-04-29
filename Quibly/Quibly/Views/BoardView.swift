@@ -44,12 +44,14 @@ struct BoardView: View {
                 ForEach(vm.tiles) { tile in
                     let sel  = inPath(tile, drawPath)
                     let pend = (inPath(tile, confirmedPath) || isPendingSwipeTile(tile))
+                    let tempResolved = temporaryResolvedLetter(for: tile)
                     TileView(
                         tile: tile,
                         size: tileSize,
                         isSelected: sel,
                         isPending: pend,
-                        scrabbleValue: tile.isJoker ? nil : vm.scrabbleValue(for: tile.letter)
+                        scrabbleValue: tile.isJoker ? nil : vm.scrabbleValue(for: tile.letter),
+                        temporaryResolvedLetter: tempResolved
                     )
                     .position(
                         x: tileX(col: tile.col, gap: gap, tileSize: tileSize),
@@ -81,6 +83,26 @@ struct BoardView: View {
         .aspectRatio(1, contentMode: .fit)
     }
 
+
+    private func temporaryResolvedLetter(for tile: Tile) -> Character? {
+        guard tile.isJoker else { return nil }
+        let activePath = confirmedPath.isEmpty ? drawPath : confirmedPath
+        guard !activePath.isEmpty else { return nil }
+
+        let letters = activePath.compactMap { pos in
+            vm.tiles.first(where: { $0.row == pos.row && $0.col == pos.col })?.letter
+        }
+        let rawWord = String(letters).lowercased()
+        guard let resolvedWord = WordValidator.resolveWord(for: rawWord, language: vm.language) else { return nil }
+        let resolvedChars = Array(resolvedWord)
+
+        guard let indexInPath = activePath.firstIndex(where: { $0.row == tile.row && $0.col == tile.col }),
+              indexInPath < resolvedChars.count else {
+            return nil
+        }
+        return resolvedChars[indexInPath]
+    }
+
     // MARK: - Word Preview
 
     private func wordPreview(boardSize: CGFloat) -> some View {
@@ -106,10 +128,12 @@ struct BoardView: View {
             let letters = activePath.compactMap { pos in
                 vm.tiles.first(where: { $0.row == pos.row && $0.col == pos.col })?.letter
             }
-            let word = String(letters).uppercased()
+            let rawWord = String(letters)
+            let resolvedWord = WordValidator.resolveWord(for: rawWord.lowercased(), language: vm.language)
+            let displayWord = (resolvedWord ?? rawWord).uppercased()
             let isDrawPending = !confirmedPath.isEmpty
-            let isValid = WordValidator.isValidWord(word.lowercased(), language: vm.language)
-            text = word
+            let isValid = WordValidator.isValidWord(rawWord.lowercased(), language: vm.language)
+            text = displayWord
             isGreen = isDrawPending || isValid
         }
 
@@ -206,15 +230,13 @@ struct BoardView: View {
             let letters = drawPath.compactMap { pos in
                 vm.tiles.first(where: { $0.row == pos.row && $0.col == pos.col })?.letter
             }
-            let word = String(letters)
-            let isValidSelection = drawPath.count >= 3 && WordValidator.isValidWord(word, language: vm.language)
+            let rawWord = String(letters).lowercased()
+            let resolvedWord = WordValidator.resolveWord(for: rawWord, language: vm.language)
+            let isValidSelection = drawPath.count >= 3 && WordValidator.isValidWord(rawWord, language: vm.language)
 
             if isValidSelection {
                 let path = drawPath
-                let letters = path.compactMap { pos in
-                    vm.tiles.first(where: { $0.row == pos.row && $0.col == pos.col })?.letter
-                }
-                acceptedWord = String(letters).uppercased()
+                acceptedWord = (resolvedWord ?? rawWord).uppercased()
                 acceptedScore = vm.pointsForDrawnWord(path: path)
                 audio.playCorrectSelectionFeedback()
                 confirmedPath = []
