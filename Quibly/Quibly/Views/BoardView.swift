@@ -37,8 +37,6 @@ struct BoardView: View {
 
             ZStack {
                 boardBackground(gap: gap, tileSize: tileSize)
-                drawPathConnector(gap: gap, tileSize: tileSize)
-                pendingSwipeConnector(gap: gap, tileSize: tileSize)
 
                 ForEach(vm.tiles) { tile in
                     let sel  = inPath(tile, drawPath)
@@ -57,6 +55,9 @@ struct BoardView: View {
                     .animation(.spring(response: 0.22, dampingFraction: 0.78), value: tile.col)
                     .animation(.spring(response: 0.22, dampingFraction: 0.78), value: tile.row)
                 }
+                
+                drawPathConnector(gap: gap, tileSize: tileSize)
+                pendingSwipeConnector(gap: gap, tileSize: tileSize)
 
                 // Word preview / confirmation hint at the bottom of the board
                 if !drawPath.isEmpty || !confirmedPath.isEmpty || (vm.showMatchHighlights && !vm.pendingSwipeMatches.isEmpty) {
