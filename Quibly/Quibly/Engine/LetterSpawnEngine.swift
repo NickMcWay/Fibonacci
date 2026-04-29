@@ -13,15 +13,19 @@ enum LetterSpawnEngine {
     // MARK: - Alphabet
 
     static let alphabet: [Character] = [
-        "a", "e", "i", "o",
+        "a", "e", "i", "o", "u",
+        "z", "q", "v", "j", "x",
+        "y",
         "r", "t", "n", "s", "l",
         "c", "d", "h", "m", "p",
         "b", "f", "g", "k", "w"
     ]
 
     static let baseWeight: [Character: Int] = [
-        "a": 9, "e": 10, "i": 7, "o": 8,
+        "a": 9, "e": 10, "i": 7, "o": 8, "u": 4,
+        "z": 2, "q": 2, "v": 4, "j": 4, "x": 1,
         "r": 8, "t": 8,  "n": 7, "s": 9, "l": 6,
+        "y": 2,
         "c": 5, "d": 5,  "h": 5, "m": 5, "p": 4,
         "b": 3, "f": 3,  "g": 3, "k": 3, "w": 3
     ]
