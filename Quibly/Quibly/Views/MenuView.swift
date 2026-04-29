@@ -4,6 +4,8 @@ struct MenuView: View {
     var onStart: (GameSettings) -> Void
 
     @EnvironmentObject private var audio: AudioManager
+    @AppStorage("SlideWords_BestScore") private var bestScore: Int = 0
+    @AppStorage("SlideWords_Coins") private var coins: Int = 125
     @State private var selectedLanguage: GameLanguage = .english
     @State private var selectedVariant: BoardVariant = .small
     @State private var activePage: MenuPage?
@@ -16,6 +18,7 @@ struct MenuView: View {
             backgroundLayer
 
             VStack(spacing: 18) {
+                summaryBar
                 titleSection
                 boardPreview
                 playButton
@@ -43,6 +46,40 @@ struct MenuView: View {
             .frame(maxWidth: 320)
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .padding(.top, 8)
+    }
+
+    private var summaryBar: some View {
+        HStack(spacing: 12) {
+            summaryItem(label: "Highscore", value: "\(bestScore)", symbol: "trophy.fill", tint: Color.yellow.opacity(0.22))
+            summaryItem(label: "Coins", value: "\(coins)", symbol: "bitcoinsign.circle.fill", tint: Color.orange.opacity(0.22))
+        }
+    }
+
+    private func summaryItem(label: String, value: String, symbol: String, tint: Color) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: symbol)
+                .font(.system(size: 14, weight: .bold))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(label)
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.black.opacity(0.65))
+                Text(value)
+                    .font(.system(size: 18, weight: .heavy, design: .rounded))
+                    .foregroundStyle(ink)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(tint)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18)
+                        .stroke(Color.white.opacity(0.72), lineWidth: 1)
+                )
+        )
     }
 
     private var boardPreview: some View {

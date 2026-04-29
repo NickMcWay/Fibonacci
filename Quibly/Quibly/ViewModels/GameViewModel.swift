@@ -30,7 +30,11 @@ final class GameViewModel: ObservableObject {
     @Published var pendingSwipeMatches: [WordValidator.WordMatch] = []
     @Published var showEmptyBoardEffect: Bool = false
     @Published var showBoardFullWarning: Bool = false
-    @Published var coins: Int = 125
+    @Published var coins: Int = 125 {
+        didSet {
+            UserDefaults.standard.set(coins, forKey: coinsKey)
+        }
+    }
     @Published var hintCharges: Int = 2
     @Published var bombCharges: Int = 1
     @Published var isBombArmed: Bool = false
@@ -54,6 +58,7 @@ final class GameViewModel: ObservableObject {
     private let settings: GameSettings
     private var board: BoardModel
     private let bestScoreKey = "SlideWords_BestScore"
+    private let coinsKey = "SlideWords_Coins"
     private var pendingSwipeDirection: SwipeDirection = .left
     private var hintTimerTask: Task<Void, Never>?
     private let shuffleCost: Int = 50
@@ -65,7 +70,9 @@ final class GameViewModel: ObservableObject {
     init(settings: GameSettings) {
         self.settings = settings
         self.board = BoardModel(size: settings.boardVariant.rawValue)
-        self.bestScore = UserDefaults.standard.integer(forKey: "SlideWords_BestScore")
+        self.bestScore = UserDefaults.standard.integer(forKey: bestScoreKey)
+        let storedCoins = UserDefaults.standard.object(forKey: coinsKey) as? Int
+        self.coins = storedCoins ?? 125
         startNewGame()
     }
 
