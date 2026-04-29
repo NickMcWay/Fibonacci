@@ -18,8 +18,8 @@ struct MenuView: View {
             backgroundLayer
 
             VStack(spacing: 18) {
-                summaryBar
                 titleSection
+                summaryBar
                 boardPreview
                 playButton
                 bottomActions
@@ -44,14 +44,15 @@ struct MenuView: View {
     private var titleSection: some View {
         Spacer()
             .frame(maxWidth: 320)
+            .frame(height: 120)
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .padding(.top, 8)
     }
 
     private var summaryBar: some View {
         HStack(spacing: 12) {
-            summaryItem(label: "Highscore", value: "\(bestScore)", symbol: "trophy.fill", tint: Color.yellow.opacity(0.22))
-            summaryItem(label: "Coins", value: "\(coins)", symbol: "bitcoinsign.circle.fill", tint: Color.orange.opacity(0.22))
+            summaryItem(label: "Highscore", value: "\(bestScore)", symbol: "trophy.fill", tint: Color(red: 1, green: 0.82, blue: 0.6))
+            summaryItem(label: "Coins", value: "\(coins)", symbol: "bitcoinsign.circle.fill", tint: Color(red: 1, green: 0.72, blue: 0.5))
         }
     }
 
