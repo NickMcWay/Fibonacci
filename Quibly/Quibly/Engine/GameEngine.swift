@@ -31,6 +31,22 @@ enum GameEngine {
         return baseScore * letterMultiplier
     }
 
+    static func score(for match: WordValidator.WordMatch, on board: BoardModel, language: GameLanguage) -> Int {
+        let values = language.scrabbleValues
+        let wordChars = Array(match.word.lowercased())
+        var baseScore = 0
+
+        for (index, pos) in match.positions.enumerated() {
+            guard index < wordChars.count else { continue }
+            guard let tile = board.tile(row: pos.row, col: pos.col) else { continue }
+            if tile.isJoker { continue }
+            baseScore += values[wordChars[index]] ?? 1
+        }
+
+        let letterMultiplier = max(1, match.word.count)
+        return baseScore * letterMultiplier
+    }
+
     // MARK: - Main Turn Entry Point
 
     static func processTurn(board: BoardModel, direction: SwipeDirection, language: GameLanguage = .english) -> TurnResult? {
@@ -62,7 +78,7 @@ enum GameEngine {
             }
 
             let multiplier = comboCount + 1
-            let roundPoints = matches.reduce(0) { $0 + wordScore($1.word, language: language) } * multiplier
+            let roundPoints = matches.reduce(0) { $0 + score(for: $1, on: current, language: language) } * multiplier
             totalPoints += roundPoints
             comboCount += 1
 
@@ -113,7 +129,7 @@ enum GameEngine {
             allWords.append(match.word)
             for pos in match.positions { toRemove.insert(current.index(pos.row, pos.col)) }
         }
-        let firstRoundScore = matches.reduce(0) { $0 + wordScore($1.word, language: language) }
+        let firstRoundScore = matches.reduce(0) { $0 + score(for: $1, on: current, language: language) }
         totalPoints += firstRoundScore * (comboCount + 1)
         comboCount += 1
 
@@ -129,7 +145,7 @@ enum GameEngine {
                 allWords.append(match.word)
                 for pos in match.positions { chainRemove.insert(current.index(pos.row, pos.col)) }
             }
-            let chainScore = chain.reduce(0) { $0 + wordScore($1.word, language: language) }
+            let chainScore = chain.reduce(0) { $0 + score(for: $1, on: current, language: language) }
             totalPoints += chainScore * (comboCount + 1)
             comboCount += 1
             for idx in chainRemove { current.cells[idx] = nil }

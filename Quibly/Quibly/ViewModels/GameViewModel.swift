@@ -253,7 +253,7 @@ final class GameViewModel: ObservableObject {
             board.cells[board.index(pos.row, pos.col)]?.isClearing = true
         }
 
-        let earned = GameEngine.wordScore(word, language: settings.language)
+        let earned = scoreForDrawnWord(pathTiles: pathTiles, validatedWord: word)
         let coinTilesUsed = pathTiles.filter(\.hasCoin).count
         score += earned
         coins += coinTilesUsed * coinPerCoinTile
@@ -294,6 +294,23 @@ final class GameViewModel: ObservableObject {
             try? await Task.sleep(nanoseconds: 1_200_000_000)
             showWordOverlay = false
         }
+    }
+
+
+    private func scoreForDrawnWord(pathTiles: [Tile], validatedWord: String) -> Int {
+        let values = settings.language.scrabbleValues
+        let resolved = WordValidator.resolveWord(for: validatedWord, language: settings.language) ?? validatedWord.lowercased()
+        let chars = Array(resolved)
+
+        var baseScore = 0
+        for (index, tile) in pathTiles.enumerated() {
+            guard index < chars.count else { continue }
+            if tile.isJoker { continue }
+            baseScore += values[chars[index]] ?? 1
+        }
+
+        let letterMultiplier = max(1, resolved.count)
+        return baseScore * letterMultiplier
     }
 
     // MARK: - Hint Timer

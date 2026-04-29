@@ -37,6 +37,7 @@ struct BoardView: View {
 
             ZStack {
                 boardBackground(gap: gap, tileSize: tileSize)
+                drawPathConnector(gap: gap, tileSize: tileSize)
                 pendingSwipeConnector(gap: gap, tileSize: tileSize)
 
                 ForEach(vm.tiles) { tile in
@@ -295,6 +296,28 @@ struct BoardView: View {
                 }
             }
         }
+    }
+
+
+    private func drawPathConnector(gap: CGFloat, tileSize: CGFloat) -> some View {
+        let activePath = confirmedPath.isEmpty ? drawPath : confirmedPath
+        let points = activePath.map {
+            CGPoint(
+                x: tileX(col: $0.col, gap: gap, tileSize: tileSize),
+                y: tileY(row: $0.row, gap: gap, tileSize: tileSize)
+            )
+        }
+
+        return Path { path in
+            guard let first = points.first else { return }
+            path.move(to: first)
+            for point in points.dropFirst() { path.addLine(to: point) }
+        }
+        .stroke(
+            Color(red: 0.08, green: 0.52, blue: 0.95).opacity(0.88),
+            style: StrokeStyle(lineWidth: tileSize * 0.12, lineCap: .round, lineJoin: .round)
+        )
+        .allowsHitTesting(false)
     }
 
     private func pendingSwipeConnector(gap: CGFloat, tileSize: CGFloat) -> some View {
