@@ -53,7 +53,7 @@ enum GameEngine {
         let (slid, moved) = board.sliding(direction: direction)
         guard moved else { return nil }
 
-        guard let spawnedTile = LetterSpawnEngine.spawnTile(for: slid) else {
+        guard let spawnedTile = LetterSpawnEngine.spawnTile(for: slid, language: language) else {
             let isOver = isGameOver(board: slid)
             return TurnResult(board: slid, clearedWords: [], pointsEarned: 0,
                               comboCount: 0, isGameOver: isOver, spawnedPosition: nil)
@@ -106,7 +106,7 @@ enum GameEngine {
         let (slid, moved) = board.sliding(direction: direction)
         guard moved else { return nil }
 
-        guard let spawnedTile = LetterSpawnEngine.spawnTile(for: slid) else {
+        guard let spawnedTile = LetterSpawnEngine.spawnTile(for: slid, language: language) else {
             return (slid, [], nil)
         }
         var current = slid

@@ -43,15 +43,15 @@ enum LetterSpawnEngine {
 
     // MARK: - Public API
 
-    static func chooseLetter(for board: BoardModel) -> Character {
-        let scores = scoredCandidates(for: board)
+    static func chooseLetter(for board: BoardModel, language: GameLanguage = .english) -> Character {
+        let scores = scoredCandidates(for: board, language: language)
         return weightedRandom(scores)
     }
 
-    static func spawnTile(for board: BoardModel) -> Tile? {
+    static func spawnTile(for board: BoardModel, language: GameLanguage = .english) -> Tile? {
         guard !board.emptyPositions.isEmpty else { return nil }
-        let letter = chooseLetter(for: board)
-        let position = choosePosition(for: board, letter: letter)
+        let letter = chooseLetter(for: board, language: language)
+        let position = choosePosition(for: board, letter: letter, language: language)
         var tile = Tile(letter: letter, row: position.row, col: position.col)
         tile.hasCoin = Double.random(in: 0..<1) < 0.18
         tile.isJoker = Double.random(in: 0..<1) < 0.08
@@ -64,22 +64,23 @@ enum LetterSpawnEngine {
 
     // MARK: - Scoring
 
-    static func scoredCandidates(for board: BoardModel) -> [Character: Int] {
+    static func scoredCandidates(for board: BoardModel, language: GameLanguage = .english) -> [Character: Int] {
         var letterCounts: [Character: Int] = [:]
         for tile in board.cells.compactMap({ $0 }) {
             letterCounts[tile.letter, default: 0] += 1
         }
 
+        let languageBaseWeights = baseWeights(for: language)
         var scores: [Character: Int] = [:]
         for letter in alphabet {
-            var score = baseWeight[letter] ?? 1
+            var score = languageBaseWeights[letter] ?? 1
             let count = letterCounts[letter] ?? 0
             if count > 2 { score -= (count - 2) * 5 }
 
             let emptyPos = board.emptyPositions
             var bestPositionBonus = 0
             for pos in emptyPos {
-                let bonus = scoreLetterAtPosition(letter: letter, row: pos.row, col: pos.col, board: board)
+                let bonus = scoreLetterAtPosition(letter: letter, row: pos.row, col: pos.col, board: board, language: language)
                 if bonus > bestPositionBonus { bestPositionBonus = bonus }
             }
             score += bestPositionBonus
@@ -88,25 +89,25 @@ enum LetterSpawnEngine {
         return scores
     }
 
-    private static func scoreLetterAtPosition(letter: Character, row: Int, col: Int, board: BoardModel) -> Int {
+    private static func scoreLetterAtPosition(letter: Character, row: Int, col: Int, board: BoardModel, language: GameLanguage) -> Int {
         var score = 0
         var testBoard = board
         let testTile = Tile(letter: letter, row: row, col: col)
         testBoard.setTile(testTile, row: row, col: col)
 
-        let matches = WordValidator.findMatches(in: testBoard)
+        let matches = WordValidator.findMatches(in: testBoard, language: language)
         let completesWord = matches.contains { match in
             match.positions.contains { $0.row == row && $0.col == col }
         }
         if completesWord { score += 100 }
-        score += scoreNearWords(letter: letter, row: row, col: col, board: board) * 25
+        score += scoreNearWords(letter: letter, row: row, col: col, board: board, language: language) * 25
         score += scoreBigrams(letter: letter, row: row, col: col, board: board) * 8
         return score
     }
 
     /// Count how many (windowSize-1)-of-windowSize near-word windows this letter
     /// participates in, across all window sizes from 3 to board.size.
-    private static func scoreNearWords(letter: Character, row: Int, col: Int, board: BoardModel) -> Int {
+    private static func scoreNearWords(letter: Character, row: Int, col: Int, board: BoardModel, language: GameLanguage) -> Int {
         var count = 0
         let size = board.size
 
@@ -129,7 +130,7 @@ enum LetterSpawnEngine {
                     }
                 }
                 let present = letters.compactMap { $0 }
-                if present.count == windowSize - 1 && hasEmpty, couldFormWord(letters: letters) {
+                if present.count == windowSize - 1 && hasEmpty, couldFormWord(letters: letters, language: language) {
                     count += 1
                 }
             }
@@ -152,7 +153,7 @@ enum LetterSpawnEngine {
                     }
                 }
                 let present = letters.compactMap { $0 }
-                if present.count == windowSize - 1 && hasEmpty, couldFormWord(letters: letters) {
+                if present.count == windowSize - 1 && hasEmpty, couldFormWord(letters: letters, language: language) {
                     count += 1
                 }
             }
@@ -160,9 +161,9 @@ enum LetterSpawnEngine {
         return count
     }
 
-    private static func couldFormWord(letters: [Character?]) -> Bool {
+    private static func couldFormWord(letters: [Character?], language: GameLanguage) -> Bool {
         let length = letters.count
-        let set = WordValidator.wordSetForLength(length)
+        let set = WordValidator.wordSetForLength(length, language: language)
         guard !set.isEmpty else { return false }
         for word in set {
             let wChars = Array(word)
@@ -191,16 +192,44 @@ enum LetterSpawnEngine {
 
     // MARK: - Position Selection
 
-    private static func choosePosition(for board: BoardModel, letter: Character) -> (row: Int, col: Int) {
+    private static func choosePosition(for board: BoardModel, letter: Character, language: GameLanguage) -> (row: Int, col: Int) {
         let empty = board.emptyPositions
         guard !empty.isEmpty else { return (0, 0) }
         var best = empty[0]
         var bestScore = -999
         for pos in empty {
-            let s = scoreLetterAtPosition(letter: letter, row: pos.row, col: pos.col, board: board)
+            let s = scoreLetterAtPosition(letter: letter, row: pos.row, col: pos.col, board: board, language: language)
             if s > bestScore { bestScore = s; best = pos }
         }
         return Double.random(in: 0..<1) < 0.70 ? best : (empty.randomElement() ?? best)
+    }
+
+    /// Uses per-language letter frequencies from the in-app dictionaries to adjust spawn distribution.
+    /// A little smoothing keeps very rare letters possible.
+    private static func baseWeights(for language: GameLanguage) -> [Character: Int] {
+        var counts: [Character: Int] = [:]
+
+        let lengths = language == .dutch ? Array(2...10) : Array(2...6)
+        for length in lengths {
+            for word in WordValidator.wordSetForLength(length, language: language) {
+                for ch in word {
+                    counts[ch, default: 0] += 1
+                }
+            }
+        }
+
+        let total = counts.values.reduce(0, +)
+        guard total > 0 else { return baseWeight }
+
+        var weights: [Character: Int] = [:]
+        for letter in alphabet {
+            let occurrences = counts[letter, default: 0]
+            let normalized = Double(occurrences) / Double(total)
+            let scaled = Int((normalized * 300.0).rounded())
+            let fallback = baseWeight[letter] ?? 1
+            weights[letter] = max(1, max(scaled, fallback / 2))
+        }
+        return weights
     }
 
     // MARK: - Weighted Random
