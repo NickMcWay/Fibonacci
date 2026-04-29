@@ -234,7 +234,7 @@ struct BoardView: View {
                     let path = confirmedPath
                     confirmedPath = []
                     vm.submitDrawnWord(path: path)
-                } else if !vm.pendingSwipeMatches.isEmpty {
+                } else if vm.showMatchHighlights && !vm.pendingSwipeMatches.isEmpty {
                     vm.confirmPendingSwipeWords()
                 }
             } else {
