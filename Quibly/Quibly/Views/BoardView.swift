@@ -30,6 +30,8 @@ struct BoardView: View {
     @State private var acceptedWord: String?
     @State private var acceptedScore: Int?
     @State private var acceptedWordTask: Task<Void, Never>?
+    @State private var rejectedPath: [(row: Int, col: Int)] = []
+    @State private var rejectShake: CGFloat = 0
 
     var body: some View {
         GeometryReader { geo in
@@ -51,6 +53,13 @@ struct BoardView: View {
                         isPending: pend,
                         scrabbleValue: tile.isJoker ? nil : vm.scrabbleValue(for: tile.letter)
                     )
+                    .overlay {
+                        if inPath(tile, rejectedPath) {
+                            RoundedRectangle(cornerRadius: tileSize * 0.20)
+                                .fill(Color.red.opacity(0.35))
+                        }
+                    }
+                    .offset(x: inPath(tile, rejectedPath) ? rejectShake : 0)
                     .position(
                         x: tileX(col: tile.col, gap: gap, tileSize: tileSize),
                         y: tileY(row: tile.row, gap: gap, tileSize: tileSize)
@@ -106,12 +115,15 @@ struct BoardView: View {
             let letters = activePath.compactMap { pos in
                 vm.tiles.first(where: { $0.row == pos.row && $0.col == pos.col })?.letter
             }
-            let rawWord = String(letters)
-            let resolvedWord = WordValidator.resolveWord(for: rawWord.lowercased(), language: vm.language)
-            let displayWord = (resolvedWord ?? rawWord).uppercased()
+            let word = String(letters).uppercased()
             let isDrawPending = !confirmedPath.isEmpty
-            let isValid = WordValidator.isValidWord(rawWord.lowercased(), language: vm.language)
-            text = displayWord
+            let isValid = WordValidator.isValidWord(word.lowercased(), language: vm.language)
+            let runningScore = vm.pointsForDrawnWord(path: activePath)
+            if let runningScore, !word.isEmpty {
+                text = "\(word)  +\(runningScore)"
+            } else {
+                text = word
+            }
             isGreen = isDrawPending || isValid
         }
 
@@ -208,13 +220,15 @@ struct BoardView: View {
             let letters = drawPath.compactMap { pos in
                 vm.tiles.first(where: { $0.row == pos.row && $0.col == pos.col })?.letter
             }
-            let rawWord = String(letters).lowercased()
-            let resolvedWord = WordValidator.resolveWord(for: rawWord, language: vm.language)
-            let isValidSelection = drawPath.count >= 3 && WordValidator.isValidWord(rawWord, language: vm.language)
+            let word = String(letters)
+            let isValidSelection = drawPath.count >= 2 && WordValidator.isValidWord(word, language: vm.language)
 
             if isValidSelection {
                 let path = drawPath
-                acceptedWord = (resolvedWord ?? rawWord).uppercased()
+                let letters = path.compactMap { pos in
+                    vm.tiles.first(where: { $0.row == pos.row && $0.col == pos.col })?.letter
+                }
+                acceptedWord = String(letters).uppercased()
                 acceptedScore = vm.pointsForDrawnWord(path: path)
                 audio.playCorrectSelectionFeedback()
                 confirmedPath = []
@@ -226,10 +240,22 @@ struct BoardView: View {
                     acceptedWord = nil
                     acceptedScore = nil
                 }
-            } else if drawPath.count >= 3 {
+            } else if drawPath.count >= 2 {
                 confirmedPath = []
                 audio.playWrongSelectionFeedback()
+                rejectedPath = drawPath
                 drawPath = []
+                withAnimation(.easeInOut(duration: 0.06)) { rejectShake = 7 }
+                Task {
+                    try? await Task.sleep(nanoseconds: 70_000_000)
+                    withAnimation(.easeInOut(duration: 0.06)) { rejectShake = -7 }
+                    try? await Task.sleep(nanoseconds: 70_000_000)
+                    withAnimation(.easeInOut(duration: 0.06)) { rejectShake = 5 }
+                    try? await Task.sleep(nanoseconds: 70_000_000)
+                    withAnimation(.easeInOut(duration: 0.06)) { rejectShake = 0 }
+                    try? await Task.sleep(nanoseconds: 220_000_000)
+                    rejectedPath = []
+                }
             } else {
                 drawPath = []
             }
