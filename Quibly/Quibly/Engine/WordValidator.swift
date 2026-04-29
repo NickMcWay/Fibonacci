@@ -280,7 +280,7 @@ final class WordValidator {
     static func findMatches(in board: BoardModel, language: GameLanguage = .english) -> [WordMatch] {
         var matches: [WordMatch] = []
         let size = board.size
-        let minimumLength = minimumWindowLength(for: language)
+        let minimumLength = minimumWordLength(for: language)
 
         for windowSize in minimumLength...max(minimumLength, size) {
             let set = wordSetForLength(windowSize, language: language)
@@ -333,7 +333,7 @@ final class WordValidator {
         }
     }
 
-    private static func minimumWindowLength(for language: GameLanguage) -> Int {
+    static func minimumWordLength(for language: GameLanguage) -> Int {
         switch language {
         case .dutch: return 2
         default: return 3

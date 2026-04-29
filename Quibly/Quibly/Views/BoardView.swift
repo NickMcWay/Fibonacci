@@ -30,6 +30,8 @@ struct BoardView: View {
     @State private var acceptedWord: String?
     @State private var acceptedScore: Int?
     @State private var acceptedWordTask: Task<Void, Never>?
+    @State private var rejectedPath: [(row: Int, col: Int)] = []
+    @State private var rejectShake: CGFloat = 0
 
     var body: some View {
         GeometryReader { geo in
@@ -51,6 +53,13 @@ struct BoardView: View {
                         isPending: pend,
                         scrabbleValue: tile.isJoker ? nil : vm.scrabbleValue(for: tile.letter)
                     )
+                    .overlay {
+                        if inPath(tile, rejectedPath) {
+                            RoundedRectangle(cornerRadius: tileSize * 0.20)
+                                .fill(Color.red.opacity(0.35))
+                        }
+                    }
+                    .offset(x: inPath(tile, rejectedPath) ? rejectShake : 0)
                     .position(
                         x: tileX(col: tile.col, gap: gap, tileSize: tileSize),
                         y: tileY(row: tile.row, gap: gap, tileSize: tileSize)
@@ -109,7 +118,12 @@ struct BoardView: View {
             let word = String(letters).uppercased()
             let isDrawPending = !confirmedPath.isEmpty
             let isValid = WordValidator.isValidWord(word.lowercased(), language: vm.language)
-            text = word
+            let runningScore = vm.pointsForDrawnWord(path: activePath)
+            if let runningScore, !word.isEmpty {
+                text = "\(word)  +\(runningScore)"
+            } else {
+                text = word
+            }
             isGreen = isDrawPending || isValid
         }
 
@@ -207,7 +221,8 @@ struct BoardView: View {
                 vm.tiles.first(where: { $0.row == pos.row && $0.col == pos.col })?.letter
             }
             let word = String(letters)
-            let isValidSelection = drawPath.count >= 3 && WordValidator.isValidWord(word, language: vm.language)
+            let minimumLength = WordValidator.minimumWordLength(for: vm.language)
+            let isValidSelection = drawPath.count >= minimumLength && WordValidator.isValidWord(word, language: vm.language)
 
             if isValidSelection {
                 let path = drawPath
@@ -226,10 +241,22 @@ struct BoardView: View {
                     acceptedWord = nil
                     acceptedScore = nil
                 }
-            } else if drawPath.count >= 3 {
+            } else if drawPath.count >= WordValidator.minimumWordLength(for: vm.language) {
                 confirmedPath = []
                 audio.playWrongSelectionFeedback()
+                rejectedPath = drawPath
                 drawPath = []
+                withAnimation(.easeInOut(duration: 0.06)) { rejectShake = 7 }
+                Task {
+                    try? await Task.sleep(nanoseconds: 70_000_000)
+                    withAnimation(.easeInOut(duration: 0.06)) { rejectShake = -7 }
+                    try? await Task.sleep(nanoseconds: 70_000_000)
+                    withAnimation(.easeInOut(duration: 0.06)) { rejectShake = 5 }
+                    try? await Task.sleep(nanoseconds: 70_000_000)
+                    withAnimation(.easeInOut(duration: 0.06)) { rejectShake = 0 }
+                    try? await Task.sleep(nanoseconds: 220_000_000)
+                    rejectedPath = []
+                }
             } else {
                 drawPath = []
             }
