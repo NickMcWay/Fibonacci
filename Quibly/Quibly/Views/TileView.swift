@@ -110,7 +110,7 @@ struct TileView: View {
     }
 
     private func textColor(for letter: Character, isPending: Bool) -> Color {
-        isPending ? Color(red: 0.44, green: 0.26, blue: 0.11) : Color(red: 0.23, green: 0.20, blue: 0.47)
+        isPending ? Color(red: 0.30, green: 0.16, blue: 0.05) : Color(red: 0.08, green: 0.14, blue: 0.24)
     }
 }
 

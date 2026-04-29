@@ -354,9 +354,12 @@ final class WordValidator {
 
     /// Validate an arbitrary sequence of letters (for drawn words).
     static func isValidWord(_ word: String, language: GameLanguage = .english) -> Bool {
-        let lower = word.lowercased()
-        let length = lower.count
-        return resolveWildcardWord(from: lower, in: wordSetForLength(length, language: language)) != nil
+        resolveWord(for: word, language: language) != nil
+    }
+
+    static func resolveWord(for pattern: String, language: GameLanguage = .english) -> String? {
+        let lower = pattern.lowercased()
+        return resolveWildcardWord(from: lower, in: wordSetForLength(lower.count, language: language))
     }
 
     private static func resolveWildcardWord(from pattern: String, in set: Set<String>) -> String? {
