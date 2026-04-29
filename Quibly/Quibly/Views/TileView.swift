@@ -54,9 +54,10 @@ struct TileView: View {
                     }
             }
 
-            Text(tile.isJoker ? "★" : String(tile.letter).uppercased())
+            Text(displayedLetter)
                 .font(.system(size: size * 0.44, weight: .bold, design: .rounded))
                 .foregroundColor(textColor(for: tile.letter, isPending: isPending))
+                .opacity(jokerLetterOpacity)
 
             if tile.hasCoin {
                 Image(systemName: "centsign.circle.fill")
@@ -98,6 +99,17 @@ struct TileView: View {
                 }
             }
         }
+    }
+
+    private var displayedLetter: String {
+        if tile.isJoker, let resolved = tile.jokerResolvedLetter {
+            return String(resolved).uppercased()
+        }
+        return tile.isJoker ? "★" : String(tile.letter).uppercased()
+    }
+
+    private var jokerLetterOpacity: Double {
+        (tile.isJoker && tile.jokerResolvedLetter != nil) ? 0.6 : 1.0
     }
 
     // MARK: - Color Palette

@@ -256,8 +256,15 @@ final class GameViewModel: ObservableObject {
 
         isAnimating = true
 
-        for pos in path {
+        let resolvedWord = WordValidator.resolveWord(for: word, language: settings.language) ?? word.lowercased()
+        let resolvedChars = Array(resolvedWord)
+
+        for (index, pos) in path.enumerated() {
+            guard let tile = board.cells[board.index(pos.row, pos.col)] else { continue }
             board.cells[board.index(pos.row, pos.col)]?.isClearing = true
+            if tile.isJoker, index < resolvedChars.count {
+                board.cells[board.index(pos.row, pos.col)]?.jokerResolvedLetter = resolvedChars[index]
+            }
         }
 
         let earned = scoreForDrawnWord(pathTiles: pathTiles, validatedWord: word)
