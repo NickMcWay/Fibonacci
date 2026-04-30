@@ -4,7 +4,7 @@ import Combine
 import UIKit
 
 enum PowerUpAnimation: Equatable {
-    case hint, shuffle, bomb
+    case hint, shuffle, bomb, wild
 }
 
 @MainActor
@@ -36,7 +36,11 @@ final class GameViewModel: ObservableObject {
     @Published var shuffleCharges: Int = 1 {
         didSet { UserDefaults.standard.set(shuffleCharges, forKey: shuffleChargesKey) }
     }
+    @Published var wildCharges: Int = 1 {
+        didSet { UserDefaults.standard.set(wildCharges, forKey: wildChargesKey) }
+    }
     @Published var isBombArmed: Bool = false
+    @Published var isWildArmed: Bool = false
 
     // Hint system
     @Published var showHintButton: Bool = false
@@ -64,11 +68,14 @@ final class GameViewModel: ObservableObject {
     private let hintChargesKey    = "SlideWords_HintCharges"
     private let bombChargesKey    = "SlideWords_BombCharges"
     private let shuffleChargesKey = "SlideWords_ShuffleCharges"
+    private let wildChargesKey    = "SlideWords_WildCharges"
     private var pendingSwipeDirection: SwipeDirection = .left
     private var hintTimerTask: Task<Void, Never>?
+
     let shuffleCost: Int = 50
     let hintCost: Int   = 25
     let bombCost: Int   = 75
+    let wildCost: Int   = 60
     private let coinPerCoinTile: Int = 10
 
     // MARK: - Init
@@ -77,19 +84,25 @@ final class GameViewModel: ObservableObject {
         self.settings = settings
         self.board = BoardModel(size: settings.boardVariant.rawValue)
         self.bestScore = UserDefaults.standard.integer(forKey: bestScoreKey)
-        self.coins = (UserDefaults.standard.object(forKey: coinsKey) as? Int) ?? 125
-
-        let storedHints   = UserDefaults.standard.object(forKey: "SlideWords_HintCharges") as? Int
-        let storedBombs   = UserDefaults.standard.object(forKey: "SlideWords_BombCharges") as? Int
-        let storedShuffle = UserDefaults.standard.object(forKey: "SlideWords_ShuffleCharges") as? Int
-        self.hintCharges    = storedHints   ?? 2
-        self.bombCharges    = storedBombs   ?? 1
-        self.shuffleCharges = storedShuffle ?? 1
-
+        self.coins         = (UserDefaults.standard.object(forKey: "SlideWords_Coins")          as? Int) ?? 125
+        self.hintCharges   = (UserDefaults.standard.object(forKey: "SlideWords_HintCharges")    as? Int) ?? 2
+        self.bombCharges   = (UserDefaults.standard.object(forKey: "SlideWords_BombCharges")    as? Int) ?? 1
+        self.shuffleCharges = (UserDefaults.standard.object(forKey: "SlideWords_ShuffleCharges") as? Int) ?? 1
+        self.wildCharges   = (UserDefaults.standard.object(forKey: "SlideWords_WildCharges")    as? Int) ?? 1
         startNewGame()
     }
 
     convenience init() { self.init(settings: .default) }
+
+    // MARK: - Sync from external changes (e.g. Shop sheet)
+
+    func syncFromDefaults() {
+        if let v = UserDefaults.standard.object(forKey: coinsKey)          as? Int { coins = v }
+        if let v = UserDefaults.standard.object(forKey: hintChargesKey)    as? Int { hintCharges = v }
+        if let v = UserDefaults.standard.object(forKey: bombChargesKey)    as? Int { bombCharges = v }
+        if let v = UserDefaults.standard.object(forKey: shuffleChargesKey) as? Int { shuffleCharges = v }
+        if let v = UserDefaults.standard.object(forKey: wildChargesKey)    as? Int { wildCharges = v }
+    }
 
     // MARK: - Game Lifecycle
 
@@ -106,6 +119,7 @@ final class GameViewModel: ObservableObject {
         showEmptyBoardEffect = false
         showBoardFullWarning = false
         isBombArmed = false
+        isWildArmed = false
         resetHintState()
 
         for _ in 0..<2 {
@@ -123,6 +137,7 @@ final class GameViewModel: ObservableObject {
         isGameOver = false
         pendingSwipeMatches = []
         isBombArmed = false
+        isWildArmed = false
         resetHintState()
         syncTiles()
     }
@@ -134,6 +149,7 @@ final class GameViewModel: ObservableObject {
 
         pendingSwipeMatches = []
         isBombArmed = false
+        isWildArmed = false
         resetHintState()
 
         guard let slideResult = GameEngine.slideAndSpawn(board: board, direction: direction, language: settings.language) else {
@@ -174,7 +190,6 @@ final class GameViewModel: ObservableObject {
         }
     }
 
-    // Use a hint charge to reveal pending swipe matches early.
     func usePowerUpHint() {
         guard !pendingSwipeMatches.isEmpty, hintCharges > 0 else { return }
         hintTimerTask?.cancel()
@@ -380,7 +395,7 @@ final class GameViewModel: ObservableObject {
                     syncTiles()
                 }
             }
-            try? await Task.sleep(nanoseconds: 1_200_000_000)
+            try? await Task.sleep(nanoseconds: 1_500_000_000)
             showEmptyBoardEffect = false
         }
     }
@@ -394,16 +409,12 @@ final class GameViewModel: ObservableObject {
     // MARK: - Economy: computed
 
     var canUseBomb: Bool    { bombCharges > 0 && !isAnimating && !isGameOver }
-    var canAffordHint: Bool { coins >= hintCost && !isAnimating && !isGameOver }
-    var canAffordShuffle: Bool { coins >= shuffleCost && !isAnimating && !isGameOver }
     var canAffordBomb: Bool { coins >= bombCost && !isAnimating && !isGameOver }
-
-    var canUseShuffle: Bool {
-        (shuffleCharges > 0 || coins >= shuffleCost) && !isAnimating && !isGameOver
-    }
-    var canUseHintButton: Bool {
-        (hintCharges > 0 || coins >= hintCost) && !isAnimating && !isGameOver
-    }
+    var canAffordHint: Bool { coins >= hintCost && !isAnimating && !isGameOver }
+    var canUseShuffle: Bool { (shuffleCharges > 0 || coins >= shuffleCost) && !isAnimating && !isGameOver }
+    var canUseHintButton: Bool { (hintCharges > 0 || coins >= hintCost) && !isAnimating && !isGameOver }
+    var canUseWild: Bool    { wildCharges > 0 && !isAnimating && !isGameOver }
+    var canAffordWild: Bool { coins >= wildCost && !isAnimating && !isGameOver }
 
     // MARK: - Economy: actions
 
@@ -450,6 +461,7 @@ final class GameViewModel: ObservableObject {
     func toggleBombArm() {
         guard canUseBomb else { return }
         isBombArmed.toggle()
+        if isBombArmed { isWildArmed = false }
         triggerHaptic(.light)
     }
 
@@ -516,7 +528,36 @@ final class GameViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Shop Purchases (spend coins)
+    // MARK: - Wild Powerup
+
+    func toggleWildArm() {
+        guard canUseWild else { return }
+        isWildArmed.toggle()
+        if isWildArmed { isBombArmed = false }
+        triggerHaptic(.light)
+    }
+
+    func convertTileToJoker(at row: Int, col: Int) {
+        guard isWildArmed, wildCharges > 0 else { return }
+        guard board.tile(row: row, col: col) != nil else { return }
+
+        isWildArmed = false
+        wildCharges -= 1
+
+        board.cells[board.index(row, col)]?.isJoker = true
+
+        powerUpAnimation = .wild
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
+            syncTiles()
+        }
+        triggerHaptic(.medium)
+        Task {
+            try? await Task.sleep(nanoseconds: 700_000_000)
+            powerUpAnimation = nil
+        }
+    }
+
+    // MARK: - Shop Purchases
 
     func shopBuyHints(count: Int = 1) {
         let cost = hintCost * count
@@ -539,6 +580,14 @@ final class GameViewModel: ObservableObject {
         guard coins >= cost else { return }
         coins -= cost
         bombCharges += count
+        triggerHaptic(.light)
+    }
+
+    func shopBuyWilds(count: Int = 1) {
+        let cost = wildCost * count
+        guard coins >= cost else { return }
+        coins -= cost
+        wildCharges += count
         triggerHaptic(.light)
     }
 

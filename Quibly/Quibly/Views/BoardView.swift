@@ -267,10 +267,17 @@ struct BoardView: View {
             drawPath = []
 
             if tapDist <= swipeThreshold {
-                if vm.isBombArmed, let tapped = tileAt(v.location, gap: gap, tileSize: tileSize) {
-                    confirmedPath = []
-                    vm.triggerBomb(at: tapped.row, col: tapped.col)
-                    return
+                if let tapped = tileAt(v.location, gap: gap, tileSize: tileSize) {
+                    if vm.isBombArmed {
+                        confirmedPath = []
+                        vm.triggerBomb(at: tapped.row, col: tapped.col)
+                        return
+                    }
+                    if vm.isWildArmed {
+                        confirmedPath = []
+                        vm.convertTileToJoker(at: tapped.row, col: tapped.col)
+                        return
+                    }
                 }
                 if vm.showMatchHighlights && !vm.pendingSwipeMatches.isEmpty {
                     vm.confirmPendingSwipeWords()

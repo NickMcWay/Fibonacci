@@ -4,16 +4,19 @@ struct MenuView: View {
     var onStart: (GameSettings) -> Void
 
     @EnvironmentObject private var audio: AudioManager
-    @AppStorage("SlideWords_BestScore") private var bestScore: Int = 0
-    @AppStorage("SlideWords_Coins") private var coins: Int = 125
-    @AppStorage("SlideWords_SelectedLanguage") private var selectedLanguageRawValue: String = GameLanguage.english.rawValue
-    @AppStorage("SlideWords_SelectedVariant") private var selectedVariantRawValue: Int = BoardVariant.small.rawValue
+    @AppStorage("SlideWords_BestScore")         private var bestScore:              Int    = 0
+    @AppStorage("SlideWords_Coins")             private var coins:                  Int    = 125
+    @AppStorage("SlideWords_SelectedLanguage")  private var selectedLanguageRawValue: String = GameLanguage.english.rawValue
+    @AppStorage("SlideWords_SelectedVariant")   private var selectedVariantRawValue: Int   = BoardVariant.small.rawValue
+
     @State private var selectedLanguage: GameLanguage = .english
-    @State private var selectedVariant: BoardVariant = .small
-    @State private var activePage: MenuPage?
+    @State private var selectedVariant:  BoardVariant = .small
+    @State private var showStats = false
+    @State private var showShop  = false
+    @State private var showModes = false
 
     private let cream = Color(red: 0.98, green: 0.94, blue: 0.88)
-    private let ink = Color(red: 0.31, green: 0.23, blue: 0.57)
+    private let ink   = Color(red: 0.31, green: 0.23, blue: 0.57)
 
     var body: some View {
         ZStack {
@@ -33,18 +36,16 @@ struct MenuView: View {
         .onAppear {
             audio.play()
             selectedLanguage = GameLanguage(rawValue: selectedLanguageRawValue) ?? .english
-            selectedVariant = BoardVariant(rawValue: selectedVariantRawValue) ?? .small
+            selectedVariant  = BoardVariant(rawValue: selectedVariantRawValue)  ?? .small
         }
-        .onChange(of: selectedLanguage) { _, newLanguage in
-            selectedLanguageRawValue = newLanguage.rawValue
-        }
-        .onChange(of: selectedVariant) { _, newVariant in
-            selectedVariantRawValue = newVariant.rawValue
-        }
-        .sheet(item: $activePage) { page in
-            MenuDetailsPage(page: page, selectedLanguage: $selectedLanguage, selectedVariant: $selectedVariant)
-        }
+        .onChange(of: selectedLanguage) { _, v in selectedLanguageRawValue = v.rawValue }
+        .onChange(of: selectedVariant)  { _, v in selectedVariantRawValue  = v.rawValue }
+        .sheet(isPresented: $showStats) { StatsSheet(bestScore: bestScore) }
+        .sheet(isPresented: $showShop)  { ShopView() }
+        .sheet(isPresented: $showModes) { ModesSheet(selectedLanguage: $selectedLanguage, selectedVariant: $selectedVariant) }
     }
+
+    // MARK: - Subviews
 
     private var backgroundLayer: some View {
         Image("Quibly Background")
@@ -63,8 +64,23 @@ struct MenuView: View {
 
     private var summaryBar: some View {
         HStack(spacing: 12) {
-            summaryItem(label: "Highscore", value: "\(bestScore)", symbol: "trophy.fill", tint: Color(red: 1, green: 0.82, blue: 0.6))
-            summaryItem(label: "Coins", value: "\(coins)", symbol: "bitcoinsign.circle.fill", tint: Color(red: 1, green: 0.72, blue: 0.5))
+            // Highscore — tap to see stats
+            Button { showStats = true } label: {
+                summaryItem(
+                    label: "Highscore",
+                    value: "\(bestScore)",
+                    symbol: "trophy.fill",
+                    tint: Color(red: 1, green: 0.82, blue: 0.6)
+                )
+            }
+            .buttonStyle(.plain)
+
+            summaryItem(
+                label: "Coins",
+                value: "\(coins)",
+                symbol: "bitcoinsign.circle.fill",
+                tint: Color(red: 1, green: 0.72, blue: 0.5)
+            )
         }
     }
 
@@ -88,10 +104,7 @@ struct MenuView: View {
         .background(
             RoundedRectangle(cornerRadius: 18)
                 .fill(tint)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18)
-                        .stroke(Color.white.opacity(0.72), lineWidth: 1)
-                )
+                .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white.opacity(0.72), lineWidth: 1))
         )
     }
 
@@ -117,10 +130,7 @@ struct MenuView: View {
         .background(
             RoundedRectangle(cornerRadius: 28)
                 .fill(Color.white.opacity(0.34))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 28)
-                        .stroke(Color.white.opacity(0.72), lineWidth: 1.2)
-                )
+                .overlay(RoundedRectangle(cornerRadius: 28).stroke(Color.white.opacity(0.72), lineWidth: 1.2))
                 .shadow(color: .black.opacity(0.18), radius: 14, x: 0, y: 7)
         )
         .overlay(alignment: .center) {
@@ -141,7 +151,6 @@ struct MenuView: View {
             RoundedRectangle(cornerRadius: 17)
                 .fill(highlighted ? Color(red: 0.99, green: 0.87, blue: 0.34) : cream)
                 .shadow(color: .black.opacity(0.10), radius: 5, x: 0, y: 3)
-
             Text(letter)
                 .font(.system(size: 24, weight: .heavy, design: .rounded))
                 .foregroundStyle(highlighted ? Color(red: 0.42, green: 0.28, blue: 0.12) : ink)
@@ -152,27 +161,20 @@ struct MenuView: View {
     private var playButton: some View {
         Button(action: startGame) {
             HStack(spacing: 10) {
-                Image(systemName: "play.fill")
-                    .font(.system(size: 16, weight: .bold))
-                Text("Play")
-                    .font(.system(size: 34, weight: .heavy, design: .rounded))
+                Image(systemName: "play.fill").font(.system(size: 16, weight: .bold))
+                Text("Play").font(.system(size: 34, weight: .heavy, design: .rounded))
             }
             .foregroundStyle(.white)
             .frame(maxWidth: 282)
             .padding(.vertical, 10)
             .background(
                 RoundedRectangle(cornerRadius: 32)
-                    .fill(
-                        LinearGradient(
-                            colors: [Color(red: 0.99, green: 0.87, blue: 0.34), Color(red: 0.97, green: 0.68, blue: 0.20)],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 32)
-                            .stroke(Color.white.opacity(0.7), lineWidth: 1.2)
-                    )
+                    .fill(LinearGradient(
+                        colors: [Color(red: 0.99, green: 0.87, blue: 0.34),
+                                 Color(red: 0.97, green: 0.68, blue: 0.20)],
+                        startPoint: .top, endPoint: .bottom
+                    ))
+                    .overlay(RoundedRectangle(cornerRadius: 32).stroke(Color.white.opacity(0.7), lineWidth: 1.2))
                     .shadow(color: Color(red: 0.72, green: 0.40, blue: 0.15).opacity(0.45), radius: 8, x: 0, y: 6)
             )
         }
@@ -181,14 +183,22 @@ struct MenuView: View {
 
     private var bottomActions: some View {
         HStack(spacing: 14) {
-            menuButton(page: .daily, tint: Color(red: 0.90, green: 0.82, blue: 0.97), symbol: "calendar", title: "Daily", iconColor: Color(red: 0.50, green: 0.36, blue: 0.84))
-            menuButton(page: .modes, tint: Color(red: 0.78, green: 0.87, blue: 0.99), symbol: "square.grid.2x2.fill", title: "Modes", iconColor: Color(red: 0.14, green: 0.44, blue: 0.79))
-            menuButton(page: .stats, tint: Color(red: 0.88, green: 0.95, blue: 0.82), symbol: "chart.bar.fill", title: "Stats", iconColor: Color(red: 0.23, green: 0.63, blue: 0.50))
+            menuButton(
+                tint: Color(red: 0.90, green: 0.82, blue: 0.97),
+                symbol: "cart.fill", title: "Shop",
+                iconColor: Color(red: 0.50, green: 0.36, blue: 0.84)
+            ) { showShop = true }
+
+            menuButton(
+                tint: Color(red: 0.78, green: 0.87, blue: 0.99),
+                symbol: "square.grid.2x2.fill", title: "Modes",
+                iconColor: Color(red: 0.14, green: 0.44, blue: 0.79)
+            ) { showModes = true }
         }
     }
 
-    private func menuButton(page: MenuPage, tint: Color, symbol: String, title: String, iconColor: Color) -> some View {
-        Button(action: { activePage = page }) {
+    private func menuButton(tint: Color, symbol: String, title: String, iconColor: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
             VStack(spacing: 8) {
                 Image(systemName: symbol)
                     .font(.system(size: 22, weight: .semibold))
@@ -202,10 +212,7 @@ struct MenuView: View {
             .background(
                 RoundedRectangle(cornerRadius: 24)
                     .fill(tint)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 24)
-                            .stroke(Color.white.opacity(0.75), lineWidth: 1.1)
-                    )
+                    .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.white.opacity(0.75), lineWidth: 1.1))
                     .shadow(color: .black.opacity(0.16), radius: 7, x: 0, y: 4)
             )
         }
@@ -213,60 +220,28 @@ struct MenuView: View {
     }
 
     private func startGame() {
-        let settings = GameSettings(language: selectedLanguage, boardVariant: selectedVariant)
-        onStart(settings)
+        onStart(GameSettings(language: selectedLanguage, boardVariant: selectedVariant))
     }
 }
 
-private enum MenuPage: String, Identifiable {
-    case daily = "Daily"
-    case modes = "Modes"
-    case stats = "Stats"
+// MARK: - Stats Sheet
 
-    var id: String { rawValue }
-}
-
-private struct MenuDetailsPage: View {
-    let page: MenuPage
-    @Binding var selectedLanguage: GameLanguage
-    @Binding var selectedVariant: BoardVariant
+private struct StatsSheet: View {
+    let bestScore: Int
+    @AppStorage("SlideWords_GamesPlayed") private var gamesPlayed: Int    = 0
+    @AppStorage("SlideWords_LongestWord") private var longestWord:  String = "—"
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationStack {
             Form {
-                switch page {
-                case .daily:
-                    Section("Today's Challenge") {
-                        Label("Find 12 words in one run", systemImage: "target")
-                        Label("Use at least one 5-letter word", systemImage: "textformat.abc")
-                        Label("Bonus: clear a full row", systemImage: "sparkles")
-                    }
-                case .modes:
-                    Section("Language") {
-                        Picker("Language", selection: $selectedLanguage) {
-                            ForEach(GameLanguage.allCases) { lang in
-                                Text("\(lang.flag) \(lang.rawValue)").tag(lang)
-                            }
-                        }
-                    }
-
-                    Section("Board Size") {
-                        Picker("Board Size", selection: $selectedVariant) {
-                            ForEach(BoardVariant.allCases) { variant in
-                                Text("\(variant.displayName) (\(variant.label))").tag(variant)
-                            }
-                        }
-                    }
-                case .stats:
-                    Section("Profile") {
-                        statRow("Best Score", value: "0")
-                        statRow("Games Played", value: "0")
-                        statRow("Longest Word", value: "—")
-                    }
+                Section("Profile") {
+                    statRow("Best Score",    value: "\(bestScore)")
+                    statRow("Games Played",  value: "\(gamesPlayed)")
+                    statRow("Longest Word",  value: longestWord)
                 }
             }
-            .navigationTitle(page.rawValue)
+            .navigationTitle("Stats")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { dismiss() }
@@ -279,9 +254,42 @@ private struct MenuDetailsPage: View {
         HStack {
             Text(label)
             Spacer()
-            Text(value)
-                .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
+            Text(value).fontWeight(.semibold).foregroundStyle(.secondary)
+        }
+    }
+}
+
+// MARK: - Modes Sheet
+
+private struct ModesSheet: View {
+    @Binding var selectedLanguage: GameLanguage
+    @Binding var selectedVariant:  BoardVariant
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Language") {
+                    Picker("Language", selection: $selectedLanguage) {
+                        ForEach(GameLanguage.allCases) { lang in
+                            Text("\(lang.flag) \(lang.rawValue)").tag(lang)
+                        }
+                    }
+                }
+                Section("Board Size") {
+                    Picker("Board Size", selection: $selectedVariant) {
+                        ForEach(BoardVariant.allCases) { variant in
+                            Text("\(variant.displayName) (\(variant.label))").tag(variant)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Modes")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") { dismiss() }
+                }
+            }
         }
     }
 }

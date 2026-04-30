@@ -6,16 +6,18 @@ struct GameView: View {
 
     @StateObject private var vm: GameViewModel
     @EnvironmentObject private var audio: AudioManager
-    @State private var showRestartAlert = false
-    @State private var showShop = false
-    @State private var showBuyHintSheet = false
+    @State private var showRestartAlert  = false
+    @State private var showShop          = false
+    @State private var showBuyHintSheet  = false
     @State private var showBuyShuffleSheet = false
-    @State private var showBuyBombSheet = false
+    @State private var showBuyBombSheet  = false
+    @State private var showBuyWildSheet  = false
 
     // Power-up animation states
     @State private var shuffleBounce: CGFloat = 1.0
-    @State private var hintFlash: Double = 0
-    @State private var bombShake: CGFloat = 0
+    @State private var hintFlash: Double   = 0
+    @State private var bombShake: CGFloat  = 0
+    @State private var wildFlash: Double   = 0
 
     private let uiTint          = Color(red: 0.93, green: 0.88, blue: 0.99)
     private let uiTintSecondary = Color(red: 0.86, green: 0.93, blue: 0.99)
@@ -39,23 +41,24 @@ struct GameView: View {
                 Spacer(minLength: 8)
 
                 VStack(spacing: 14) {
-                    scoreBar
-                        .padding(.horizontal, 26)
+                    scoreBar.padding(.horizontal, 26)
 
                     BoardView(vm: vm)
                         .padding(.horizontal, 8)
                         .padding()
-                        // Shake on bomb
                         .offset(x: bombShake)
-                        // Flash overlay on hint
                         .overlay(
                             RoundedRectangle(cornerRadius: 24)
                                 .fill(Color(red: 1, green: 0.93, blue: 0.3).opacity(hintFlash))
                                 .allowsHitTesting(false)
-                                .padding(.horizontal, 8)
-                                .padding()
+                                .padding(.horizontal, 8).padding()
                         )
-                        // Scale bounce on shuffle
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 24)
+                                .fill(Color(red: 0.72, green: 0.4, blue: 1.0).opacity(wildFlash))
+                                .allowsHitTesting(false)
+                                .padding(.horizontal, 8).padding()
+                        )
                         .scaleEffect(shuffleBounce)
                 }
                 .padding(.horizontal)
@@ -69,8 +72,14 @@ struct GameView: View {
                 }
 
                 actionBar
-                    .padding(.horizontal, 50)
-                    .padding(.bottom, 56)
+                    .padding(.horizontal, 26)
+                    .padding(.bottom, 40)
+            }
+
+            if vm.showEmptyBoardEffect {
+                BoardClearedCelebration()
+                    .transition(.opacity)
+                    .allowsHitTesting(false)
             }
 
             if vm.isGameOver {
@@ -84,10 +93,11 @@ struct GameView: View {
             case .hint:    playHintAnimation()
             case .shuffle: playShuffleAnimation()
             case .bomb:    playBombAnimation()
+            case .wild:    playWildAnimation()
             }
         }
-        .sheet(isPresented: $showShop) {
-            ShopView(vm: vm)
+        .sheet(isPresented: $showShop, onDismiss: { vm.syncFromDefaults() }) {
+            ShopView()
         }
         .confirmationDialog("Restart game?", isPresented: $showRestartAlert, titleVisibility: .visible) {
             Button("Restart", role: .destructive) { withAnimation { vm.startNewGame() } }
@@ -98,35 +108,34 @@ struct GameView: View {
         }
         .sheet(isPresented: $showBuyHintSheet) {
             BuyChargeSheet(
-                title: "Buy Hints",
-                icon: "lightbulb.fill",
+                title: "Buy Hints", icon: "lightbulb.fill",
                 iconColor: Color(red: 1, green: 0.78, blue: 0.1),
-                singleCost: vm.hintCost,
-                coins: vm.coins,
-                onBuy: { vm.shopBuyHints(count: 1) }
-            )
+                singleCost: vm.hintCost, coins: vm.coins
+            ) { vm.shopBuyHints(count: 1) }
             .presentationDetents([.height(300)])
         }
         .sheet(isPresented: $showBuyShuffleSheet) {
             BuyChargeSheet(
-                title: "Buy Shuffles",
-                icon: "shuffle",
+                title: "Buy Shuffles", icon: "shuffle",
                 iconColor: Color(red: 0.2, green: 0.6, blue: 1),
-                singleCost: vm.shuffleCost,
-                coins: vm.coins,
-                onBuy: { vm.shopBuyShuffles(count: 1) }
-            )
+                singleCost: vm.shuffleCost, coins: vm.coins
+            ) { vm.shopBuyShuffles(count: 1) }
             .presentationDetents([.height(300)])
         }
         .sheet(isPresented: $showBuyBombSheet) {
             BuyChargeSheet(
-                title: "Buy Bombs",
-                icon: "burst.fill",
+                title: "Buy Bombs", icon: "burst.fill",
                 iconColor: Color(red: 1, green: 0.35, blue: 0.25),
-                singleCost: vm.bombCost,
-                coins: vm.coins,
-                onBuy: { vm.shopBuyBombs(count: 1) }
-            )
+                singleCost: vm.bombCost, coins: vm.coins
+            ) { vm.shopBuyBombs(count: 1) }
+            .presentationDetents([.height(300)])
+        }
+        .sheet(isPresented: $showBuyWildSheet) {
+            BuyChargeSheet(
+                title: "Buy Wilds", icon: "wand.and.stars",
+                iconColor: Color(red: 0.55, green: 0.25, blue: 0.95),
+                singleCost: vm.wildCost, coins: vm.coins
+            ) { vm.shopBuyWilds(count: 1) }
             .presentationDetents([.height(300)])
         }
     }
@@ -134,29 +143,27 @@ struct GameView: View {
     // MARK: - Animations
 
     private func playHintAnimation() {
-        hintFlash = 0
-        withAnimation(.easeIn(duration: 0.15)) { hintFlash = 0.55 }
+        withAnimation(.easeIn(duration: 0.15))       { hintFlash = 0.55 }
         withAnimation(.easeOut(duration: 0.35).delay(0.15)) { hintFlash = 0 }
     }
 
     private func playShuffleAnimation() {
-        withAnimation(.spring(response: 0.18, dampingFraction: 0.35)) {
-            shuffleBounce = 1.06
-        }
-        withAnimation(.spring(response: 0.30, dampingFraction: 0.55).delay(0.18)) {
-            shuffleBounce = 1.0
-        }
+        withAnimation(.spring(response: 0.18, dampingFraction: 0.35)) { shuffleBounce = 1.06 }
+        withAnimation(.spring(response: 0.30, dampingFraction: 0.55).delay(0.18)) { shuffleBounce = 1.0 }
     }
 
     private func playBombAnimation() {
-        let shakeSeq: [CGFloat] = [10, -10, 8, -8, 5, -5, 0]
+        let seq: [CGFloat] = [10, -10, 8, -8, 5, -5, 0]
         var delay: Double = 0
-        for offset in shakeSeq {
-            withAnimation(.easeInOut(duration: 0.07).delay(delay)) {
-                bombShake = offset
-            }
+        for offset in seq {
+            withAnimation(.easeInOut(duration: 0.07).delay(delay)) { bombShake = offset }
             delay += 0.07
         }
+    }
+
+    private func playWildAnimation() {
+        withAnimation(.easeIn(duration: 0.12))        { wildFlash = 0.5 }
+        withAnimation(.easeOut(duration: 0.4).delay(0.12)) { wildFlash = 0 }
     }
 
     // MARK: - Views
@@ -171,11 +178,8 @@ struct GameView: View {
     private var topBar: some View {
         HStack(spacing: 12) {
             circleButton(system: "arrow.left") { showRestartAlert = true }
-
             Spacer()
-
             circleButton(system: "cart.fill") { showShop = true }
-
             circleButton(system: audio.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill") {
                 audio.toggleMute()
             }
@@ -187,7 +191,7 @@ struct GameView: View {
         HStack(spacing: 16) {
             scoreStat(label: "Score", value: "\(vm.score)")
             Divider().overlay(uiInk.opacity(0.25))
-            scoreStat(label: "Best", value: "\(vm.bestScore)")
+            scoreStat(label: "Best",  value: "\(vm.bestScore)")
             Divider().overlay(uiInk.opacity(0.25))
             scoreStat(label: "Coins", value: "\(vm.coins)")
         }
@@ -197,10 +201,7 @@ struct GameView: View {
         .background(
             RoundedRectangle(cornerRadius: 18)
                 .fill(uiTint.opacity(0.88))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18)
-                        .stroke(.white.opacity(0.6), lineWidth: 1)
-                )
+                .overlay(RoundedRectangle(cornerRadius: 18).stroke(.white.opacity(0.6), lineWidth: 1))
         )
     }
 
@@ -234,58 +235,78 @@ struct GameView: View {
         )
     }
 
+    // MARK: - 2×2 Action Grid
+
     private var actionBar: some View {
-        HStack(spacing: 12) {
-            // Bomb
-            actionPill(
-                title: "Bomb",
-                subtitle: vm.bombCharges > 0 ? "💣 \(vm.bombCharges)" : "\(vm.bombCost)🪙",
-                icon: "burst.fill",
-                isArmed: vm.isBombArmed,
-                enabled: vm.canUseBomb || vm.canAffordBomb
-            ) {
-                if vm.bombCharges > 0 {
-                    vm.toggleBombArm()
-                } else {
-                    showBuyBombSheet = true
-                }
+        VStack(spacing: 10) {
+            HStack(spacing: 10) {
+                bombPill
+                shufflePill
             }
+            HStack(spacing: 10) {
+                hintPill
+                wildPill
+            }
+        }
+    }
 
-            // Shuffle
-            actionPill(
-                title: "Shuffle",
-                subtitle: vm.shuffleCharges > 0 ? "🔀 \(vm.shuffleCharges)" : "\(vm.shuffleCost)🪙",
-                icon: "shuffle",
-                isArmed: false,
-                enabled: vm.canUseShuffle
-            ) {
-                if vm.shuffleCharges > 0 || vm.coins >= vm.shuffleCost {
-                    vm.shuffleBoard()
-                } else {
-                    showBuyShuffleSheet = true
-                }
-            }
+    private var bombPill: some View {
+        actionPill(
+            title: "Bomb",
+            subtitle: vm.bombCharges > 0 ? "💣 \(vm.bombCharges)" : "\(vm.bombCost)🪙",
+            icon: "burst.fill",
+            isArmed: vm.isBombArmed,
+            armedColor: Color(red: 1, green: 0.35, blue: 0.25),
+            enabled: vm.canUseBomb || vm.canAffordBomb
+        ) {
+            if vm.bombCharges > 0 { vm.toggleBombArm() } else { showBuyBombSheet = true }
+        }
+    }
 
-            // Hint
-            actionPill(
-                title: "Hint",
-                subtitle: vm.hintCharges > 0 ? "💡 \(vm.hintCharges)" : "\(vm.hintCost)🪙",
-                icon: "lightbulb.fill",
-                isArmed: false,
-                enabled: vm.canUseHintButton,
-                isPulsing: vm.showHintButton && vm.hintCharges > 0
-            ) {
-                if vm.hintCharges > 0 {
-                    if !vm.pendingSwipeMatches.isEmpty {
-                        vm.usePowerUpHint()
-                    }
-                    // if no pending match, hint charge is preserved; user swiped already
-                } else if vm.coins >= vm.hintCost {
-                    vm.shopBuyHints(count: 1)
-                } else {
-                    showBuyHintSheet = true
-                }
+    private var shufflePill: some View {
+        actionPill(
+            title: "Shuffle",
+            subtitle: vm.shuffleCharges > 0 ? "🔀 \(vm.shuffleCharges)" : "\(vm.shuffleCost)🪙",
+            icon: "shuffle",
+            isArmed: false,
+            armedColor: .clear,
+            enabled: vm.canUseShuffle
+        ) {
+            if vm.shuffleCharges > 0 || vm.coins >= vm.shuffleCost { vm.shuffleBoard() }
+            else { showBuyShuffleSheet = true }
+        }
+    }
+
+    private var hintPill: some View {
+        actionPill(
+            title: "Hint",
+            subtitle: vm.hintCharges > 0 ? "💡 \(vm.hintCharges)" : "\(vm.hintCost)🪙",
+            icon: "lightbulb.fill",
+            isArmed: false,
+            armedColor: .clear,
+            enabled: vm.canUseHintButton,
+            isPulsing: vm.showHintButton && vm.hintCharges > 0
+        ) {
+            if vm.hintCharges > 0 {
+                if !vm.pendingSwipeMatches.isEmpty { vm.usePowerUpHint() }
+            } else if vm.coins >= vm.hintCost {
+                vm.shopBuyHints(count: 1)
+            } else {
+                showBuyHintSheet = true
             }
+        }
+    }
+
+    private var wildPill: some View {
+        actionPill(
+            title: "Wild",
+            subtitle: vm.wildCharges > 0 ? "⭐ \(vm.wildCharges)" : "\(vm.wildCost)🪙",
+            icon: "wand.and.stars",
+            isArmed: vm.isWildArmed,
+            armedColor: Color(red: 0.55, green: 0.25, blue: 0.95),
+            enabled: vm.canUseWild || vm.canAffordWild
+        ) {
+            if vm.wildCharges > 0 { vm.toggleWildArm() } else { showBuyWildSheet = true }
         }
     }
 
@@ -294,6 +315,7 @@ struct GameView: View {
         subtitle: String,
         icon: String,
         isArmed: Bool,
+        armedColor: Color,
         enabled: Bool,
         isPulsing: Bool = false,
         action: @escaping () -> Void
@@ -302,28 +324,25 @@ struct GameView: View {
             VStack(spacing: 6) {
                 ZStack {
                     Circle()
-                        .fill(isArmed
-                              ? Color(red: 1, green: 0.35, blue: 0.25).opacity(0.9)
-                              : uiTintSecondary.opacity(0.96))
+                        .fill(isArmed ? armedColor.opacity(0.9) : uiTintSecondary.opacity(0.96))
                         .overlay(Circle().stroke(.white.opacity(0.6), lineWidth: 1))
-                        .frame(width: 48, height: 48)
+                        .frame(width: 44, height: 44)
 
                     if isPulsing {
                         Circle()
                             .stroke(Color(red: 1, green: 0.78, blue: 0.1), lineWidth: 2.5)
-                            .frame(width: 48, height: 48)
-                            .opacity(isPulsing ? 1 : 0)
+                            .frame(width: 44, height: 44)
                     }
 
                     Image(systemName: icon)
-                        .font(.system(size: 20, weight: .bold))
+                        .font(.system(size: 18, weight: .bold))
                         .foregroundColor(isArmed ? .white : uiInk)
                 }
 
                 Text(title)
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
                 Text(subtitle)
-                    .font(.system(size: 12, weight: .heavy, design: .rounded))
+                    .font(.system(size: 11, weight: .heavy, design: .rounded))
                     .foregroundColor(Color(red: 0.56, green: 0.36, blue: 0.08))
             }
             .foregroundColor(uiInk)
@@ -331,9 +350,7 @@ struct GameView: View {
             .padding(.vertical, 9)
             .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(isArmed
-                          ? Color(red: 1, green: 0.35, blue: 0.25).opacity(0.15)
-                          : uiTint.opacity(0.8))
+                    .fill(isArmed ? armedColor.opacity(0.15) : uiTint.opacity(0.8))
                     .overlay(RoundedRectangle(cornerRadius: 20).stroke(.white.opacity(0.55), lineWidth: 1))
             )
         }
@@ -365,17 +382,76 @@ struct GameView: View {
                 Text("Final score: \(vm.score)")
                     .foregroundColor(.white)
 
-                Button("Play Again") {
-                    withAnimation { vm.startNewGame() }
-                }
-                .font(.system(size: 18, weight: .bold, design: .rounded))
-                .padding(.horizontal, 24)
-                .padding(.vertical, 10)
-                .background(Capsule().fill(Color.white.opacity(0.18)))
-                .foregroundColor(.white)
+                Button("Play Again") { withAnimation { vm.startNewGame() } }
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .padding(.horizontal, 24).padding(.vertical, 10)
+                    .background(Capsule().fill(Color.white.opacity(0.18)))
+                    .foregroundColor(.white)
             }
             .padding(24)
             .background(RoundedRectangle(cornerRadius: 22).fill(Color.black.opacity(0.35)))
+        }
+    }
+}
+
+// MARK: - Board Cleared Celebration
+
+private struct BoardClearedCelebration: View {
+    @State private var burst   = false
+    @State private var textIn  = false
+    @State private var textOut = false
+
+    private let particles: [(angle: Double, icon: String, color: Color, size: CGFloat)] = [
+        (0,   "star.fill",     .yellow,  16), (30,  "sparkle",       .pink,    12),
+        (60,  "star.fill",     .cyan,    14), (90,  "sparkle",       .green,   16),
+        (120, "star.fill",     .orange,  12), (150, "sparkle",       .purple,  14),
+        (180, "star.fill",     .yellow,  12), (210, "sparkle",       .pink,    16),
+        (240, "star.fill",     .cyan,    12), (270, "sparkle",       .green,   14),
+        (300, "star.fill",     .orange,  16), (330, "sparkle",       .purple,  12),
+        (15,  "circle.fill",   .white,   8),  (75,  "circle.fill",   .yellow,  6),
+        (135, "circle.fill",   .pink,    8),  (195, "circle.fill",   .cyan,    6),
+        (255, "circle.fill",   .white,   8),  (315, "circle.fill",   .orange,  6),
+    ]
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.18).ignoresSafeArea()
+
+            ForEach(Array(particles.enumerated()), id: \.offset) { i, p in
+                let rad = p.angle * .pi / 180
+                Image(systemName: p.icon)
+                    .font(.system(size: burst ? p.size * 0.4 : p.size))
+                    .foregroundColor(p.color)
+                    .opacity(burst ? 0 : 1)
+                    .offset(
+                        x: burst ? CGFloat(cos(rad)) * 220 : 0,
+                        y: burst ? CGFloat(sin(rad)) * 260 : 0
+                    )
+                    .animation(
+                        .easeOut(duration: 0.85).delay(Double(i) * 0.025),
+                        value: burst
+                    )
+            }
+
+            VStack(spacing: 6) {
+                Text("✨ Board Cleared! ✨")
+                    .font(.system(size: 30, weight: .heavy, design: .rounded))
+                    .foregroundColor(.white)
+                    .shadow(color: .black.opacity(0.5), radius: 6, x: 0, y: 3)
+                Text("Amazing!")
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundColor(Color(red: 1, green: 0.90, blue: 0.35))
+                    .shadow(color: .black.opacity(0.3), radius: 3, x: 0, y: 2)
+            }
+            .scaleEffect(textIn ? (textOut ? 0.7 : 1.0) : 0.4)
+            .opacity(textIn ? (textOut ? 0 : 1) : 0)
+            .animation(.spring(response: 0.4, dampingFraction: 0.55), value: textIn)
+            .animation(.easeOut(duration: 0.4), value: textOut)
+        }
+        .onAppear {
+            withAnimation { textIn = true }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { burst = true }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.1)  { withAnimation { textOut = true } }
         }
     }
 }
@@ -420,20 +496,16 @@ struct BuyChargeSheet: View {
                 onBuy()
                 dismiss()
             } label: {
-                HStack {
-                    Text("Buy 1 for \(singleCost) coins")
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
-                }
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 14)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(coins >= singleCost
-                              ? Color(red: 0.25, green: 0.55, blue: 1.0)
-                              : Color.gray)
-                )
-                .padding(.horizontal, 24)
+                Text("Buy 1 for \(singleCost) coins")
+                    .font(.system(size: 17, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(coins >= singleCost ? Color(red: 0.25, green: 0.55, blue: 1.0) : Color.gray)
+                    )
+                    .padding(.horizontal, 24)
             }
             .disabled(coins < singleCost)
 

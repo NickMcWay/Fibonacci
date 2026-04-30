@@ -1,17 +1,21 @@
 import SwiftUI
 
 struct ShopView: View {
-    @ObservedObject var vm: GameViewModel
+    @AppStorage("SlideWords_Coins")          private var coins:          Int = 125
+    @AppStorage("SlideWords_HintCharges")    private var hintCharges:    Int = 2
+    @AppStorage("SlideWords_ShuffleCharges") private var shuffleCharges: Int = 1
+    @AppStorage("SlideWords_BombCharges")    private var bombCharges:    Int = 1
+    @AppStorage("SlideWords_WildCharges")    private var wildCharges:    Int = 1
+
     @Environment(\.dismiss) private var dismiss
-    @AppStorage("SlideWords_LastDailyClaim") private var lastDailyClaimTimestamp: Double = 0
+
+    private let hintCost    = 25
+    private let shuffleCost = 50
+    private let wildCost    = 60
+    private let bombCost    = 75
 
     private let uiTint = Color(red: 0.93, green: 0.88, blue: 0.99)
     private let uiInk  = Color(red: 0.24, green: 0.20, blue: 0.49)
-
-    private var canClaimDaily: Bool {
-        let last = Date(timeIntervalSince1970: lastDailyClaimTimestamp)
-        return !Calendar.current.isDateInToday(last)
-    }
 
     var body: some View {
         NavigationStack {
@@ -21,7 +25,6 @@ struct ShopView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         coinBalanceCard
-                        dailyCoinsSection
                         powerUpSection
                         coinPacksSection
                     }
@@ -53,11 +56,10 @@ struct ShopView: View {
                 Text("Your Coins")
                     .font(.system(size: 12, weight: .bold, design: .rounded))
                     .foregroundColor(uiInk.opacity(0.65))
-                Text("\(vm.coins)")
+                Text("\(coins)")
                     .font(.system(size: 32, weight: .heavy, design: .rounded))
                     .foregroundColor(uiInk)
             }
-
             Spacer()
         }
         .padding(20)
@@ -69,64 +71,7 @@ struct ShopView: View {
         )
     }
 
-    // MARK: - Daily Coins
-
-    private var dailyCoinsSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            sectionHeader("Daily Bonus")
-
-            Button {
-                guard canClaimDaily else { return }
-                vm.coins += 50
-                lastDailyClaimTimestamp = Date().timeIntervalSince1970
-            } label: {
-                HStack(spacing: 14) {
-                    ZStack {
-                        Circle()
-                            .fill(Color(red: 1, green: 0.85, blue: 0.3).opacity(0.2))
-                            .frame(width: 52, height: 52)
-                        Image(systemName: "gift.fill")
-                            .font(.system(size: 24, weight: .bold))
-                            .foregroundColor(Color(red: 0.9, green: 0.6, blue: 0.1))
-                    }
-
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text("Daily Reward")
-                            .font(.system(size: 16, weight: .bold, design: .rounded))
-                            .foregroundColor(uiInk)
-                        Text(canClaimDaily ? "+50 coins — tap to claim!" : "Come back tomorrow")
-                            .font(.system(size: 13, weight: .medium, design: .rounded))
-                            .foregroundColor(.secondary)
-                    }
-
-                    Spacer()
-
-                    if canClaimDaily {
-                        Text("Claim")
-                            .font(.system(size: 14, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 7)
-                            .background(Capsule().fill(Color(red: 0.9, green: 0.6, blue: 0.1)))
-                    } else {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(.green.opacity(0.7))
-                    }
-                }
-                .padding(16)
-                .background(
-                    RoundedRectangle(cornerRadius: 18)
-                        .fill(Color.white.opacity(0.75))
-                        .overlay(RoundedRectangle(cornerRadius: 18).stroke(.white.opacity(0.6), lineWidth: 1))
-                )
-            }
-            .disabled(!canClaimDaily)
-            .buttonStyle(.plain)
-        }
-    }
-
-    // MARK: - Power-Up Section
+    // MARK: - Power-Ups
 
     private var powerUpSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -136,38 +81,34 @@ struct ShopView: View {
                 shopRow(
                     icon: "lightbulb.fill",
                     iconColor: Color(red: 1, green: 0.78, blue: 0.1),
-                    title: "Hint",
-                    detail: "Reveals a pending word match",
-                    owned: vm.hintCharges,
-                    cost: vm.hintCost,
-                    canAfford: vm.coins >= vm.hintCost
-                ) {
-                    vm.shopBuyHints(count: 1)
-                }
+                    title: "Hint",    detail: "Reveals a pending word match",
+                    owned: hintCharges, cost: hintCost,
+                    canAfford: coins >= hintCost
+                ) { coins -= hintCost; hintCharges += 1 }
 
                 shopRow(
                     icon: "shuffle",
                     iconColor: Color(red: 0.2, green: 0.6, blue: 1),
-                    title: "Shuffle",
-                    detail: "Randomly rearranges all tiles",
-                    owned: vm.shuffleCharges,
-                    cost: vm.shuffleCost,
-                    canAfford: vm.coins >= vm.shuffleCost
-                ) {
-                    vm.shopBuyShuffles(count: 1)
-                }
+                    title: "Shuffle", detail: "Randomly rearranges all tiles",
+                    owned: shuffleCharges, cost: shuffleCost,
+                    canAfford: coins >= shuffleCost
+                ) { coins -= shuffleCost; shuffleCharges += 1 }
+
+                shopRow(
+                    icon: "wand.and.stars",
+                    iconColor: Color(red: 0.55, green: 0.25, blue: 0.95),
+                    title: "Wild",    detail: "Converts any tile into a joker",
+                    owned: wildCharges, cost: wildCost,
+                    canAfford: coins >= wildCost
+                ) { coins -= wildCost; wildCharges += 1 }
 
                 shopRow(
                     icon: "burst.fill",
                     iconColor: Color(red: 1, green: 0.35, blue: 0.25),
-                    title: "Bomb",
-                    detail: "Clears a full row and column",
-                    owned: vm.bombCharges,
-                    cost: vm.bombCost,
-                    canAfford: vm.coins >= vm.bombCost
-                ) {
-                    vm.shopBuyBombs(count: 1)
-                }
+                    title: "Bomb",    detail: "Clears a full row and column",
+                    owned: bombCharges, cost: bombCost,
+                    canAfford: coins >= bombCost
+                ) { coins -= bombCost; bombCharges += 1 }
             }
         }
     }
@@ -180,11 +121,11 @@ struct ShopView: View {
 
             HStack(spacing: 12) {
                 coinPackCard(amount: 100, label: "Starter", color: Color(red: 0.85, green: 0.92, blue: 1))
-                coinPackCard(amount: 300, label: "Builder", color: Color(red: 0.88, green: 1, blue: 0.88))
-                coinPackCard(amount: 750, label: "Master", color: Color(red: 1, green: 0.92, blue: 0.78))
+                coinPackCard(amount: 300, label: "Builder", color: Color(red: 0.88, green: 1,    blue: 0.88))
+                coinPackCard(amount: 750, label: "Master",  color: Color(red: 1,    green: 0.92, blue: 0.78))
             }
 
-            Text("Coin packs are awarded for free — no purchase required.")
+            Text("Coin packs are free — no purchase required.")
                 .font(.system(size: 11, weight: .medium, design: .rounded))
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -193,27 +134,21 @@ struct ShopView: View {
     }
 
     private func coinPackCard(amount: Int, label: String, color: Color) -> some View {
-        Button {
-            vm.coins += amount
-        } label: {
+        Button { coins += amount } label: {
             VStack(spacing: 8) {
                 Image(systemName: "bitcoinsign.circle.fill")
                     .font(.system(size: 28, weight: .bold))
                     .foregroundColor(Color(red: 0.85, green: 0.55, blue: 0.1))
-
                 Text("+\(amount)")
                     .font(.system(size: 18, weight: .heavy, design: .rounded))
                     .foregroundColor(uiInk)
-
                 Text(label)
                     .font(.system(size: 11, weight: .bold, design: .rounded))
                     .foregroundColor(.secondary)
-
                 Text("FREE")
                     .font(.system(size: 12, weight: .heavy, design: .rounded))
                     .foregroundColor(.white)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
+                    .padding(.horizontal, 10).padding(.vertical, 4)
                     .background(Capsule().fill(Color(red: 0.25, green: 0.65, blue: 0.35)))
             }
             .frame(maxWidth: .infinity)
@@ -236,20 +171,14 @@ struct ShopView: View {
     }
 
     private func shopRow(
-        icon: String,
-        iconColor: Color,
-        title: String,
-        detail: String,
-        owned: Int,
-        cost: Int,
-        canAfford: Bool,
+        icon: String, iconColor: Color,
+        title: String, detail: String,
+        owned: Int, cost: Int, canAfford: Bool,
         onBuy: @escaping () -> Void
     ) -> some View {
         HStack(spacing: 14) {
             ZStack {
-                Circle()
-                    .fill(iconColor.opacity(0.15))
-                    .frame(width: 50, height: 50)
+                Circle().fill(iconColor.opacity(0.15)).frame(width: 50, height: 50)
                 Image(systemName: icon)
                     .font(.system(size: 22, weight: .bold))
                     .foregroundColor(iconColor)
@@ -273,19 +202,15 @@ struct ShopView: View {
 
             Button(action: onBuy) {
                 HStack(spacing: 4) {
-                    Image(systemName: "bitcoinsign.circle.fill")
-                        .font(.system(size: 12))
-                    Text("\(cost)")
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                    Image(systemName: "bitcoinsign.circle.fill").font(.system(size: 12))
+                    Text("\(cost)").font(.system(size: 14, weight: .bold, design: .rounded))
                 }
-                .foregroundColor(canAfford ? .white : Color.gray)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
+                .foregroundColor(canAfford ? .white : .gray)
+                .padding(.horizontal, 14).padding(.vertical, 8)
                 .background(
-                    Capsule()
-                        .fill(canAfford
-                              ? Color(red: 0.25, green: 0.55, blue: 1.0)
-                              : Color.gray.opacity(0.25))
+                    Capsule().fill(canAfford
+                                   ? Color(red: 0.25, green: 0.55, blue: 1.0)
+                                   : Color.gray.opacity(0.25))
                 )
             }
             .buttonStyle(.plain)
@@ -301,5 +226,5 @@ struct ShopView: View {
 }
 
 #Preview("Shop") {
-    ShopView(vm: GameViewModel(settings: .default))
+    ShopView()
 }
