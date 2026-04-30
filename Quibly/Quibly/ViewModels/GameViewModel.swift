@@ -1,17 +1,11 @@
 // GameViewModel.swift
-// ObservableObject between GameEngine (pure logic) and SwiftUI views.
-//
-// Hint system:
-//   After a swipe finds word(s) the tiles are stored in pendingSwipeMatches but NOT
-//   highlighted. A hint timer starts:
-//     5 s  → showHintButton = true  (the power-up button starts pulsing)
-//    10 s  → showMatchHighlights = true  (tile glows + word preview appear)
-//   The player can tap the hint button at any time after 5 s to reveal early.
-//   Any new swipe/draw/confirmation cancels and resets the timer.
-
 import SwiftUI
 import Combine
 import UIKit
+
+enum PowerUpAnimation: Equatable {
+    case hint, shuffle, bomb
+}
 
 @MainActor
 final class GameViewModel: ObservableObject {
@@ -31,17 +25,25 @@ final class GameViewModel: ObservableObject {
     @Published var showEmptyBoardEffect: Bool = false
     @Published var showBoardFullWarning: Bool = false
     @Published var coins: Int = 125 {
-        didSet {
-            UserDefaults.standard.set(coins, forKey: coinsKey)
-        }
+        didSet { UserDefaults.standard.set(coins, forKey: coinsKey) }
     }
-    @Published var hintCharges: Int = 2
-    @Published var bombCharges: Int = 1
+    @Published var hintCharges: Int = 2 {
+        didSet { UserDefaults.standard.set(hintCharges, forKey: hintChargesKey) }
+    }
+    @Published var bombCharges: Int = 1 {
+        didSet { UserDefaults.standard.set(bombCharges, forKey: bombChargesKey) }
+    }
+    @Published var shuffleCharges: Int = 1 {
+        didSet { UserDefaults.standard.set(shuffleCharges, forKey: shuffleChargesKey) }
+    }
     @Published var isBombArmed: Bool = false
 
     // Hint system
-    @Published var showHintButton: Bool = false       // power-up glows after 5 s
-    @Published var showMatchHighlights: Bool = false  // tile glows after 10 s
+    @Published var showHintButton: Bool = false
+    @Published var showMatchHighlights: Bool = false
+
+    // Animation events
+    @Published var powerUpAnimation: PowerUpAnimation? = nil
 
     // MARK: - Accessors for Views
 
@@ -57,12 +59,16 @@ final class GameViewModel: ObservableObject {
 
     private let settings: GameSettings
     private var board: BoardModel
-    private let bestScoreKey = "SlideWords_BestScore"
-    private let coinsKey = "SlideWords_Coins"
+    private let bestScoreKey      = "SlideWords_BestScore"
+    private let coinsKey          = "SlideWords_Coins"
+    private let hintChargesKey    = "SlideWords_HintCharges"
+    private let bombChargesKey    = "SlideWords_BombCharges"
+    private let shuffleChargesKey = "SlideWords_ShuffleCharges"
     private var pendingSwipeDirection: SwipeDirection = .left
     private var hintTimerTask: Task<Void, Never>?
-    private let shuffleCost: Int = 50
-    private let hintCost: Int = 25
+    let shuffleCost: Int = 50
+    let hintCost: Int   = 25
+    let bombCost: Int   = 75
     private let coinPerCoinTile: Int = 10
 
     // MARK: - Init
@@ -71,14 +77,19 @@ final class GameViewModel: ObservableObject {
         self.settings = settings
         self.board = BoardModel(size: settings.boardVariant.rawValue)
         self.bestScore = UserDefaults.standard.integer(forKey: bestScoreKey)
-        let storedCoins = UserDefaults.standard.object(forKey: coinsKey) as? Int
-        self.coins = storedCoins ?? 125
+        self.coins = (UserDefaults.standard.object(forKey: coinsKey) as? Int) ?? 125
+
+        let storedHints   = UserDefaults.standard.object(forKey: "SlideWords_HintCharges") as? Int
+        let storedBombs   = UserDefaults.standard.object(forKey: "SlideWords_BombCharges") as? Int
+        let storedShuffle = UserDefaults.standard.object(forKey: "SlideWords_ShuffleCharges") as? Int
+        self.hintCharges    = storedHints   ?? 2
+        self.bombCharges    = storedBombs   ?? 1
+        self.shuffleCharges = storedShuffle ?? 1
+
         startNewGame()
     }
 
-    convenience init() {
-        self.init(settings: .default)
-    }
+    convenience init() { self.init(settings: .default) }
 
     // MARK: - Game Lifecycle
 
@@ -94,7 +105,6 @@ final class GameViewModel: ObservableObject {
         pendingSwipeMatches = []
         showEmptyBoardEffect = false
         showBoardFullWarning = false
-        bombCharges = 1
         isBombArmed = false
         resetHintState()
 
@@ -157,7 +167,6 @@ final class GameViewModel: ObservableObject {
             } else if slideResult.matches.isEmpty {
                 if GameEngine.isGameOver(board: board) { isGameOver = true }
             } else {
-                // Store matches but don't reveal them yet — start the hint timer
                 pendingSwipeMatches = slideResult.matches
                 pendingSwipeDirection = direction
                 startHintTimer()
@@ -165,14 +174,18 @@ final class GameViewModel: ObservableObject {
         }
     }
 
-    /// User taps the hint / power-up button to reveal the word early.
+    // Use a hint charge to reveal pending swipe matches early.
     func usePowerUpHint() {
         guard !pendingSwipeMatches.isEmpty, hintCharges > 0 else { return }
         hintTimerTask?.cancel()
         hintTimerTask = nil
         hintCharges -= 1
         showMatchHighlights = true
-        // Leave showHintButton true (it will dim after highlights are shown)
+        powerUpAnimation = .hint
+        Task {
+            try? await Task.sleep(nanoseconds: 600_000_000)
+            powerUpAnimation = nil
+        }
     }
 
     func confirmPendingSwipeWords() {
@@ -304,7 +317,6 @@ final class GameViewModel: ObservableObject {
         }
     }
 
-
     func pointsForDrawnWord(path: [(row: Int, col: Int)]) -> Int? {
         let pathTiles = path.compactMap { board.tile(row: $0.row, col: $0.col) }
         guard pathTiles.count == path.count else { return nil }
@@ -338,13 +350,11 @@ final class GameViewModel: ObservableObject {
 
         hintTimerTask = Task {
             do {
-                try await Task.sleep(nanoseconds: 5_000_000_000)   // 5 s
+                try await Task.sleep(nanoseconds: 5_000_000_000)
                 showHintButton = true
-                try await Task.sleep(nanoseconds: 5_000_000_000)   // 10 s total
+                try await Task.sleep(nanoseconds: 5_000_000_000)
                 showMatchHighlights = true
-            } catch {
-                // Task cancelled — leave state as-is (resetHintState will clean up)
-            }
+            } catch {}
         }
     }
 
@@ -381,27 +391,34 @@ final class GameViewModel: ObservableObject {
         tiles = board.cells.compactMap { $0 }
     }
 
-    // MARK: - Economy Actions
+    // MARK: - Economy: computed
 
-    var shufflePrice: Int { shuffleCost }
-    var hintPrice: Int { hintCost }
-    var canUseBomb: Bool { bombCharges > 0 && !isAnimating && !isGameOver }
-    var canAffordShuffle: Bool { coins >= shuffleCost && !isAnimating && !isGameOver }
+    var canUseBomb: Bool    { bombCharges > 0 && !isAnimating && !isGameOver }
     var canAffordHint: Bool { coins >= hintCost && !isAnimating && !isGameOver }
+    var canAffordShuffle: Bool { coins >= shuffleCost && !isAnimating && !isGameOver }
+    var canAffordBomb: Bool { coins >= bombCost && !isAnimating && !isGameOver }
 
-    func buyHints() {
-        guard canAffordHint else { return }
-        coins -= hintCost
-        hintCharges += 1
-        triggerHaptic(.light)
+    var canUseShuffle: Bool {
+        (shuffleCharges > 0 || coins >= shuffleCost) && !isAnimating && !isGameOver
+    }
+    var canUseHintButton: Bool {
+        (hintCharges > 0 || coins >= hintCost) && !isAnimating && !isGameOver
     }
 
+    // MARK: - Economy: actions
+
     func shuffleBoard() {
-        guard canAffordShuffle else { return }
+        guard !isAnimating, !isGameOver else { return }
         let tiles = board.cells.compactMap { $0 }
         guard tiles.count > 1 else { return }
 
-        coins -= shuffleCost
+        if shuffleCharges > 0 {
+            shuffleCharges -= 1
+        } else {
+            guard coins >= shuffleCost else { return }
+            coins -= shuffleCost
+        }
+
         let positions = board.cells.indices.shuffled()
         var shuffled = board
         shuffled.cells = Array(repeating: nil, count: board.size * board.size)
@@ -419,10 +436,15 @@ final class GameViewModel: ObservableObject {
         }
 
         board = shuffled
+        powerUpAnimation = .shuffle
         withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
             syncTiles()
         }
         triggerHaptic(.medium)
+        Task {
+            try? await Task.sleep(nanoseconds: 700_000_000)
+            powerUpAnimation = nil
+        }
     }
 
     func toggleBombArm() {
@@ -463,6 +485,7 @@ final class GameViewModel: ObservableObject {
             UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
         }
 
+        powerUpAnimation = .bomb
         withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
             syncTiles()
         }
@@ -478,6 +501,7 @@ final class GameViewModel: ObservableObject {
             triggerHaptic(.heavy)
             try? await Task.sleep(nanoseconds: 120_000_000)
             isAnimating = false
+            powerUpAnimation = nil
 
             if board.isEmpty {
                 triggerEmptyBoardEffect()
@@ -490,6 +514,32 @@ final class GameViewModel: ObservableObject {
             try? await Task.sleep(nanoseconds: 1_000_000_000)
             showWordOverlay = false
         }
+    }
+
+    // MARK: - Shop Purchases (spend coins)
+
+    func shopBuyHints(count: Int = 1) {
+        let cost = hintCost * count
+        guard coins >= cost else { return }
+        coins -= cost
+        hintCharges += count
+        triggerHaptic(.light)
+    }
+
+    func shopBuyShuffles(count: Int = 1) {
+        let cost = shuffleCost * count
+        guard coins >= cost else { return }
+        coins -= cost
+        shuffleCharges += count
+        triggerHaptic(.light)
+    }
+
+    func shopBuyBombs(count: Int = 1) {
+        let cost = bombCost * count
+        guard coins >= cost else { return }
+        coins -= cost
+        bombCharges += count
+        triggerHaptic(.light)
     }
 
     // MARK: - Haptic Feedback
