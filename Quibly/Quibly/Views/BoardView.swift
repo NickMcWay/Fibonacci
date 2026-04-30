@@ -232,7 +232,8 @@ struct BoardView: View {
             }
             let rawWord = String(letters).lowercased()
             let resolvedWord = WordValidator.resolveWord(for: rawWord, language: vm.language)
-            let isValidSelection = drawPath.count >= 3 && WordValidator.isValidWord(rawWord, language: vm.language)
+            let minimumLength = WordValidator.minimumWordLength(for: vm.language)
+            let isValidSelection = drawPath.count >= minimumLength && WordValidator.isValidWord(rawWord, language: vm.language)
 
             if isValidSelection {
                 let path = drawPath
@@ -248,7 +249,7 @@ struct BoardView: View {
                     acceptedWord = nil
                     acceptedScore = nil
                 }
-            } else if drawPath.count >= 3 {
+            } else if drawPath.count >= minimumLength {
                 confirmedPath = []
                 audio.playWrongSelectionFeedback()
                 drawPath = []
