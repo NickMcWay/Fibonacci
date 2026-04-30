@@ -4,34 +4,145 @@ struct MenuView: View {
     var onStart: (GameSettings) -> Void
 
     @EnvironmentObject private var audio: AudioManager
-    @AppStorage("SlideWords_BestScore")         private var bestScore:              Int    = 0
-    @AppStorage("SlideWords_Coins")             private var coins:                  Int    = 125
+    @AppStorage("SlideWords_BestScore")         private var bestScore: Int    = 0
+    @AppStorage("SlideWords_Coins")             private var coins: Int        = 125
+    @AppStorage("SlideWords_Streak")            private var streak: Int       = 7
     @AppStorage("SlideWords_SelectedLanguage")  private var selectedLanguageRawValue: String = GameLanguage.english.rawValue
-    @AppStorage("SlideWords_SelectedVariant")   private var selectedVariantRawValue: Int   = BoardVariant.small.rawValue
+    @AppStorage("SlideWords_SelectedVariant")   private var selectedVariantRawValue:  Int    = BoardVariant.small.rawValue
 
     @State private var selectedLanguage: GameLanguage = .english
     @State private var selectedVariant:  BoardVariant = .small
-    @State private var showStats = false
-    @State private var showShop  = false
-    @State private var showModes = false
+    @State private var showShop      = false
+    @State private var showModes     = false
+    @State private var showSettings  = false
+    @State private var showProfile   = false
+    @State private var showDaily     = false
+    @State private var showQuests    = false
+    @State private var showLocked    = false
 
-    private let cream = Color(red: 0.98, green: 0.94, blue: 0.88)
-    private let ink   = Color(red: 0.31, green: 0.23, blue: 0.57)
+    private let previewLetters: [[String]] = [
+        ["Q","U","I","B"],
+        ["L","P","A","R"],
+        ["E","L","A","Y"],
+        ["W","O","R","D"]
+    ]
 
     var body: some View {
-        ZStack {
-            backgroundLayer
+        DreamBackground {
+            GeometryReader { geo in
+                let w = geo.size.width
+                let h = geo.size.height
 
-            VStack(spacing: 18) {
-                titleSection
-                summaryBar
-                boardPreview
-                playButton
-                bottomActions
+                ZStack(alignment: .top) {
+                    // Floating decorative tiles
+                    decorativeTile("Q", size: 42, rotation: -12)
+                        .floatingAnimation(delay: 0, duration: 3.4)
+                        .position(x: 36, y: h * 0.158)
+
+                    decorativeTile("B", size: 38, rotation: 14)
+                        .floatingAnimation(delay: 0.6, duration: 4.1)
+                        .position(x: w - 36, y: h * 0.228)
+
+                    decorativeTile("Y", size: 34, rotation: 8)
+                        .floatingAnimation(delay: 0.3, duration: 3.8)
+                        .position(x: 38, y: h * 0.288)
+
+                    // Top bar
+                    HStack(alignment: .center) {
+                        profileChip
+                        Spacer()
+                        HStack(spacing: 8) {
+                            dailyButton
+                            QCircleButton(size: 36, action: { showSettings = true }) {
+                                Image(systemName: "gearshape.fill")
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundStyle(Color.qInk)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, geo.safeAreaInsets.top + 12)
+
+                    // Logo cluster
+                    VStack(spacing: 4) {
+                        QuiblyLogo(size: 68)
+                            .floatingAnimation(delay: 0, duration: 4.0, distance: 4)
+                        Text("Slide. Spell. Sparkle.")
+                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.white.opacity(0.95))
+                            .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 1)
+                    }
+                    .position(x: w / 2, y: h * 0.198)
+
+                    // Stats row
+                    HStack(spacing: 8) {
+                        QStatChip(
+                            icon: "trophy.fill", iconColor: Color(red: 0.48, green: 0.27, blue: 0),
+                            label: "Best", value: "\(bestScore)",
+                            gradient: [Color(red: 1, green: 0.96, blue: 0.83), Color(red: 1, green: 0.85, blue: 0.48)]
+                        )
+                        QStatChip(
+                            icon: "flame.fill", iconColor: Color(red: 0.66, green: 0.24, blue: 0),
+                            label: "Streak", value: "\(streak)d",
+                            gradient: [Color(red: 1, green: 0.85, blue: 0.77), Color(red: 1, green: 0.67, blue: 0.48)]
+                        )
+                        QStatChip(
+                            icon: "circle.fill", iconColor: Color(red: 0.94, green: 0.65, blue: 0.13),
+                            label: "Coins", value: "\(coins)",
+                            gradient: [Color(red: 1, green: 0.97, blue: 0.85), Color(red: 1, green: 0.89, blue: 0.60)]
+                        )
+                    }
+                    .padding(.horizontal, 24)
+                    .position(x: w / 2, y: h * 0.342)
+
+                    // Board preview
+                    boardPreview
+                        .position(x: w / 2, y: h * 0.476)
+
+                    // Play button + mode chip
+                    VStack(spacing: 10) {
+                        Button(action: startGame) {
+                            HStack(spacing: 10) {
+                                Image(systemName: "play.fill")
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundStyle(Color.qGoldDeep)
+                                Text("PLAY")
+                                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                                    .foregroundStyle(Color.qGoldDeep)
+                            }
+                        }
+                        .frame(width: 240)
+                        .buttonStyle(PuffyButtonStyle(variant: .gold))
+
+                        Button { showModes = true } label: {
+                            HStack(spacing: 8) {
+                                Text("Mode").opacity(0.7)
+                                Text("\(selectedLanguage.flag) \(selectedVariant.label)")
+                                    .fontWeight(.semibold)
+                                Text("›").opacity(0.6)
+                            }
+                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.qInk)
+                            .padding(.horizontal, 14).padding(.vertical, 6)
+                            .background(
+                                Capsule()
+                                    .fill(Color.white.opacity(0.55))
+                                    .overlay(Capsule().stroke(Color.white.opacity(0.85), lineWidth: 1))
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .position(x: w / 2, y: h * 0.742)
+
+                    // Bottom nav
+                    bottomNav
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, geo.safeAreaInsets.bottom + 8)
+                        .frame(maxWidth: .infinity)
+                        .position(x: w / 2, y: h - geo.safeAreaInsets.bottom - 52)
+                }
+                .ignoresSafeArea(edges: .top)
             }
-            .padding(.horizontal, 42)
-            .padding(.top, 38)
-            .padding(.bottom, 52)
         }
         .onAppear {
             audio.play()
@@ -40,257 +151,218 @@ struct MenuView: View {
         }
         .onChange(of: selectedLanguage) { _, v in selectedLanguageRawValue = v.rawValue }
         .onChange(of: selectedVariant)  { _, v in selectedVariantRawValue  = v.rawValue }
-        .sheet(isPresented: $showStats) { StatsSheet(bestScore: bestScore) }
-        .sheet(isPresented: $showShop)  { ShopView() }
-        .sheet(isPresented: $showModes) { ModesSheet(selectedLanguage: $selectedLanguage, selectedVariant: $selectedVariant) }
-    }
-
-    // MARK: - Subviews
-
-    private var backgroundLayer: some View {
-        Image("Quibly Background")
-            .resizable()
-            .scaledToFill()
-            .ignoresSafeArea()
-    }
-
-    private var titleSection: some View {
-        Spacer()
-            .frame(maxWidth: 320)
-            .frame(height: 120)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-            .padding(.top, 8)
-    }
-
-    private var summaryBar: some View {
-        HStack(spacing: 12) {
-            // Highscore — tap to see stats
-            Button { showStats = true } label: {
-                summaryItem(
-                    label: "Highscore",
-                    value: "\(bestScore)",
-                    symbol: "trophy.fill",
-                    tint: Color(red: 1, green: 0.82, blue: 0.6)
-                )
-            }
-            .buttonStyle(.plain)
-
-            summaryItem(
-                label: "Coins",
-                value: "\(coins)",
-                symbol: "bitcoinsign.circle.fill",
-                tint: Color(red: 1, green: 0.72, blue: 0.5)
+        .fullScreenCover(isPresented: $showShop)     { ShopView(onBack: { showShop = false }) }
+        .fullScreenCover(isPresented: $showModes)    {
+            ModesView(
+                selectedLanguage: $selectedLanguage,
+                selectedVariant: $selectedVariant,
+                onBack: { showModes = false },
+                onStart: { settings in showModes = false; onStart(settings) }
             )
         }
+        .fullScreenCover(isPresented: $showSettings) { SettingsView(onBack: { showSettings = false }) }
+        .sheet(isPresented: $showProfile)  { ProfilePopupSheet() }
+        .sheet(isPresented: $showDaily)    { DailyRewardPopupSheet() }
+        .sheet(isPresented: $showQuests)   { QuestsPopupSheet() }
+        .sheet(isPresented: $showLocked)   { LockedPopupSheet() }
     }
 
-    private func summaryItem(label: String, value: String, symbol: String, tint: Color) -> some View {
-        HStack(spacing: 8) {
-            Image(systemName: symbol)
-                .font(.system(size: 14, weight: .bold))
-            VStack(alignment: .leading, spacing: 2) {
-                Text(label)
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.black.opacity(0.65))
-                Text(value)
-                    .font(.system(size: 18, weight: .heavy, design: .rounded))
-                    .foregroundStyle(ink)
+    // MARK: - Profile Chip
+
+    private var profileChip: some View {
+        Button { showProfile = true } label: {
+            HStack(spacing: 8) {
+                ZStack {
+                    Circle()
+                        .fill(LinearGradient(
+                            colors: [Color.qBubble1, Color.qGrape1],
+                            startPoint: .topLeading, endPoint: .bottomTrailing
+                        ))
+                        .shadow(color: Color.qInk.opacity(0.35), radius: 0, x: 0, y: 3)
+                    Text("R")
+                        .font(.system(size: 18, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.white)
+                }
+                .frame(width: 40, height: 40)
+
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("LVL 12")
+                        .font(.system(size: 9, weight: .heavy, design: .rounded))
+                        .foregroundStyle(Color.white.opacity(0.85))
+                        .tracking(0.6)
+                    Text("Riley")
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.white)
+                        .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 1)
+                }
             }
-            Spacer(minLength: 0)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .frame(maxWidth: .infinity)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(tint)
-                .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white.opacity(0.72), lineWidth: 1))
-        )
+        .buttonStyle(.plain)
     }
+
+    // MARK: - Daily Button
+
+    private var dailyButton: some View {
+        Button { showDaily = true } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "gift.fill")
+                    .font(.system(size: 13, weight: .bold))
+                Text("Daily")
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+            }
+            .foregroundStyle(.white)
+            .padding(.horizontal, 12).padding(.vertical, 6)
+            .background(
+                Capsule()
+                    .fill(LinearGradient(
+                        colors: [Color(red: 1, green: 0.70, blue: 0.85),
+                                 Color(red: 1, green: 0.44, blue: 0.68)],
+                        startPoint: .top, endPoint: .bottom
+                    ))
+                    .overlay(Capsule().stroke(Color.white.opacity(0.55), lineWidth: 1))
+                    .shadow(color: Color(red: 0.63, green: 0.12, blue: 0.35).opacity(0.4), radius: 0, x: 0, y: 3)
+            )
+            .overlay(alignment: .topTrailing) {
+                ZStack {
+                    Circle()
+                        .fill(Color.qSun1)
+                        .shadow(color: Color(red: 0.71, green: 0.43, blue: 0).opacity(0.4), radius: 0, x: 0, y: 2)
+                    Text("3")
+                        .font(.system(size: 10, weight: .heavy, design: .rounded))
+                        .foregroundStyle(Color.qGoldDeep)
+                }
+                .frame(width: 18, height: 18)
+                .offset(x: 6, y: -6)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Board Preview
 
     private var boardPreview: some View {
-        let letters: [[String]] = [
-            ["Q", "U", "I", "B"],
-            ["L", "P", "A", "R"],
-            ["E", "L", "A", "Y"],
-            ["W", "O", "R", "D"]
-        ]
-
-        return VStack(spacing: 8) {
-            ForEach(Array(letters.enumerated()), id: \.offset) { rowIndex, row in
-                HStack(spacing: 8) {
-                    ForEach(Array(row.enumerated()), id: \.offset) { columnIndex, letter in
-                        tile(letter: letter, highlighted: isHighlighted(row: rowIndex, col: columnIndex))
+        VStack(spacing: 6) {
+            ForEach(0..<4, id: \.self) { r in
+                HStack(spacing: 6) {
+                    ForEach(0..<4, id: \.self) { c in
+                        let letter = previewLetters[r][c]
+                        let hl = isHighlighted(row: r, col: c)
+                        previewTile(letter: letter, highlighted: hl)
                     }
                 }
             }
         }
-        .padding(8)
-        .frame(maxWidth: 282)
-        .background(
-            RoundedRectangle(cornerRadius: 28)
-                .fill(Color.white.opacity(0.34))
-                .overlay(RoundedRectangle(cornerRadius: 28).stroke(Color.white.opacity(0.72), lineWidth: 1.2))
-                .shadow(color: .black.opacity(0.18), radius: 14, x: 0, y: 7)
-        )
-        .overlay(alignment: .center) {
-            HStack(spacing: 40) {
-                Circle().fill(Color.white.opacity(0.82)).frame(width: 8, height: 8)
-                Circle().fill(Color.white.opacity(0.82)).frame(width: 8, height: 8)
-            }
-            .offset(x: 16, y: 32)
-        }
+        .padding(10)
+        .qCard(cornerRadius: 28)
     }
 
     private func isHighlighted(row: Int, col: Int) -> Bool {
         (row == 1 && col == 1) || (row == 2 && (1...3).contains(col))
     }
 
-    private func tile(letter: String, highlighted: Bool) -> some View {
+    private func previewTile(letter: String, highlighted: Bool) -> some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 17)
-                .fill(highlighted ? Color(red: 0.99, green: 0.87, blue: 0.34) : cream)
-                .shadow(color: .black.opacity(0.10), radius: 5, x: 0, y: 3)
+            RoundedRectangle(cornerRadius: 11)
+                .fill(highlighted
+                    ? LinearGradient(colors: [Color.qSun1, Color.qSun2], startPoint: .top, endPoint: .bottom)
+                    : LinearGradient(colors: [Color.qCream, Color(red: 1, green: 0.95, blue: 0.88)], startPoint: .top, endPoint: .bottom)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 11)
+                        .stroke(Color.white.opacity(0.75), lineWidth: 1)
+                )
+                .shadow(color: Color.qInk.opacity(0.18), radius: 0, x: 0, y: 2)
             Text(letter)
-                .font(.system(size: 24, weight: .heavy, design: .rounded))
-                .foregroundStyle(highlighted ? Color(red: 0.42, green: 0.28, blue: 0.12) : ink)
+                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .foregroundStyle(highlighted ? Color.qGoldDeep : Color.qInk)
         }
-        .frame(width: 54, height: 54)
+        .frame(width: 50, height: 50)
     }
 
-    private var playButton: some View {
-        Button(action: startGame) {
-            HStack(spacing: 10) {
-                Image(systemName: "play.fill").font(.system(size: 16, weight: .bold))
-                Text("Play").font(.system(size: 34, weight: .heavy, design: .rounded))
-            }
-            .foregroundStyle(.white)
-            .frame(maxWidth: 282)
-            .padding(.vertical, 10)
-            .background(
-                RoundedRectangle(cornerRadius: 32)
-                    .fill(LinearGradient(
-                        colors: [Color(red: 0.99, green: 0.87, blue: 0.34),
-                                 Color(red: 0.97, green: 0.68, blue: 0.20)],
-                        startPoint: .top, endPoint: .bottom
-                    ))
-                    .overlay(RoundedRectangle(cornerRadius: 32).stroke(Color.white.opacity(0.7), lineWidth: 1.2))
-                    .shadow(color: Color(red: 0.72, green: 0.40, blue: 0.15).opacity(0.45), radius: 8, x: 0, y: 6)
-            )
+    // MARK: - Decorative Floating Tile
+
+    private func decorativeTile(_ letter: String, size: CGFloat, rotation: Double) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: size * 0.22)
+                .fill(LinearGradient(
+                    colors: [Color.qCream, Color(red: 1, green: 0.95, blue: 0.88)],
+                    startPoint: .top, endPoint: .bottom
+                ))
+                .overlay(
+                    RoundedRectangle(cornerRadius: size * 0.22)
+                        .stroke(Color.white.opacity(0.8), lineWidth: 1.2)
+                )
+                .shadow(color: Color.qInk.opacity(0.22), radius: 0, x: 0, y: 3)
+                .shadow(color: Color.qInk.opacity(0.10), radius: 8, x: 0, y: 5)
+            Text(letter)
+                .font(.system(size: size * 0.44, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.qInk)
         }
-        .buttonStyle(.plain)
+        .frame(width: size, height: size)
+        .rotationEffect(.degrees(rotation))
     }
 
-    private var bottomActions: some View {
-        HStack(spacing: 14) {
-            menuButton(
-                tint: Color(red: 0.90, green: 0.82, blue: 0.97),
-                symbol: "cart.fill", title: "Shop",
-                iconColor: Color(red: 0.50, green: 0.36, blue: 0.84)
+    // MARK: - Bottom Nav
+
+    private var bottomNav: some View {
+        HStack(spacing: 8) {
+            navButton(
+                label: "Modes",
+                icon: "square.grid.2x2.fill",
+                gradient: [Color(red: 0.80, green: 0.71, blue: 1.0), Color(red: 0.61, green: 0.48, blue: 0.94)]
+            ) { showModes = true }
+
+            navButton(
+                label: "Shop",
+                icon: "cart.fill",
+                gradient: [Color(red: 1.0, green: 0.70, blue: 0.85), Color(red: 1.0, green: 0.44, blue: 0.68)]
             ) { showShop = true }
 
-            menuButton(
-                tint: Color(red: 0.78, green: 0.87, blue: 0.99),
-                symbol: "square.grid.2x2.fill", title: "Modes",
-                iconColor: Color(red: 0.14, green: 0.44, blue: 0.79)
-            ) { showModes = true }
+            navButton(
+                label: "Quests",
+                icon: "checkmark.circle.fill",
+                gradient: [Color.qMint1, Color.qMint2]
+            ) { showQuests = true }
+
+            navButton(
+                label: "Friends",
+                icon: "person.2.fill",
+                gradient: [Color.qSun1, Color.qSun2]
+            ) { showLocked = true }
         }
     }
 
-    private func menuButton(tint: Color, symbol: String, title: String, iconColor: Color, action: @escaping () -> Void) -> some View {
+    private func navButton(label: String, icon: String, gradient: [Color], action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 8) {
-                Image(systemName: symbol)
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(iconColor)
-                Text(title)
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.black.opacity(0.65))
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(.white)
+                Text(label)
+                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.white)
+                    .shadow(color: Color(red: 0.24, green: 0.12, blue: 0.47).opacity(0.4), radius: 0, x: 0, y: 1)
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 78)
+            .padding(.vertical, 10)
             .background(
-                RoundedRectangle(cornerRadius: 24)
-                    .fill(tint)
-                    .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.white.opacity(0.75), lineWidth: 1.1))
-                    .shadow(color: .black.opacity(0.16), radius: 7, x: 0, y: 4)
+                RoundedRectangle(cornerRadius: 18)
+                    .fill(LinearGradient(colors: gradient, startPoint: .top, endPoint: .bottom))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18)
+                            .stroke(Color.white.opacity(0.45), lineWidth: 1)
+                    )
+                    .shadow(color: Color(red: 0.24, green: 0.12, blue: 0.47).opacity(0.35), radius: 0, x: 0, y: 4)
+                    .shadow(color: Color(red: 0.24, green: 0.12, blue: 0.47).opacity(0.15), radius: 8, x: 0, y: 4)
             )
         }
         .buttonStyle(.plain)
     }
+
+    // MARK: - Action
 
     private func startGame() {
         onStart(GameSettings(language: selectedLanguage, boardVariant: selectedVariant))
-    }
-}
-
-// MARK: - Stats Sheet
-
-private struct StatsSheet: View {
-    let bestScore: Int
-    @AppStorage("SlideWords_GamesPlayed") private var gamesPlayed: Int    = 0
-    @AppStorage("SlideWords_LongestWord") private var longestWord:  String = "—"
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section("Profile") {
-                    statRow("Best Score",    value: "\(bestScore)")
-                    statRow("Games Played",  value: "\(gamesPlayed)")
-                    statRow("Longest Word",  value: longestWord)
-                }
-            }
-            .navigationTitle("Stats")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") { dismiss() }
-                }
-            }
-        }
-    }
-
-    private func statRow(_ label: String, value: String) -> some View {
-        HStack {
-            Text(label)
-            Spacer()
-            Text(value).fontWeight(.semibold).foregroundStyle(.secondary)
-        }
-    }
-}
-
-// MARK: - Modes Sheet
-
-private struct ModesSheet: View {
-    @Binding var selectedLanguage: GameLanguage
-    @Binding var selectedVariant:  BoardVariant
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section("Language") {
-                    Picker("Language", selection: $selectedLanguage) {
-                        ForEach(GameLanguage.allCases) { lang in
-                            Text("\(lang.flag) \(lang.rawValue)").tag(lang)
-                        }
-                    }
-                }
-                Section("Board Size") {
-                    Picker("Board Size", selection: $selectedVariant) {
-                        ForEach(BoardVariant.allCases) { variant in
-                            Text("\(variant.displayName) (\(variant.label))").tag(variant)
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Modes")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") { dismiss() }
-                }
-            }
-        }
     }
 }
 

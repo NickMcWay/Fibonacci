@@ -1,11 +1,5 @@
 // TileView.swift
-// Renders a single letter tile with:
-//   - Rounded rectangle background (colour keyed to letter category)
-//   - Scrabble point value badge in the top-right corner
-//   - Spawn scale-in animation (isNew flag)
-//   - Clear pop-out animation (isClearing flag)
-//   - Draw-selection highlight (isSelected flag)
-//   - Pending-confirmation glow pulse (isPending flag)
+// Renders a single letter tile with Quibly's puffy, candy aesthetic.
 
 import SwiftUI
 
@@ -14,7 +8,7 @@ struct TileView: View {
     let size: CGFloat
     var isSelected: Bool = false
     var isPending: Bool = false
-    var scrabbleValue: Int? = nil   // shown as a small badge; nil hides it
+    var scrabbleValue: Int? = nil
     var temporaryResolvedLetter: Character? = nil
 
     @State private var scale: CGFloat = 1.0
@@ -23,27 +17,39 @@ struct TileView: View {
 
     var body: some View {
         ZStack {
+            // Base tile shape
             RoundedRectangle(cornerRadius: size * 0.20)
-                .fill(tileColor(for: tile.letter))
+                .fill(tileBackground)
                 .overlay(
+                    // Inner top sheen
                     RoundedRectangle(cornerRadius: size * 0.20)
-                        .stroke(Color.white.opacity(0.65), lineWidth: 1.5)
+                        .stroke(
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.80), Color.white.opacity(0.10)],
+                                startPoint: .top, endPoint: .bottom
+                            ),
+                            lineWidth: 1.5
+                        )
                 )
-                .shadow(color: .black.opacity(0.14), radius: 8, x: 0, y: 5)
+                .shadow(color: shadowColor.opacity(0.28), radius: 0, x: 0, y: size * 0.06)
+                .shadow(color: shadowColor.opacity(0.12), radius: size * 0.12, x: 0, y: size * 0.10)
 
-            // White wash + border while finger is tracing this tile
+            // Selected state: white wash
             if isSelected {
                 RoundedRectangle(cornerRadius: size * 0.20)
-                    .fill(Color.white.opacity(0.35))
+                    .fill(Color.white.opacity(0.30))
                 RoundedRectangle(cornerRadius: size * 0.20)
                     .strokeBorder(Color.white, lineWidth: size * 0.07)
             }
 
-            // Pulsing green ring for confirmed-but-not-yet-submitted words
+            // Pending (hint) glow: pulsing gold ring
             if isPending {
                 RoundedRectangle(cornerRadius: size * 0.20)
                     .strokeBorder(
-                        Color(red: 1.00, green: 0.89, blue: 0.38),
+                        LinearGradient(
+                            colors: [Color.qSun1, Color.qSun2],
+                            startPoint: .topLeading, endPoint: .bottomTrailing
+                        ),
                         lineWidth: size * 0.10
                     )
                     .opacity(glowOpacity)
@@ -55,38 +61,42 @@ struct TileView: View {
                     }
             }
 
+            // Letter
             Text(displayedLetter)
                 .font(.system(size: size * 0.44, weight: .bold, design: .rounded))
-                .foregroundColor(textColor(for: tile.letter, isPending: isPending))
+                .foregroundStyle(letterColor)
                 .opacity(jokerLetterOpacity)
+                .shadow(color: shadowColor.opacity(0.25), radius: 0, x: 0, y: 1)
 
+            // Coin tile indicator
             if tile.hasCoin {
                 Image(systemName: "centsign.circle.fill")
                     .font(.system(size: size * 0.22, weight: .bold))
-                    .foregroundColor(Color(red: 0.93, green: 0.70, blue: 0.12))
+                    .foregroundStyle(Color(red: 0.93, green: 0.70, blue: 0.12))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                     .padding(.bottom, size * 0.08)
                     .padding(.trailing, size * 0.08)
             }
 
-            // Scrabble point value — small superscript in top-right corner
+            // Scrabble point value badge
             if let value = scrabbleValue {
                 Text("\(value)")
                     .font(.system(size: size * 0.20, weight: .bold, design: .rounded))
-                    .foregroundColor(textColor(for: tile.letter, isPending: isPending).opacity(0.60))
+                    .foregroundStyle(letterColor.opacity(0.55))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                     .padding(.top, size * 0.07)
                     .padding(.trailing, size * 0.07)
             }
         }
         .frame(width: size, height: size)
-        .scaleEffect(scale)
+        .scaleEffect(isSelected ? 1.06 : scale)
         .opacity(opacity)
+        .animation(.spring(response: 0.2, dampingFraction: 0.5), value: isSelected)
         .onAppear {
             if tile.isNew {
                 scale = 0.01
                 opacity = 0
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                withAnimation(.spring(response: 0.32, dampingFraction: 0.58)) {
                     scale = 1.0
                     opacity = 1.0
                 }
@@ -102,6 +112,8 @@ struct TileView: View {
         }
     }
 
+    // MARK: - Computed Properties
+
     private var displayedLetter: String {
         if tile.isJoker, let resolved = (tile.jokerResolvedLetter ?? temporaryResolvedLetter) {
             return String(resolved).uppercased()
@@ -110,36 +122,72 @@ struct TileView: View {
     }
 
     private var jokerLetterOpacity: Double {
-        (tile.isJoker && (tile.jokerResolvedLetter != nil || temporaryResolvedLetter != nil)) ? 0.6 : 1.0
+        (tile.isJoker && (tile.jokerResolvedLetter != nil || temporaryResolvedLetter != nil)) ? 0.65 : 1.0
     }
 
-    // MARK: - Color Palette
-
-    private func tileColor(for letter: Character) -> Color {
+    private var tileBackground: LinearGradient {
         if isPending {
-            return Color(red: 0.98, green: 0.82, blue: 0.30)
+            return LinearGradient(
+                colors: [Color.qSun1, Color(red: 1, green: 0.78, blue: 0.22)],
+                startPoint: .top, endPoint: .bottom
+            )
         }
-        return Color(red: 0.98, green: 0.95, blue: 0.93)
+        if tile.isJoker {
+            return LinearGradient(
+                colors: [Color.qGrape1, Color.qGrape2],
+                startPoint: .top, endPoint: .bottom
+            )
+        }
+        if isSelected {
+            return LinearGradient(
+                colors: [Color.qSun1.opacity(0.9), Color.qSun2.opacity(0.9)],
+                startPoint: .top, endPoint: .bottom
+            )
+        }
+        // Default cream tile
+        return LinearGradient(
+            colors: [Color.qCream, Color(red: 1.0, green: 0.95, blue: 0.88)],
+            startPoint: .top, endPoint: .bottom
+        )
     }
 
-    private func textColor(for letter: Character, isPending: Bool) -> Color {
-        isPending ? Color(red: 0.30, green: 0.16, blue: 0.05) : Color(red: 0.08, green: 0.14, blue: 0.24)
+    private var letterColor: Color {
+        if isPending   { return Color.qGoldDeep }
+        if tile.isJoker { return .white }
+        if isSelected  { return Color.qGoldDeep }
+        return Color.qInk
+    }
+
+    private var shadowColor: Color {
+        if tile.isJoker { return Color.qGrape2 }
+        return Color.qInk
     }
 }
 
 // MARK: - Previews
 
-#Preview("Tile - Vowel with value") {
+#Preview("Tile - Normal") {
     TileView(tile: Tile(letter: "A", row: 0, col: 0), size: 72, scrabbleValue: 1)
         .padding()
+        .background(Color.qPeach1)
 }
 
 #Preview("Tile - Selected") {
     TileView(tile: Tile(letter: "C", row: 0, col: 0), size: 72, isSelected: true, scrabbleValue: 3)
         .padding()
+        .background(Color.qPeach1)
 }
 
 #Preview("Tile - Pending") {
     TileView(tile: Tile(letter: "T", row: 0, col: 1), size: 72, isPending: true, scrabbleValue: 1)
         .padding()
+        .background(Color.qPeach1)
+}
+
+#Preview("Tile - Joker") {
+    var joker = Tile(letter: "*", row: 0, col: 0)
+    joker.isJoker = true
+    return TileView(tile: joker, size: 72)
+        .padding()
+        .background(Color.qPeach1)
 }

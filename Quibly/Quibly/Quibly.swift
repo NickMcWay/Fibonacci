@@ -1,10 +1,3 @@
-//
-//  FibonacciApp.swift
-//  Fibonacci
-//
-//  Created by Niels Weggeman on 22/04/2026.
-//
-
 import SwiftUI
 import CoreData
 import Combine
@@ -23,14 +16,14 @@ struct FibonacciApp: App {
     }
 }
 
-/// Routes between the start menu and the active game.
+// Routes between the menu and the active game.
 struct ContentRouter: View {
     @State private var activeSettings: GameSettings? = nil
 
     var body: some View {
         if let settings = activeSettings {
             GameView(settings: settings, onReturnToMenu: {
-                withAnimation(.easeInOut(duration: 0.3)) {
+                withAnimation(.easeInOut(duration: 0.25)) {
                     activeSettings = nil
                 }
             })
@@ -40,7 +33,7 @@ struct ContentRouter: View {
             ))
         } else {
             MenuView(onStart: { settings in
-                withAnimation(.easeInOut(duration: 0.3)) {
+                withAnimation(.easeInOut(duration: 0.25)) {
                     activeSettings = settings
                 }
             })
