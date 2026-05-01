@@ -103,8 +103,8 @@ struct SettingsView: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.white.opacity(0.55))
-                    .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.white.opacity(0.85), lineWidth: 1.5))
+                    .fill(Color.white.opacity(0.82))
+                    .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.white.opacity(0.95), lineWidth: 1.5))
                     .shadow(color: Color.qInk.opacity(0.18), radius: 0, x: 0, y: 4)
             )
             .clipShape(RoundedRectangle(cornerRadius: 20))
