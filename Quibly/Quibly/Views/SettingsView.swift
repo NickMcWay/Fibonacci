@@ -20,24 +20,6 @@ struct SettingsView: View {
     var body: some View {
         DreamBackground {
             ZStack(alignment: .top) {
-                // Top bar
-                HStack {
-                    QCircleButton(size: 40, action: { dismiss(); onBack?() }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundStyle(Color.qInk)
-                    }
-                    Spacer()
-                    Text("Settings")
-                        .font(.system(size: 22, weight: .semibold, design: .rounded))
-                        .foregroundStyle(Color.white)
-                        .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 2)
-                    Spacer()
-                    Color.clear.frame(width: 40, height: 40)
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 56)
-
                 // Scrollable settings
                 ScrollView {
                     VStack(spacing: 0) {
@@ -81,6 +63,24 @@ struct SettingsView: View {
                         .padding(.horizontal, 16)
                     }
                 }
+
+                // Top bar (above scroll view so taps reach buttons)
+                HStack {
+                    QCircleButton(size: 40, action: { dismiss(); onBack?() }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundStyle(Color.qInk)
+                    }
+                    Spacer()
+                    Text("Settings")
+                        .font(.system(size: 22, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.white)
+                        .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 2)
+                    Spacer()
+                    Color.clear.frame(width: 40, height: 40)
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 56)
             }
         }
     }

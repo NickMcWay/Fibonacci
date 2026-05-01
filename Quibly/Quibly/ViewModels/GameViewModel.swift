@@ -65,6 +65,8 @@ final class GameViewModel: ObservableObject {
     private var board: BoardModel
     private let bestScoreKey      = "SlideWords_BestScore"
     private let coinsKey          = "SlideWords_Coins"
+    private let totalXPKey        = "SlideWords_TotalXP"
+    static let xpPerLevel: Int    = 500
     private let hintChargesKey    = "SlideWords_HintCharges"
     private let bombChargesKey    = "SlideWords_BombCharges"
     private let shuffleChargesKey = "SlideWords_ShuffleCharges"
@@ -243,6 +245,8 @@ final class GameViewModel: ObservableObject {
                 bestScore = score
                 UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
             }
+            let totalXP = UserDefaults.standard.integer(forKey: totalXPKey) + result.pointsEarned
+            UserDefaults.standard.set(totalXP, forKey: totalXPKey)
 
             lastWords = result.clearedWords
             comboCount = result.comboCount
@@ -312,6 +316,8 @@ final class GameViewModel: ObservableObject {
             bestScore = score
             UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
         }
+        let totalXP2 = UserDefaults.standard.integer(forKey: totalXPKey) + earned
+        UserDefaults.standard.set(totalXP2, forKey: totalXPKey)
 
         lastWords = [word]
         comboCount = 0

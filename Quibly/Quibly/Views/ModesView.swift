@@ -36,7 +36,23 @@ struct ModesView: View {
     var body: some View {
         DreamBackground {
             ZStack(alignment: .top) {
-                // Top bar
+                // Scrollable content
+                ScrollView {
+                    VStack(spacing: 0) {
+                        Spacer().frame(height: 110)
+
+                        VStack(spacing: 14) {
+                            languagePicker
+                            modeTiles
+                            boardSizePicker
+                            startButton
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 40)
+                    }
+                }
+
+                // Top bar (above scroll view so taps reach buttons)
                 HStack {
                     QCircleButton(size: 40, action: { dismiss(); onBack?() }) {
                         Image(systemName: "chevron.left")
@@ -53,22 +69,6 @@ struct ModesView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 56)
-
-                // Scrollable content
-                ScrollView {
-                    VStack(spacing: 0) {
-                        Spacer().frame(height: 110)
-
-                        VStack(spacing: 14) {
-                            languagePicker
-                            modeTiles
-                            boardSizePicker
-                            startButton
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 40)
-                    }
-                }
             }
         }
     }

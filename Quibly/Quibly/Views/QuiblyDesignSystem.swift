@@ -372,3 +372,41 @@ struct QModal<Content: View>: View {
         .animation(.spring(response: 0.35, dampingFraction: 0.65), value: isPresented)
     }
 }
+
+// MARK: - XP Bar
+
+struct XPBarView: View {
+    @AppStorage("SlideWords_TotalXP") private var totalXP: Int = 0
+
+    private let xpPerLevel = 500
+
+    private var level: Int { totalXP / xpPerLevel + 1 }
+    private var xpInLevel: Int { totalXP % xpPerLevel }
+    private var progress: Double { Double(xpInLevel) / Double(xpPerLevel) }
+
+    var body: some View {
+        VStack(spacing: 3) {
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 999)
+                    .fill(Color.qInk.opacity(0.10))
+                    .frame(height: 8)
+                GeometryReader { geo in
+                    RoundedRectangle(cornerRadius: 999)
+                        .fill(LinearGradient(
+                            colors: [Color.qSun1, Color.qBubble2, Color.qGrape1],
+                            startPoint: .leading, endPoint: .trailing
+                        ))
+                        .frame(width: max(geo.size.width * progress, progress > 0 ? 8 : 0), height: 8)
+                }
+                .frame(height: 8)
+            }
+            HStack {
+                Text("Lvl \(level)")
+                Spacer()
+                Text("\(xpInLevel) / \(xpPerLevel) xp")
+            }
+            .font(.system(size: 10, weight: .bold, design: .rounded))
+            .foregroundStyle(Color.qInk.opacity(0.65))
+        }
+    }
+}

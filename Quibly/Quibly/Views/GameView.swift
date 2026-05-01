@@ -244,35 +244,7 @@ struct GameView: View {
             .padding(.top, 10)
 
             // XP progress bar
-            VStack(spacing: 3) {
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 999)
-                        .fill(Color.qInk.opacity(0.10))
-                        .frame(height: 8)
-                    RoundedRectangle(cornerRadius: 999)
-                        .fill(LinearGradient(
-                            colors: [Color.qSun1, Color.qBubble2, Color.qGrape1],
-                            startPoint: .leading, endPoint: .trailing
-                        ))
-                        .frame(width: nil, height: 8)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .mask(
-                            GeometryReader { geo in
-                                HStack(spacing: 0) {
-                                    Color.black.frame(width: geo.size.width * 0.62)
-                                    Color.clear
-                                }
-                            }
-                        )
-                }
-                HStack {
-                    Text("Lvl 12")
-                    Spacer()
-                    Text("520 / 840 xp")
-                }
-                .font(.system(size: 10, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.qInk.opacity(0.65))
-            }
+            XPBarView()
             .padding(.horizontal, 14)
             .padding(.bottom, 10)
         }
