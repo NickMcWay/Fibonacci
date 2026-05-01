@@ -30,15 +30,19 @@ struct GameView: View {
     var body: some View {
         DreamBackground {
             ZStack {
-                VStack(spacing: 0) {
+                VStack(spacing: 20) {
                     topBar
                         .padding(.horizontal, 16)
                         .padding(.top, 56)
                         .padding(.bottom, 8)
-
+                    
+                        Spacer()
+                            .frame(height: 100)
+                    
                     scoreHeader
                         .padding(.horizontal, 18)
                         .padding(.bottom, 6)
+                        .frame(height: 50)
 
                     // Combo ribbon
                     if vm.comboCount > 0 {

@@ -41,7 +41,7 @@ struct MenuView: View {
 
                     decorativeTile("B", size: 38, rotation: 14)
                         .floatingAnimation(delay: 0.6, duration: 4.1)
-                        .position(x: w - 36, y: h * 0.228)
+                        .position(x: w - 36, y: h * 0.258)
 
                     decorativeTile("Y", size: 34, rotation: 8)
                         .floatingAnimation(delay: 0.3, duration: 3.8)
@@ -63,44 +63,35 @@ struct MenuView: View {
                     .padding(.horizontal, 16)
                     .padding(.top, geo.safeAreaInsets.top + 12)
 
-                    // Logo cluster
-                    VStack(spacing: 4) {
-                        QuiblyLogo(size: 68)
-                            .floatingAnimation(delay: 0, duration: 4.0, distance: 4)
-                        Text("Slide. Spell. Sparkle.")
-                            .font(.system(size: 13, weight: .medium, design: .rounded))
-                            .foregroundStyle(Color.white.opacity(0.95))
-                            .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 1)
-                    }
-                    .position(x: w / 2, y: h * 0.198)
 
-                    // Stats row
-                    HStack(spacing: 8) {
-                        QStatChip(
-                            icon: "trophy.fill", iconColor: Color(red: 0.48, green: 0.27, blue: 0),
-                            label: "Best", value: "\(bestScore)",
-                            gradient: [Color(red: 1, green: 0.96, blue: 0.83), Color(red: 1, green: 0.85, blue: 0.48)]
-                        )
-                        QStatChip(
-                            icon: "flame.fill", iconColor: Color(red: 0.66, green: 0.24, blue: 0),
-                            label: "Streak", value: "\(streak)d",
-                            gradient: [Color(red: 1, green: 0.85, blue: 0.77), Color(red: 1, green: 0.67, blue: 0.48)]
-                        )
-                        QStatChip(
-                            icon: "circle.fill", iconColor: Color(red: 0.94, green: 0.65, blue: 0.13),
-                            label: "Coins", value: "\(coins)",
-                            gradient: [Color(red: 1, green: 0.97, blue: 0.85), Color(red: 1, green: 0.89, blue: 0.60)]
-                        )
-                    }
-                    .padding(.horizontal, 24)
-                    .position(x: w / 2, y: h * 0.342)
 
                     // Board preview
-                    boardPreview
-                        .position(x: w / 2, y: h * 0.476)
-
-                    // Play button + mode chip
-                    VStack(spacing: 10) {
+                    VStack(spacing: 20){
+                        Spacer()
+                            .frame(height: 250)
+                        // Stats row
+                        HStack(spacing: 8) {
+                            QStatChip(
+                                icon: "trophy.fill", iconColor: Color(red: 0.48, green: 0.27, blue: 0),
+                                label: "Best", value: "\(bestScore)",
+                                gradient: [Color(red: 1, green: 0.96, blue: 0.83), Color(red: 1, green: 0.85, blue: 0.48)]
+                            )
+                            QStatChip(
+                                icon: "flame.fill", iconColor: Color(red: 0.66, green: 0.24, blue: 0),
+                                label: "Streak", value: "\(streak)d",
+                                gradient: [Color(red: 1, green: 0.85, blue: 0.77), Color(red: 1, green: 0.67, blue: 0.48)]
+                            )
+                            QStatChip(
+                                icon: "circle.fill", iconColor: Color(red: 0.94, green: 0.65, blue: 0.13),
+                                label: "Coins", value: "\(coins)",
+                                gradient: [Color(red: 1, green: 0.97, blue: 0.85), Color(red: 1, green: 0.89, blue: 0.60)]
+                            )
+                        }
+                        .padding(.horizontal, 30)
+                        
+                        boardPreview
+                        
+                        // Play button + mode chip
                         Button(action: startGame) {
                             HStack(spacing: 10) {
                                 Image(systemName: "play.fill")
@@ -113,7 +104,7 @@ struct MenuView: View {
                         }
                         .frame(width: 240)
                         .buttonStyle(PuffyButtonStyle(variant: .gold))
-
+                        
                         Button { showModes = true } label: {
                             HStack(spacing: 8) {
                                 Text("Mode").opacity(0.7)
@@ -131,15 +122,16 @@ struct MenuView: View {
                             )
                         }
                         .buttonStyle(.plain)
+                        
+                        // Bottom nav
+                        bottomNav
+                            .padding(.horizontal, 16)
+                            .padding(.horizontal)
+                            .padding(.bottom, geo.safeAreaInsets.bottom + 8)
+                            .frame(maxWidth: .infinity)
                     }
-                    .position(x: w / 2, y: h * 0.742)
 
-                    // Bottom nav
-                    bottomNav
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, geo.safeAreaInsets.bottom + 8)
-                        .frame(maxWidth: .infinity)
-                        .position(x: w / 2, y: h - geo.safeAreaInsets.bottom - 52)
+
                 }
                 .ignoresSafeArea(edges: .top)
             }
