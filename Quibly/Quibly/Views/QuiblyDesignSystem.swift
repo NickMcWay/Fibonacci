@@ -33,15 +33,10 @@ struct DreamBackground<Content: View>: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(
-                stops: [
-                    .init(color: Color(red: 1.0, green: 0.835, blue: 0.918), location: 0.00),
-                    .init(color: Color(red: 1.0, green: 0.757, blue: 0.659), location: 0.35),
-                    .init(color: Color(red: 1.0, green: 0.886, blue: 0.478), location: 1.00),
-                ],
-                startPoint: .top, endPoint: .bottom
-            )
-            .ignoresSafeArea()
+            Image("Quibly Background")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
             content
         }
     }

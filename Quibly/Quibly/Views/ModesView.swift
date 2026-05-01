@@ -4,8 +4,10 @@ struct ModesView: View {
     @Binding var selectedLanguage: GameLanguage
     @Binding var selectedVariant:  BoardVariant
 
-    var onBack:  () -> Void
+    var onBack:  (() -> Void)?
     var onStart: (GameSettings) -> Void
+
+    @Environment(\.dismiss) private var dismiss
 
     private struct GameMode {
         let id: String
@@ -36,7 +38,7 @@ struct ModesView: View {
             ZStack(alignment: .top) {
                 // Top bar
                 HStack {
-                    QCircleButton(size: 40, action: onBack) {
+                    QCircleButton(size: 40, action: { dismiss(); onBack?() }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundStyle(Color.qInk)

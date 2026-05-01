@@ -1,7 +1,10 @@
 import SwiftUI
 
 struct SettingsView: View {
-    var onBack: () -> Void
+    var onBack: (() -> Void)?
+
+    @EnvironmentObject private var audio: AudioManager
+    @Environment(\.dismiss) private var dismiss
 
     @AppStorage("SlideWords_SoundEnabled")   private var soundOn:   Bool   = true
     @AppStorage("SlideWords_MusicEnabled")   private var musicOn:   Bool   = true
@@ -19,7 +22,7 @@ struct SettingsView: View {
             ZStack(alignment: .top) {
                 // Top bar
                 HStack {
-                    QCircleButton(size: 40, action: onBack) {
+                    QCircleButton(size: 40, action: { dismiss(); onBack?() }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundStyle(Color.qInk)
@@ -42,8 +45,10 @@ struct SettingsView: View {
 
                         VStack(spacing: 0) {
                             settingsGroup(title: "Audio & Haptics") {
-                                toggleRow(icon: "speaker.wave.2.fill", label: "Sound effects", binding: $soundOn)
-                                toggleRow(icon: "music.note", label: "Music", binding: $musicOn)
+                                toggleRow(icon: "speaker.wave.2.fill", label: "Sound effects",
+                                    binding: Binding(get: { soundOn }, set: { v in soundOn = v; audio.isSoundEnabled = v }))
+                                toggleRow(icon: "music.note", label: "Music",
+                                    binding: Binding(get: { musicOn }, set: { v in musicOn = v; audio.isMusicEnabled = v }))
                                 toggleRow(icon: "waveform", label: "Haptics", binding: $hapticsOn)
                             }
 

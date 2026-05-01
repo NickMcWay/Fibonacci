@@ -72,6 +72,14 @@ final class GameViewModel: ObservableObject {
     private var pendingSwipeDirection: SwipeDirection = .left
     private var hintTimerTask: Task<Void, Never>?
 
+    // Settings read from UserDefaults on each action (no need to observe changes live)
+    private var isHapticsEnabled: Bool {
+        UserDefaults.standard.object(forKey: "SlideWords_HapticsEnabled") as? Bool ?? true
+    }
+    private var isAutoHintsEnabled: Bool {
+        UserDefaults.standard.object(forKey: "SlideWords_AutoHints") as? Bool ?? true
+    }
+
     let shuffleCost: Int = 50
     let hintCost: Int   = 25
     let bombCost: Int   = 75
@@ -359,6 +367,7 @@ final class GameViewModel: ObservableObject {
     // MARK: - Hint Timer
 
     private func startHintTimer() {
+        guard isAutoHintsEnabled else { return }
         hintTimerTask?.cancel()
         showHintButton = false
         showMatchHighlights = false
@@ -596,6 +605,7 @@ final class GameViewModel: ObservableObject {
     private enum HapticStyle { case light, medium, heavy, error }
 
     private func triggerHaptic(_ style: HapticStyle) {
+        guard isHapticsEnabled else { return }
         #if os(iOS)
         switch style {
         case .light:  UIImpactFeedbackGenerator(style: .light).impactOccurred()

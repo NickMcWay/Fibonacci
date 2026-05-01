@@ -18,13 +18,28 @@ final class AudioManager: ObservableObject {
         }
     }
 
+    @Published var isMusicEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(isMusicEnabled, forKey: "SlideWords_MusicEnabled")
+            if isMusicEnabled && !isMuted { player?.play() } else { player?.pause() }
+        }
+    }
+
+    @Published var isSoundEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(isSoundEnabled, forKey: "SlideWords_SoundEnabled")
+        }
+    }
+
     private var player: AVAudioPlayer?
     private var correctPlayer: AVAudioPlayer?
     private var wrongPlayer: AVAudioPlayer?
     private let muteKey = "SlideWords_IsMuted"
 
     init() {
-        isMuted = UserDefaults.standard.bool(forKey: "SlideWords_IsMuted")
+        isMuted        = UserDefaults.standard.bool(forKey: "SlideWords_IsMuted")
+        isMusicEnabled = UserDefaults.standard.object(forKey: "SlideWords_MusicEnabled") as? Bool ?? true
+        isSoundEnabled = UserDefaults.standard.object(forKey: "SlideWords_SoundEnabled") as? Bool ?? true
         setupPlayer()
         setupEffects()
     }
@@ -71,7 +86,7 @@ final class AudioManager: ObservableObject {
     }
 
     func play() {
-        guard !isMuted else { return }
+        guard !isMuted, isMusicEnabled else { return }
         player?.play()
     }
 
@@ -95,7 +110,7 @@ final class AudioManager: ObservableObject {
     }
 
     private func playEffect(_ effectPlayer: AVAudioPlayer?) {
-        guard !isMuted else { return }
+        guard !isMuted, isSoundEnabled else { return }
         guard let effectPlayer else { return }
         effectPlayer.currentTime = 0
         effectPlayer.play()
