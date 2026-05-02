@@ -50,7 +50,7 @@ struct QCard: ViewModifier {
         content
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(Color.white.opacity(0.55))
+                    .fill(Color.white.opacity(0.82))
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius)
                             .stroke(Color.white.opacity(0.85), lineWidth: 1.5)

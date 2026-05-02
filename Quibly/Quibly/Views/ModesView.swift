@@ -23,9 +23,7 @@ struct ModesView: View {
     }
 
     private let modes: [GameMode] = [
-        .init(id: "classic",   icon: "🟪", label: "Classic",      desc: "4×4 board · the original",       gradient: [Color.qGrape1, Color.qGrape2],     stars: 3, locked: false, badge: nil,     unlock: nil),
-        .init(id: "extended",  icon: "🟫", label: "Extended",     desc: "5×5 · more room to combo",       gradient: [Color.qBubble1, Color.qBubble2],   stars: 2, locked: false, badge: nil,     unlock: nil),
-        .init(id: "challenge", icon: "🟧", label: "Challenge",    desc: "6×6 · for word wizards",         gradient: [Color.qSun1, Color.qSun2],         stars: 1, locked: false, badge: nil,     unlock: nil),
+        .init(id: "classic",   icon: "🟪", label: "Classic",      desc: "The original",       gradient: [Color.qGrape1, Color.qGrape2],     stars: 3, locked: false, badge: nil,     unlock: nil),
         .init(id: "blitz",     icon: "⚡", label: "Blitz",        desc: "90 seconds · score sprint",      gradient: [Color.qSky1, Color.qSky2],         stars: 0, locked: false, badge: "NEW",   unlock: nil),
         .init(id: "zen",       icon: "🍃", label: "Zen",          desc: "No game-over · just vibes",      gradient: [Color.qMint1, Color.qMint2],       stars: 0, locked: false, badge: nil,     unlock: nil),
         .init(id: "daily",     icon: "📅", label: "Daily Puzzle", desc: "Same board worldwide",           gradient: [Color.qSun1, Color(red: 1, green: 0.69, blue: 0.23)], stars: 0, locked: false, badge: "TODAY", unlock: nil),
