@@ -28,7 +28,7 @@ struct ShopView: View {
     private let powerUps: [PowerUp] = [
         .init(id: "hint",    icon: "lightbulb.fill", name: "Hint",    desc: "Reveals a pending word match",       cost: 25, gradient: [Color.qSun1, Color.qSun2]),
         .init(id: "shuffle", icon: "shuffle",         name: "Shuffle", desc: "Randomly rearranges all tiles",      cost: 50, gradient: [Color.qSky1, Color.qSky2]),
-        .init(id: "wild",    icon: "wand.and.stars",  name: "Wild",    desc: "Converts any tile into a joker",     cost: 60, gradient: [Color.qGrape1, Color.qGrape2]),
+        .init(id: "joker",    icon: "wand.and.stars",  name: "Joker",    desc: "Converts any tile into a joker",     cost: 60, gradient: [Color.qGrape1, Color.qGrape2]),
         .init(id: "bomb",    icon: "burst.fill",       name: "Bomb",    desc: "Clears a full row and column",       cost: 75, gradient: [Color.qCoral1, Color.qCoral2]),
     ]
 
@@ -227,7 +227,7 @@ struct ShopView: View {
             switch pu.id {
             case "hint":    return hintCharges
             case "shuffle": return shuffleCharges
-            case "wild":    return wildCharges
+            case "joker":    return wildCharges
             case "bomb":    return bombCharges
             default:        return 0
             }
@@ -267,7 +267,7 @@ struct ShopView: View {
                 switch pu.id {
                 case "hint":    hintCharges += 1
                 case "shuffle": shuffleCharges += 1
-                case "wild":    wildCharges += 1
+                case "joker":    wildCharges += 1
                 case "bomb":    bombCharges += 1
                 default: break
                 }

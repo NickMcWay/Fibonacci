@@ -165,7 +165,7 @@ struct GameView: View {
         }
         .sheet(isPresented: $showBuyWildSheet) {
             BuyChargePopupSheet(
-                powerUpName: "Wild", icon: "wand.and.stars",
+                powerUpName: "Joker", icon: "wand.and.stars",
                 iconGradient: [Color.qGrape1, Color.qGrape2],
                 singleCost: vm.wildCost, tripleCost: vm.wildCost * 3, coins: vm.coins
             ) { count in vm.shopBuyWilds(count: count) }
@@ -343,7 +343,7 @@ struct GameView: View {
             }
 
             puButton(
-                label: "Wild",
+                label: "Joker",
                 icon: "wand.and.stars",
                 gradient: [Color.qGrape1, Color.qGrape2],
                 charges: vm.wildCharges,
