@@ -65,36 +65,7 @@ struct ShopView: View {
             }
             .allowsHitTesting(false)
 
-            // Header
-            VStack(spacing: 0) {
-                HStack {
-                    QCircleButton(size: 40, action: { onBack?() ?? dismiss() }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundStyle(Color.qInk)
-                    }
-                    Spacer()
-                    HStack(spacing: 8) {
-                        Image(systemName: "cart.fill")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(Color.qInk)
-                        Text("Shop")
-                            .font(.system(size: 22, weight: .semibold, design: .rounded))
-                            .foregroundStyle(Color.qInk)
-                    }
-                    Spacer()
-                    CoinChip(amount: coins, big: true)
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 52)
-                .padding(.bottom, 14)
-                .background(
-                    LinearGradient(
-                        colors: [Color.white.opacity(0.45), Color.white.opacity(0)],
-                        startPoint: .top, endPoint: .bottom
-                    )
-                )
-            }
+            
 
             // Scrollable content
             ScrollView {
@@ -147,6 +118,37 @@ struct ShopView: View {
                     }
                     .padding(.horizontal, 16)
                 }
+            }
+            
+            // Header
+            VStack(spacing: 0) {
+                HStack {
+                    QCircleButton(size: 40, action: { onBack?() ?? dismiss() }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundStyle(Color.qInk)
+                    }
+                    Spacer()
+                    HStack(spacing: 8) {
+                        Image(systemName: "cart.fill")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(Color.qInk)
+                        Text("Shop")
+                            .font(.system(size: 22, weight: .semibold, design: .rounded))
+                            .foregroundStyle(Color.qInk)
+                    }
+                    Spacer()
+                    CoinChip(amount: coins, big: true)
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 52)
+                .padding(.bottom, 14)
+                .background(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.45), Color.white.opacity(0)],
+                        startPoint: .top, endPoint: .bottom
+                    )
+                )
             }
         }
     }
