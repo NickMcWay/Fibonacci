@@ -1,4 +1,5 @@
 import SwiftUI
+import StoreKit
 
 struct ShopView: View {
     var onBack: (() -> Void)? = nil
@@ -10,6 +11,8 @@ struct ShopView: View {
     @AppStorage("SlideWords_WildCharges")    private var wildCharges:    Int = 1
 
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var store = StoreManager.shared
+    @StateObject private var ads   = AdManager.shared
 
     private let hintCost    = 25
     private let shuffleCost = 50
@@ -28,7 +31,7 @@ struct ShopView: View {
     private let powerUps: [PowerUp] = [
         .init(id: "hint",    icon: "lightbulb.fill", name: "Hint",    desc: "Reveals a pending word match",       cost: 25, gradient: [Color.qSun1, Color.qSun2]),
         .init(id: "shuffle", icon: "shuffle",         name: "Shuffle", desc: "Randomly rearranges all tiles",      cost: 50, gradient: [Color.qSky1, Color.qSky2]),
-        .init(id: "joker",    icon: "wand.and.stars",  name: "Joker",    desc: "Converts any tile into a joker",     cost: 60, gradient: [Color.qGrape1, Color.qGrape2]),
+        .init(id: "joker",   icon: "wand.and.stars",  name: "Joker",   desc: "Converts any tile into a joker",     cost: 60, gradient: [Color.qGrape1, Color.qGrape2]),
         .init(id: "bomb",    icon: "burst.fill",       name: "Bomb",    desc: "Clears a full row and column",       cost: 75, gradient: [Color.qCoral1, Color.qCoral2]),
     ]
 
@@ -39,6 +42,27 @@ struct ShopView: View {
         ("Bubble",   [Color.qBubble1, Color.qBubble2],                       Color(red: 0.66, green: 0.24, blue: 0.43),     400, false, false),
         ("Lemonade", [Color(red: 1, green: 0.97, blue: 0.70), Color(red: 1, green: 0.84, blue: 0.29)], Color(red: 0.65, green: 0.42, blue: 0), 500, false, false),
         ("Sky",      [Color.qSky1, Color.qSky2],                             Color(red: 0.12, green: 0.34, blue: 0.55),     500, false, true),
+    ]
+
+    private struct CoinPack {
+        let productID: StoreManager.ProductID
+        let amount: Int
+        let label: String
+        let tintColors: [Color]
+        let accentColor: Color
+        let popular: Bool
+    }
+
+    private let coinPacks: [CoinPack] = [
+        .init(productID: .starterPack,  amount: 100,  label: "Starter",
+              tintColors: [Color(red: 0.85, green: 0.93, blue: 1.0), Color(red: 0.62, green: 0.79, blue: 1.0)],
+              accentColor: Color(red: 0.23, green: 0.47, blue: 0.76), popular: false),
+        .init(productID: .builderPack,  amount: 300,  label: "Builder",
+              tintColors: [Color(red: 0.84, green: 0.97, blue: 0.85), Color(red: 0.55, green: 0.89, blue: 0.61)],
+              accentColor: Color(red: 0.12, green: 0.61, blue: 0.36), popular: true),
+        .init(productID: .masterPack,   amount: 750,  label: "Master",
+              tintColors: [Color(red: 1, green: 0.95, blue: 0.77), Color(red: 1, green: 0.81, blue: 0.42)],
+              accentColor: Color(red: 0.65, green: 0.42, blue: 0), popular: false),
     ]
 
     var body: some View {
@@ -86,18 +110,15 @@ struct ShopView: View {
                         }
 
                         // Coin Packs
-                        QSectionHeader(title: "Coin Packs", subtitle: "Free — no purchase required")
+                        QSectionHeader(title: "Coin Packs", subtitle: "Buy coins to spend in the shop")
                         HStack(spacing: 10) {
-                            coinPackCard(amount: 100, label: "Starter",
-                                         tintColors: [Color(red: 0.85, green: 0.93, blue: 1.0), Color(red: 0.62, green: 0.79, blue: 1.0)],
-                                         accentColor: Color(red: 0.23, green: 0.47, blue: 0.76), popular: false)
-                            coinPackCard(amount: 300, label: "Builder",
-                                         tintColors: [Color(red: 0.84, green: 0.97, blue: 0.85), Color(red: 0.55, green: 0.89, blue: 0.61)],
-                                         accentColor: Color(red: 0.12, green: 0.61, blue: 0.36), popular: true)
-                            coinPackCard(amount: 750, label: "Master",
-                                         tintColors: [Color(red: 1, green: 0.95, blue: 0.77), Color(red: 1, green: 0.81, blue: 0.42)],
-                                         accentColor: Color(red: 0.65, green: 0.42, blue: 0), popular: false)
+                            ForEach(coinPacks, id: \.label) { pack in
+                                coinPackCard(pack)
+                            }
                         }
+
+                        // Watch Ad
+                        watchAdRow
 
                         // Tile Themes
                         QSectionHeader(title: "Tile Themes", subtitle: "Re-skin your board")
@@ -108,7 +129,7 @@ struct ShopView: View {
                             }
                         }
 
-                        Text("Coin packs are free — no purchase required.")
+                        Text("Purchases are processed by Apple and subject to their Terms of Sale.")
                             .font(.system(size: 11, weight: .medium, design: .rounded))
                             .foregroundStyle(Color.qInk.opacity(0.55))
                             .multilineTextAlignment(.center)
@@ -119,7 +140,6 @@ struct ShopView: View {
                     .padding(.horizontal, 16)
                 }
             }
-            
             // Header
             VStack(spacing: 0) {
                 HStack {
@@ -149,6 +169,14 @@ struct ShopView: View {
                         startPoint: .top, endPoint: .bottom
                     )
                 )
+
+            // Purchasing overlay
+            if store.isPurchasing {
+                Color.black.opacity(0.35).ignoresSafeArea()
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .scaleEffect(1.6)
+                    .tint(.white)
             }
         }
     }
@@ -156,69 +184,73 @@ struct ShopView: View {
     // MARK: - Hero Bundle
 
     private var heroBundle: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 24)
-                .fill(LinearGradient(
-                    colors: [Color.qGrape1, Color.qBubble2, Color.qSun1],
-                    startPoint: .topLeading, endPoint: .bottomTrailing
-                ))
-                .shadow(color: Color(red: 0.31, green: 0.12, blue: 0.51).opacity(0.4), radius: 0, x: 0, y: 6)
-                .shadow(color: Color(red: 0.31, green: 0.12, blue: 0.51).opacity(0.2), radius: 14, x: 0, y: 8)
+        Button {
+            Task { await store.purchase(.sparkleBundle) }
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(LinearGradient(
+                        colors: [Color.qGrape1, Color.qBubble2, Color.qSun1],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    ))
+                    .shadow(color: Color(red: 0.31, green: 0.12, blue: 0.51).opacity(0.4), radius: 0, x: 0, y: 6)
+                    .shadow(color: Color(red: 0.31, green: 0.12, blue: 0.51).opacity(0.2), radius: 14, x: 0, y: 8)
 
-            // Radial shine
-            Circle()
-                .fill(RadialGradient(
-                    colors: [Color.white.opacity(0.5), Color.white.opacity(0)],
-                    center: .center, startRadius: 0, endRadius: 80
-                ))
-                .frame(width: 160, height: 160)
-                .offset(x: 60, y: -30)
-                .allowsHitTesting(false)
+                Circle()
+                    .fill(RadialGradient(
+                        colors: [Color.white.opacity(0.5), Color.white.opacity(0)],
+                        center: .center, startRadius: 0, endRadius: 80
+                    ))
+                    .frame(width: 160, height: 160)
+                    .offset(x: 60, y: -30)
+                    .allowsHitTesting(false)
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text("LIMITED · 48H")
-                    .font(.system(size: 11, weight: .heavy, design: .rounded))
-                    .foregroundStyle(Color.white.opacity(0.9))
-                    .tracking(1)
-
-                Text("Sparkle Bundle")
-                    .font(.system(size: 26, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.white)
-                    .shadow(color: Color(red: 0.31, green: 0.12, blue: 0.51).opacity(0.45), radius: 0, x: 0, y: 2)
-
-                Text("1,500 coins · 5 of every power-up · Sunset theme")
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.white.opacity(0.95))
-
-                HStack(spacing: 12) {
-                    Text("$4.99")
-                        .font(.system(size: 16, weight: .semibold, design: .rounded))
-                        .foregroundStyle(Color(red: 0.66, green: 0.24, blue: 0.43))
-                        .padding(.horizontal, 14).padding(.vertical, 8)
-                        .background(
-                            Capsule()
-                                .fill(Color.white)
-                                .shadow(color: Color(red: 0.66, green: 0.24, blue: 0.43).opacity(0.3), radius: 0, x: 0, y: 3)
-                        )
-
-                    Text("$9.99")
-                        .font(.system(size: 12, weight: .heavy, design: .rounded))
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("LIMITED · 48H")
+                        .font(.system(size: 11, weight: .heavy, design: .rounded))
                         .foregroundStyle(Color.white.opacity(0.9))
-                        .strikethrough()
+                        .tracking(1)
 
-                    Spacer()
-
-                    Text("−50%")
-                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    Text("Sparkle Bundle")
+                        .font(.system(size: 26, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.white)
-                        .padding(.horizontal, 10).padding(.vertical, 4)
-                        .background(Capsule().fill(Color.white.opacity(0.25)))
+                        .shadow(color: Color(red: 0.31, green: 0.12, blue: 0.51).opacity(0.45), radius: 0, x: 0, y: 2)
+
+                    Text("1,500 coins · 5 of every power-up · Sunset theme")
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.white.opacity(0.95))
+
+                    HStack(spacing: 12) {
+                        Text(store.displayPrice(for: .sparkleBundle))
+                            .font(.system(size: 16, weight: .semibold, design: .rounded))
+                            .foregroundStyle(Color(red: 0.66, green: 0.24, blue: 0.43))
+                            .padding(.horizontal, 14).padding(.vertical, 8)
+                            .background(
+                                Capsule()
+                                    .fill(Color.white)
+                                    .shadow(color: Color(red: 0.66, green: 0.24, blue: 0.43).opacity(0.3), radius: 0, x: 0, y: 3)
+                            )
+
+                        Text("$9.99")
+                            .font(.system(size: 12, weight: .heavy, design: .rounded))
+                            .foregroundStyle(Color.white.opacity(0.9))
+                            .strikethrough()
+
+                        Spacer()
+
+                        Text("−50%")
+                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                            .foregroundStyle(Color.white)
+                            .padding(.horizontal, 10).padding(.vertical, 4)
+                            .background(Capsule().fill(Color.white.opacity(0.25)))
+                    }
+                    .padding(.top, 8)
                 }
-                .padding(.top, 8)
+                .padding(16)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .buttonStyle(.plain)
         .padding(.top, 8)
     }
 
@@ -229,7 +261,7 @@ struct ShopView: View {
             switch pu.id {
             case "hint":    return hintCharges
             case "shuffle": return shuffleCharges
-            case "joker":    return wildCharges
+            case "joker":   return wildCharges
             case "bomb":    return bombCharges
             default:        return 0
             }
@@ -269,7 +301,7 @@ struct ShopView: View {
                 switch pu.id {
                 case "hint":    hintCharges += 1
                 case "shuffle": shuffleCharges += 1
-                case "joker":    wildCharges += 1
+                case "joker":   wildCharges += 1
                 case "bomb":    bombCharges += 1
                 default: break
                 }
@@ -303,11 +335,16 @@ struct ShopView: View {
 
     // MARK: - Coin Pack Card
 
-    private func coinPackCard(amount: Int, label: String, tintColors: [Color], accentColor: Color, popular: Bool) -> some View {
-        Button { coins += amount } label: {
+    private func coinPackCard(_ pack: CoinPack) -> some View {
+        let price = store.displayPrice(for: pack.productID)
+        let isLoading = store.isPurchasing
+
+        return Button {
+            Task { await store.purchase(pack.productID) }
+        } label: {
             ZStack(alignment: .top) {
                 RoundedRectangle(cornerRadius: 18)
-                    .fill(LinearGradient(colors: tintColors, startPoint: .top, endPoint: .bottom))
+                    .fill(LinearGradient(colors: pack.tintColors, startPoint: .top, endPoint: .bottom))
                     .overlay(
                         RoundedRectangle(cornerRadius: 18)
                             .stroke(Color.white.opacity(0.85), lineWidth: 1)
@@ -315,7 +352,7 @@ struct ShopView: View {
                     .shadow(color: Color.qInk.opacity(0.18), radius: 0, x: 0, y: 4)
 
                 VStack(spacing: 4) {
-                    Spacer().frame(height: popular ? 10 : 6)
+                    Spacer().frame(height: pack.popular ? 10 : 6)
                     Circle()
                         .fill(RadialGradient(
                             colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)],
@@ -324,24 +361,31 @@ struct ShopView: View {
                         .frame(width: 36, height: 36)
                         .shadow(color: Color(red: 0.55, green: 0.31, blue: 0).opacity(0.4), radius: 0, x: -2, y: -3)
 
-                    Text("+\(amount)")
+                    Text("+\(pack.amount)")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
-                        .foregroundStyle(accentColor)
-                    Text(label.uppercased())
+                        .foregroundStyle(pack.accentColor)
+                    Text(pack.label.uppercased())
                         .font(.system(size: 10, weight: .heavy, design: .rounded))
                         .foregroundStyle(Color.qInk.opacity(0.65))
                         .tracking(0.6)
 
-                    Text("FREE")
-                        .font(.system(size: 11, weight: .heavy, design: .rounded))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 12).padding(.vertical, 4)
-                        .background(Capsule().fill(Color.qMint2).shadow(color: Color(red: 0.08, green: 0.39, blue: 0.20).opacity(0.4), radius: 0, x: 0, y: 2))
-                        .padding(.bottom, 6)
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .scaleEffect(0.7)
+                            .padding(.bottom, 6)
+                    } else {
+                        Text(price)
+                            .font(.system(size: 11, weight: .heavy, design: .rounded))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 12).padding(.vertical, 4)
+                            .background(Capsule().fill(pack.accentColor).shadow(color: pack.accentColor.opacity(0.4), radius: 0, x: 0, y: 2))
+                            .padding(.bottom, 6)
+                    }
                 }
                 .frame(maxWidth: .infinity)
 
-                if popular {
+                if pack.popular {
                     Text("BEST VALUE")
                         .font(.system(size: 9, weight: .heavy, design: .rounded))
                         .foregroundStyle(.white)
@@ -352,6 +396,78 @@ struct ShopView: View {
             }
         }
         .buttonStyle(.plain)
+        .disabled(isLoading)
+    }
+
+    // MARK: - Watch Ad Row
+
+    private var watchAdRow: some View {
+        Button {
+            ads.showRewardedAd { reward in
+                coins += reward
+            }
+        } label: {
+            HStack(spacing: 14) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(LinearGradient(
+                            colors: [Color(red: 0.95, green: 0.75, blue: 1.0), Color(red: 0.78, green: 0.50, blue: 0.98)],
+                            startPoint: .top, endPoint: .bottom
+                        ))
+                        .shadow(color: Color(red: 0.55, green: 0.20, blue: 0.80).opacity(0.3), radius: 0, x: 0, y: 3)
+                    Image(systemName: "play.rectangle.fill")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundStyle(.white)
+                }
+                .frame(width: 56, height: 56)
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Watch an Ad")
+                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.qInk)
+                    Text("Earn \(ads.rewardedCoinGrant) free coins — no purchase needed")
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.qInk.opacity(0.70))
+                }
+
+                Spacer()
+
+                Group {
+                    if ads.isLoadingAd {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .scaleEffect(0.8)
+                    } else if ads.isRewardedAdReady {
+                        HStack(spacing: 5) {
+                            Circle()
+                                .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 8))
+                                .frame(width: 14, height: 14)
+                            Text("+\(ads.rewardedCoinGrant)")
+                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Color.qGoldDeep)
+                        }
+                        .padding(.horizontal, 12).padding(.vertical, 8)
+                        .background(
+                            Capsule()
+                                .fill(LinearGradient(
+                                    colors: [Color(red: 1, green: 0.97, blue: 0.85), Color(red: 1, green: 0.89, blue: 0.60)],
+                                    startPoint: .top, endPoint: .bottom
+                                ))
+                                .shadow(color: Color(red: 0.71, green: 0.43, blue: 0).opacity(0.35), radius: 0, x: 0, y: 3)
+                        )
+                    } else {
+                        Text("Soon")
+                            .font(.system(size: 13, weight: .semibold, design: .rounded))
+                            .foregroundStyle(Color.qInk.opacity(0.4))
+                    }
+                }
+            }
+            .padding(12)
+            .qCard(cornerRadius: 20)
+        }
+        .buttonStyle(.plain)
+        .disabled(!ads.isRewardedAdReady || ads.isLoadingAd)
+        .padding(.top, 10)
     }
 
     // MARK: - Theme Card
