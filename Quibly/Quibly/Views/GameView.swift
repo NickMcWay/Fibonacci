@@ -33,7 +33,7 @@ struct GameView: View {
                 VStack(spacing: 20) {
                     topBar
                         .padding(.horizontal, 16)
-                        .padding(.top, 56)
+                        .padding(.top, 40)
                         .padding(.bottom, 8)
                     
                         Spacer()
@@ -186,22 +186,22 @@ struct GameView: View {
             Spacer()
 
             // Timer pill (static display – hook into a real timer if needed)
-            HStack(spacing: 6) {
-                Image(systemName: "clock.fill")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Color.qInk)
-                Text("∞")
-                    .font(.system(size: 14, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.qInk)
-            }
-            .padding(.horizontal, 12).padding(.vertical, 5)
-            .background(
-                Capsule()
-                    .fill(Color.white.opacity(0.55))
-                    .overlay(Capsule().stroke(Color.white.opacity(0.85), lineWidth: 1))
-            )
+//            HStack(spacing: 6) {
+//                Image(systemName: "clock.fill")
+//                    .font(.system(size: 13, weight: .semibold))
+//                    .foregroundStyle(Color.qInk)
+//                Text("∞")
+//                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+//                    .foregroundStyle(Color.qInk)
+//            }
+//            .padding(.horizontal, 12).padding(.vertical, 5)
+//            .background(
+//                Capsule()
+//                    .fill(Color.white.opacity(0.55))
+//                    .overlay(Capsule().stroke(Color.white.opacity(0.85), lineWidth: 1))
+//            )
 
-            Spacer()
+//            Spacer()
 
             HStack(spacing: 6) {
                 QCircleButton(size: 36, action: { showShop = true }) {
