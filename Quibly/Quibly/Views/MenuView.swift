@@ -22,8 +22,8 @@ struct MenuView: View {
 
     private let previewLetters: [[String]] = [
         ["Q","U","I","B"],
-        ["L","P","A","R"],
-        ["E","L","A","Y"],
+        ["L","E","A","R"],
+        ["P","L","A","Y"],
         ["W","O","R","D"]
     ]
 
