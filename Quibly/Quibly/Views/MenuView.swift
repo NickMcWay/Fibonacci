@@ -330,29 +330,51 @@ struct MenuView: View {
 
     private func navButton(label: String, icon: String, gradient: [Color], action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 4) {
-                Image(systemName: icon)
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(.white)
+            VStack(spacing: 7) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Color.white.opacity(0.22))
+                        .frame(width: 46, height: 46)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14)
+                                .stroke(Color.white.opacity(0.30), lineWidth: 1)
+                        )
+                    Image(systemName: icon)
+                        .font(.system(size: 21, weight: .bold))
+                        .foregroundStyle(.white)
+                        .shadow(color: Color.black.opacity(0.20), radius: 0, x: 0, y: 1)
+                }
                 Text(label)
-                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
-                    .shadow(color: Color(red: 0.24, green: 0.12, blue: 0.47).opacity(0.4), radius: 0, x: 0, y: 1)
+                    .shadow(color: Color.black.opacity(0.18), radius: 0, x: 0, y: 1)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 10)
+            .padding(.vertical, 12)
             .background(
-                RoundedRectangle(cornerRadius: 18)
-                    .fill(LinearGradient(colors: gradient, startPoint: .top, endPoint: .bottom))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 18)
-                            .stroke(Color.white.opacity(0.45), lineWidth: 1)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(LinearGradient(
+                            colors: gradient,
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ))
+                    // Inner top-highlight shimmer
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.30), Color.clear],
+                        startPoint: .top,
+                        endPoint: .init(x: 0.5, y: 0.5)
                     )
-                    .shadow(color: Color(red: 0.24, green: 0.12, blue: 0.47).opacity(0.35), radius: 0, x: 0, y: 4)
-                    .shadow(color: Color(red: 0.24, green: 0.12, blue: 0.47).opacity(0.15), radius: 8, x: 0, y: 4)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    // Border
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.white.opacity(0.38), lineWidth: 1)
+                }
+                .shadow(color: (gradient.last ?? .black).opacity(0.45), radius: 8, x: 0, y: 5)
+                .shadow(color: Color.black.opacity(0.10), radius: 2, x: 0, y: 1)
             )
         }
-        .buttonStyle(.plain)
+        .buttonStyle(QNavButtonStyle())
     }
 
     // MARK: - Action
