@@ -288,17 +288,6 @@ extension View {
     }
 }
 
-// MARK: - Nav Button Style (Menu bottom bar)
-
-struct QNavButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed ? 0.92 : 1.0)
-            .brightness(configuration.isPressed ? -0.06 : 0)
-            .animation(.spring(response: 0.18, dampingFraction: 0.60), value: configuration.isPressed)
-    }
-}
-
 // MARK: - Stat Chip (Menu stats row)
 
 struct QStatChip: View {
