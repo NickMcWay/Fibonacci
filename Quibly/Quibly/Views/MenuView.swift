@@ -28,135 +28,139 @@ struct MenuView: View {
     ]
 
     var body: some View {
-        DreamBackground {
-            GeometryReader { geo in
-                let w = geo.size.width
-                let h = geo.size.height
-
-                ZStack(alignment: .top) {
-                    // Floating decorative tiles
-                    decorativeTile("Q", size: 42, rotation: -12)
-                        .floatingAnimation(delay: 0, duration: 3.4)
-                        .position(x: 36, y: h * 0.158)
-
-                    decorativeTile("B", size: 38, rotation: 14)
-                        .floatingAnimation(delay: 0.6, duration: 4.1)
-                        .position(x: w - 36, y: h * 0.258)
-
-                    decorativeTile("Y", size: 34, rotation: 8)
-                        .floatingAnimation(delay: 0.3, duration: 3.8)
-                        .position(x: 38, y: h * 0.288)
-
-                    // Top bar
-                    HStack(alignment: .center) {
-                        profileChip
-                        Spacer()
-                        HStack(spacing: 8) {
-                            dailyButton
-                            QCircleButton(size: 36, action: { showSettings = true }) {
-                                Image(systemName: "gearshape.fill")
-                                    .font(.system(size: 16, weight: .bold))
-                                    .foregroundStyle(Color.qInk)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, geo.safeAreaInsets.top + 12)
-
-
-
-                    // Board preview
-                    VStack(spacing: 20){
-                        Spacer()
-                            .frame(height: 250)
-                        // Stats row
-                        HStack(spacing: 8) {
-                            QStatChip(
-                                icon: "trophy.fill", iconColor: Color(red: 0.48, green: 0.27, blue: 0),
-                                label: "Best", value: "\(bestScore)",
-                                gradient: [Color(red: 1, green: 0.96, blue: 0.83), Color(red: 1, green: 0.85, blue: 0.48)]
-                            )
-                            QStatChip(
-                                icon: "flame.fill", iconColor: Color(red: 0.66, green: 0.24, blue: 0),
-                                label: "Streak", value: "\(streak)d",
-                                gradient: [Color(red: 1, green: 0.85, blue: 0.77), Color(red: 1, green: 0.67, blue: 0.48)]
-                            )
-                            QStatChip(
-                                icon: "circle.fill", iconColor: Color(red: 0.94, green: 0.65, blue: 0.13),
-                                label: "Coins", value: "\(coins)",
-                                gradient: [Color(red: 1, green: 0.97, blue: 0.85), Color(red: 1, green: 0.89, blue: 0.60)]
-                            )
-                        }
-                        .padding(.horizontal, 30)
+        NavigationView{
+            DreamBackground {
+                GeometryReader { geo in
+                    let w = geo.size.width
+                    let h = geo.size.height
+                    
+                    ZStack(alignment: .top) {
+                        // Floating decorative tiles
+                        //                    decorativeTile("Q", size: 42, rotation: -12)
+                        //                        .floatingAnimation(delay: 0, duration: 3.4)
+                        //                        .position(x: 36, y: h * 0.158)
+                        //
+                        //                    decorativeTile("B", size: 38, rotation: 14)
+                        //                        .floatingAnimation(delay: 0.6, duration: 4.1)
+                        //                        .position(x: w - 36, y: h * 0.258)
+                        //
+                        //                    decorativeTile("Y", size: 34, rotation: 8)
+                        //                        .floatingAnimation(delay: 0.3, duration: 3.8)
+                        //                        .position(x: 38, y: h * 0.288)
                         
-                        boardPreview
+                        // Top bar
                         
-                        // Play button + mode chip
-                        Button(action: startGame) {
-                            HStack(spacing: 10) {
-                                Image(systemName: "play.fill")
-                                    .font(.system(size: 18, weight: .bold))
-                                    .foregroundStyle(Color.qGoldDeep)
-                                Text("PLAY")
-                                    .font(.system(size: 26, weight: .bold, design: .rounded))
-                                    .foregroundStyle(Color.qGoldDeep)
-                            }
-                        }
-                        .frame(width: 240)
-                        .buttonStyle(PuffyButtonStyle(variant: .gold))
                         
-                        Button { showModes = true } label: {
+                        
+                        // Board preview
+                        VStack(spacing: 20){
+                            Spacer()
+                                .frame(height: 250)
+                            // Stats row
                             HStack(spacing: 8) {
-                                Text("Mode").opacity(0.7)
-                                Text("\(selectedLanguage.flag) \(selectedVariant.label)")
-                                    .fontWeight(.semibold)
-                                Text("›").opacity(0.6)
+                                QStatChip(
+                                    icon: "trophy.fill", iconColor: Color(red: 0.48, green: 0.27, blue: 0),
+                                    label: "Best", value: "\(bestScore)",
+                                    gradient: [Color(red: 1, green: 0.96, blue: 0.83), Color(red: 1, green: 0.85, blue: 0.48)]
+                                )
+                                QStatChip(
+                                    icon: "flame.fill", iconColor: Color(red: 0.66, green: 0.24, blue: 0),
+                                    label: "Streak", value: "\(streak)d",
+                                    gradient: [Color(red: 1, green: 0.85, blue: 0.77), Color(red: 1, green: 0.67, blue: 0.48)]
+                                )
+                                QStatChip(
+                                    icon: "circle.fill", iconColor: Color(red: 0.94, green: 0.65, blue: 0.13),
+                                    label: "Coins", value: "\(coins)",
+                                    gradient: [Color(red: 1, green: 0.97, blue: 0.85), Color(red: 1, green: 0.89, blue: 0.60)]
+                                )
                             }
-                            .font(.system(size: 13, weight: .medium, design: .rounded))
-                            .foregroundStyle(Color.qInk)
-                            .padding(.horizontal, 14).padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .fill(Color.white.opacity(0.55))
-                                    .overlay(Capsule().stroke(Color.white.opacity(0.85), lineWidth: 1))
-                            )
+                            .padding(.horizontal, 30)
+                            
+                            boardPreview
+                            
+                            // Play button + mode chip
+                            Button(action: startGame) {
+                                HStack(spacing: 10) {
+                                    Image(systemName: "play.fill")
+                                        .font(.system(size: 18, weight: .bold))
+                                        .foregroundStyle(Color.qGoldDeep)
+                                    Text("PLAY")
+                                        .font(.system(size: 26, weight: .bold, design: .rounded))
+                                        .foregroundStyle(Color.qGoldDeep)
+                                }
+                            }
+                            .frame(width: 240)
+                            .buttonStyle(PuffyButtonStyle(variant: .gold))
+                            
+                            Button { showModes = true } label: {
+                                HStack(spacing: 8) {
+                                    Text("Mode").opacity(0.7)
+                                    Text("\(selectedLanguage.flag) \(selectedVariant.label)")
+                                        .fontWeight(.semibold)
+                                    Text("›").opacity(0.6)
+                                }
+                                .font(.system(size: 13, weight: .medium, design: .rounded))
+                                .foregroundStyle(Color.qInk)
+                                .padding(.horizontal, 14).padding(.vertical, 6)
+                                .background(
+                                    Capsule()
+                                        .fill(Color.white.opacity(0.55))
+                                        .overlay(Capsule().stroke(Color.white.opacity(0.85), lineWidth: 1))
+                                )
+                            }
+                            .buttonStyle(.plain)
+                            
+                            // Bottom nav
+                            bottomNav
+                                .padding(.horizontal, 16)
+                                .padding(.horizontal)
+                                .padding(.bottom, geo.safeAreaInsets.bottom + 8)
+                                .frame(maxWidth: .infinity)
                         }
-                        .buttonStyle(.plain)
                         
-                        // Bottom nav
-                        bottomNav
-                            .padding(.horizontal, 16)
-                            .padding(.horizontal)
-                            .padding(.bottom, geo.safeAreaInsets.bottom + 8)
-                            .frame(maxWidth: .infinity)
+                        
                     }
-
-
+                    .ignoresSafeArea(edges: .top)
                 }
-                .ignoresSafeArea(edges: .top)
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    profileChip
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    HStack(spacing: 8) {
+                        dailyButton
+                        QCircleButton(size: 36, action: { showSettings = true }) {
+                            Image(systemName: "gearshape.fill")
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundStyle(Color.qInk)
+                        }
+                    }
+                }
+            }
+            .onAppear {
+                audio.play()
+                selectedLanguage = GameLanguage(rawValue: selectedLanguageRawValue) ?? .english
+                selectedVariant  = BoardVariant(rawValue: selectedVariantRawValue)  ?? .small
+            }
+            .onChange(of: selectedLanguage) { _, v in selectedLanguageRawValue = v.rawValue }
+            .onChange(of: selectedVariant)  { _, v in selectedVariantRawValue  = v.rawValue }
+            .fullScreenCover(isPresented: $showShop)     { ShopView(onBack: { showShop = false }) }
+            .fullScreenCover(isPresented: $showModes)    {
+                ModesView(
+                    selectedLanguage: $selectedLanguage,
+                    selectedVariant: $selectedVariant,
+                    onBack: { showModes = false },
+                    onStart: { settings in showModes = false; onStart(settings) }
+                )
+            }
+            .fullScreenCover(isPresented: $showSettings) { SettingsView(onBack: { showSettings = false }) }
+            .sheet(isPresented: $showProfile)  { ProfilePopupSheet() }
+            .sheet(isPresented: $showDaily)    { DailyRewardPopupSheet() }
+            .sheet(isPresented: $showQuests)   { QuestsPopupSheet() }
+            .sheet(isPresented: $showLocked)   { LockedPopupSheet() }
         }
-        .onAppear {
-            audio.play()
-            selectedLanguage = GameLanguage(rawValue: selectedLanguageRawValue) ?? .english
-            selectedVariant  = BoardVariant(rawValue: selectedVariantRawValue)  ?? .small
-        }
-        .onChange(of: selectedLanguage) { _, v in selectedLanguageRawValue = v.rawValue }
-        .onChange(of: selectedVariant)  { _, v in selectedVariantRawValue  = v.rawValue }
-        .fullScreenCover(isPresented: $showShop)     { ShopView(onBack: { showShop = false }) }
-        .fullScreenCover(isPresented: $showModes)    {
-            ModesView(
-                selectedLanguage: $selectedLanguage,
-                selectedVariant: $selectedVariant,
-                onBack: { showModes = false },
-                onStart: { settings in showModes = false; onStart(settings) }
-            )
-        }
-        .fullScreenCover(isPresented: $showSettings) { SettingsView(onBack: { showSettings = false }) }
-        .sheet(isPresented: $showProfile)  { ProfilePopupSheet() }
-        .sheet(isPresented: $showDaily)    { DailyRewardPopupSheet() }
-        .sheet(isPresented: $showQuests)   { QuestsPopupSheet() }
-        .sheet(isPresented: $showLocked)   { LockedPopupSheet() }
     }
 
     // MARK: - Profile Chip

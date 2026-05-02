@@ -18,69 +18,77 @@ struct SettingsView: View {
     private var selectedVariant:  BoardVariant  { BoardVariant(rawValue: selectedVariantRaw)  ?? .small }
 
     var body: some View {
-        DreamBackground {
-            ZStack(alignment: .top) {
-                // Scrollable settings
-                ScrollView {
-                    VStack(spacing: 0) {
-                        Spacer().frame(height: 110)
-
+        NavigationView{
+            DreamBackground {
+                ZStack(alignment: .top) {
+                    // Scrollable settings
+                    ScrollView {
                         VStack(spacing: 0) {
-                            settingsGroup(title: "Audio & Haptics") {
-                                toggleRow(icon: "speaker.wave.2.fill", label: "Sound effects",
-                                    binding: Binding(get: { soundOn }, set: { v in soundOn = v; audio.isSoundEnabled = v }))
-                                toggleRow(icon: "music.note", label: "Music",
-                                    binding: Binding(get: { musicOn }, set: { v in musicOn = v; audio.isMusicEnabled = v }))
-                                toggleRow(icon: "waveform", label: "Haptics", binding: $hapticsOn)
+                            Spacer().frame(height: 160)
+                            
+                            VStack(spacing: 0) {
+                                settingsGroup(title: "Audio & Haptics") {
+                                    toggleRow(icon: "speaker.wave.2.fill", label: "Sound effects",
+                                              binding: Binding(get: { soundOn }, set: { v in soundOn = v; audio.isSoundEnabled = v }))
+                                    toggleRow(icon: "music.note", label: "Music",
+                                              binding: Binding(get: { musicOn }, set: { v in musicOn = v; audio.isMusicEnabled = v }))
+                                    toggleRow(icon: "waveform", label: "Haptics", binding: $hapticsOn)
+                                }
+                                
+                                settingsGroup(title: "Gameplay") {
+                                    toggleRow(icon: "lightbulb.fill", label: "Auto-hints", sublabel: "Glow tiles after 10s", binding: $autoHints)
+                                    pickerRow(icon: "globe", label: "Language", value: "\(selectedLanguage.flag) \(selectedLanguage.rawValue)")
+                                    pickerRow(icon: "square.grid.2x2.fill", label: "Default board", value: "\(selectedVariant.displayName) (\(selectedVariant.label))")
+                                }
+                                
+                                settingsGroup(title: "Look & Feel") {
+                                    toggleRow(icon: "moon.fill", label: "Dark mode", sublabel: "Use system setting", binding: $darkMode)
+                                    pickerRow(icon: "paintbrush.fill", label: "Tile theme", value: "Cream")
+                                    pickerRow(icon: "sun.max.fill", label: "Background", value: "Dawn")
+                                }
+                                
+                                settingsGroup(title: "Account") {
+                                    actionRow(icon: "heart.fill", label: "Restore purchases") {}
+                                    actionRow(icon: "hand.raised.fill", label: "Privacy") {}
+                                    actionRow(icon: "doc.text.fill", label: "Terms of service") {}
+                                }
+                                
+                                Text("Quibly v1.4.2 · made with 💜")
+                                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                                    .foregroundStyle(Color.qInk.opacity(0.55))
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.top, 20)
+                                    .padding(.bottom, 40)
                             }
-
-                            settingsGroup(title: "Gameplay") {
-                                toggleRow(icon: "lightbulb.fill", label: "Auto-hints", sublabel: "Glow tiles after 10s", binding: $autoHints)
-                                pickerRow(icon: "globe", label: "Language", value: "\(selectedLanguage.flag) \(selectedLanguage.rawValue)")
-                                pickerRow(icon: "square.grid.2x2.fill", label: "Default board", value: "\(selectedVariant.displayName) (\(selectedVariant.label))")
-                            }
-
-                            settingsGroup(title: "Look & Feel") {
-                                toggleRow(icon: "moon.fill", label: "Dark mode", sublabel: "Use system setting", binding: $darkMode)
-                                pickerRow(icon: "paintbrush.fill", label: "Tile theme", value: "Cream")
-                                pickerRow(icon: "sun.max.fill", label: "Background", value: "Dawn")
-                            }
-
-                            settingsGroup(title: "Account") {
-                                actionRow(icon: "heart.fill", label: "Restore purchases") {}
-                                actionRow(icon: "hand.raised.fill", label: "Privacy") {}
-                                actionRow(icon: "doc.text.fill", label: "Terms of service") {}
-                            }
-
-                            Text("Quibly v1.4.2 · made with 💜")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
-                                .foregroundStyle(Color.qInk.opacity(0.55))
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity)
-                                .padding(.top, 20)
-                                .padding(.bottom, 40)
+                            .padding(.horizontal, 16)
                         }
-                        .padding(.horizontal, 16)
                     }
+                    
                 }
-
-                // Top bar (above scroll view so taps reach buttons)
-                HStack {
+                
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
                     QCircleButton(size: 40, action: { dismiss(); onBack?() }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundStyle(Color.qInk)
                     }
-                    Spacer()
+                }
+                
+                ToolbarItem(placement: .principal) {
                     Text("Settings")
                         .font(.system(size: 22, weight: .semibold, design: .rounded))
                         .foregroundStyle(Color.white)
                         .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 2)
-                    Spacer()
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    // Keep spacing symmetrical with a clear view matching the button size
                     Color.clear.frame(width: 40, height: 40)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 56)
             }
         }
     }
