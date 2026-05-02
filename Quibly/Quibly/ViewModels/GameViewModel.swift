@@ -462,11 +462,13 @@ final class GameViewModel: ObservableObject {
 
         Task {
             try? await Task.sleep(nanoseconds: 500_000_000)
-            if let newTile = LetterSpawnEngine.spawnTile(for: board, language: settings.language) {
+            let spawnCount = (board.size * board.size) / 2
+            for _ in 0..<spawnCount {
+                guard let newTile = LetterSpawnEngine.spawnTile(for: board, language: settings.language) else { break }
                 board.setTile(newTile, row: newTile.row, col: newTile.col)
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                    syncTiles()
-                }
+            }
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                syncTiles()
             }
             try? await Task.sleep(nanoseconds: 1_500_000_000)
             showEmptyBoardEffect = false
