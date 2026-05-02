@@ -10,29 +10,42 @@ struct ModesView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedModeId: String = "classic"
 
-    private struct GameMode {
+    private struct ModeConfig {
         let id: String
         let icon: String
         let label: String
         let desc: String
         let gradient: [Color]
-        let stars: Int
         let locked: Bool
         let badge: String?
         let unlock: String?
     }
 
-    private let modes: [GameMode] = [
-        .init(id: "classic",   icon: "🟪", label: "Classic",      desc: "4×4 board · the original",       gradient: [Color.qGrape1, Color.qGrape2],     stars: 3, locked: false, badge: nil,     unlock: nil),
-        .init(id: "extended",  icon: "🟫", label: "Extended",     desc: "5×5 · more room to combo",       gradient: [Color.qBubble1, Color.qBubble2],   stars: 2, locked: false, badge: nil,     unlock: nil),
-        .init(id: "challenge", icon: "🟧", label: "Challenge",    desc: "6×6 · for word wizards",         gradient: [Color.qSun1, Color.qSun2],         stars: 1, locked: false, badge: nil,     unlock: nil),
-        .init(id: "blitz",     icon: "⚡", label: "Blitz",        desc: "90 seconds · score sprint",      gradient: [Color.qSky1, Color.qSky2],         stars: 0, locked: false, badge: "NEW",   unlock: nil),
-        .init(id: "zen",       icon: "🍃", label: "Zen",          desc: "No game-over · just vibes",      gradient: [Color.qMint1, Color.qMint2],       stars: 0, locked: false, badge: nil,     unlock: nil),
-        .init(id: "daily",     icon: "📅", label: "Daily Puzzle", desc: "Same board worldwide",           gradient: [Color.qSun1, Color(red: 1, green: 0.69, blue: 0.23)], stars: 0, locked: false, badge: "TODAY", unlock: nil),
-        .init(id: "duel",      icon: "⚔️", label: "Duel",         desc: "Async vs. friends",              gradient: [Color.qCoral1, Color.qCoral2],     stars: 0, locked: true,  badge: nil,     unlock: "Lvl 15"),
+    private let modes: [ModeConfig] = [
+        .init(id: "classic",   icon: "🟪", label: "Classic",      desc: "4×4 board · the original",       gradient: [Color.qGrape1, Color.qGrape2],     locked: false, badge: nil,     unlock: nil),
+        .init(id: "extended",  icon: "🟫", label: "Extended",     desc: "5×5 · more room to combo",       gradient: [Color.qBubble1, Color.qBubble2],   locked: false, badge: nil,     unlock: nil),
+        .init(id: "challenge", icon: "🟧", label: "Challenge",    desc: "6×6 · for word wizards",         gradient: [Color.qSun1, Color.qSun2],         locked: false, badge: nil,     unlock: nil),
+        .init(id: "blitz",     icon: "⚡", label: "Blitz",        desc: "90 seconds · score sprint",      gradient: [Color.qSky1, Color.qSky2],         locked: false, badge: "NEW",   unlock: nil),
+        .init(id: "zen",       icon: "🍃", label: "Zen",          desc: "No game-over · just vibes",      gradient: [Color.qMint1, Color.qMint2],       locked: false, badge: nil,     unlock: nil),
+        .init(id: "daily",     icon: "📅", label: "Daily Puzzle", desc: "Same board worldwide",           gradient: [Color.qSun1, Color(red: 1, green: 0.69, blue: 0.23)], locked: false, badge: "TODAY", unlock: nil),
+        .init(id: "duel",      icon: "⚔️", label: "Duel",         desc: "Async vs. friends",              gradient: [Color.qCoral1, Color.qCoral2],     locked: true,  badge: nil,     unlock: "Lvl 15"),
     ]
 
     private let languages: [GameLanguage] = GameLanguage.allCases
+
+    private var derivedGameMode: GameMode {
+        switch selectedModeId {
+        case "blitz": return .blitz
+        case "zen":   return .zen
+        case "daily": return .daily
+        default:      return .classic
+        }
+    }
+
+    // Board size picker only makes sense for board-size modes and zen
+    private var showsBoardSizePicker: Bool {
+        ["classic", "extended", "challenge", "zen"].contains(selectedModeId)
+    }
 
     var body: some View {
         DreamBackground {
@@ -44,7 +57,9 @@ struct ModesView: View {
                         VStack(spacing: 14) {
                             languagePicker
                             modeTiles
-                            boardSizePicker
+                            if showsBoardSizePicker {
+                                boardSizePicker
+                            }
                             startButton
                         }
                         .padding(.horizontal, 16)
@@ -163,7 +178,7 @@ struct ModesView: View {
         .qCard(cornerRadius: 20)
     }
 
-    private func modeTile(_ mode: GameMode, fullWidth: Bool = false) -> some View {
+    private func modeTile(_ mode: ModeConfig, fullWidth: Bool = false) -> some View {
         let isSelected = mode.id == selectedModeId
         return Button {
             guard !mode.locked else { return }
@@ -172,6 +187,8 @@ struct ModesView: View {
             case "classic":   selectedVariant = .small
             case "extended":  selectedVariant = .medium
             case "challenge": selectedVariant = .large
+            case "blitz":     selectedVariant = .small
+            case "daily":     selectedVariant = .small
             default: break
             }
         } label: {
@@ -231,8 +248,10 @@ struct ModesView: View {
                             .foregroundStyle(.white)
                             .shadow(color: Color.black.opacity(0.25), radius: 0, x: 0, y: 2)
                         Text(mode.desc)
-                            .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.white.opacity(0.95))
+                            .font(.system(size: 12, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.white.opacity(0.9))
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
 
                         if mode.locked, let unlock = mode.unlock {
                             HStack(spacing: 4) {
@@ -242,19 +261,11 @@ struct ModesView: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 8).padding(.vertical, 3)
                             .background(Capsule().fill(Color.black.opacity(0.25)))
-                        } else {
-                            HStack(spacing: 2) {
-                                ForEach(0..<3, id: \.self) { i in
-                                    Text("★")
-                                        .font(.system(size: 14))
-                                        .foregroundStyle(i < mode.stars ? Color.qSun1 : Color.white.opacity(0.35))
-                                }
-                            }
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(12)
-                    .frame(minHeight: 130)
+                    .frame(minHeight: 120)
                 }
 
                 if let badge = mode.badge {
@@ -329,7 +340,13 @@ struct ModesView: View {
     // MARK: - Start Button
 
     private var startButton: some View {
-        Button { onStart(GameSettings(language: selectedLanguage, boardVariant: selectedVariant)) } label: {
+        Button {
+            onStart(GameSettings(
+                language: selectedLanguage,
+                boardVariant: selectedVariant,
+                gameMode: derivedGameMode
+            ))
+        } label: {
             HStack(spacing: 8) {
                 Image(systemName: "play.fill")
                     .font(.system(size: 16, weight: .bold))

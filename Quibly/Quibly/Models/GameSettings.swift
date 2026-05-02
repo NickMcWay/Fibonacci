@@ -95,9 +95,32 @@ enum BoardVariant: Int, CaseIterable, Identifiable {
     }
 }
 
+// MARK: - Game Mode
+
+enum GameMode {
+    case classic
+    case zen
+    case blitz
+    case daily
+}
+
+// MARK: - Game Settings
+
 struct GameSettings {
     var language: GameLanguage = .english
     var boardVariant: BoardVariant = .small
+    var gameMode: GameMode = .classic
 
     static let `default` = GameSettings()
+}
+
+// MARK: - Seeded RNG (for Daily Puzzle)
+
+struct SeededRNG: RandomNumberGenerator {
+    private var state: UInt64
+    init(seed: UInt64) { self.state = seed == 0 ? 1 : seed }
+    mutating func next() -> UInt64 {
+        state = state &* 6364136223846793005 &+ 1442695040888963407
+        return state
+    }
 }
