@@ -25,6 +25,9 @@ struct TutorialView: View {
 
     @State private var currentStep = 0
     @State private var direction: Int = 1  // 1 = forward, -1 = back
+    @AppStorage("SlideWords_SelectedLanguage") private var selectedLanguageRaw: String = GameLanguage.english.rawValue
+
+    private let languageStepIndex = 1
 
     private let steps: [TutorialStep] = [
         TutorialStep(
@@ -32,6 +35,12 @@ struct TutorialView: View {
             iconColors: [Color.qSun1, Color.qSun2],
             title: "Welcome to Quibly!",
             body: "A word-sliding puzzle game. Slide tiles across the board to form words and score points."
+        ),
+        TutorialStep(
+            icon: "globe",
+            iconColors: [Color.qGrape1, Color.qGrape2],
+            title: "Choose Your Language",
+            body: "Words are validated in your chosen language. You can change this any time in Settings."
         ),
         TutorialStep(
             icon: "square.grid.2x2.fill",
@@ -77,7 +86,10 @@ struct TutorialView: View {
                 VStack(spacing: 24) {
                     stepIcon
                     stepText
-                    if let illustration = steps[currentStep].illustration {
+                    if currentStep == languageStepIndex {
+                        LanguagePicker(selectedRaw: $selectedLanguageRaw)
+                            .transition(.opacity.combined(with: .scale(scale: 0.9)))
+                    } else if let illustration = steps[currentStep].illustration {
                         illustration
                             .transition(.opacity.combined(with: .scale(scale: 0.9)))
                     }
@@ -370,6 +382,55 @@ private struct PowerUpIllustration: View {
         }
         .padding(.horizontal, 12).padding(.vertical, 10)
         .qCard(cornerRadius: 20)
+    }
+}
+
+// MARK: - Language Picker
+
+private struct LanguagePicker: View {
+    @Binding var selectedRaw: String
+
+    var body: some View {
+        VStack(spacing: 6) {
+            ForEach(GameLanguage.allCases) { language in
+                let isSelected = selectedRaw == language.rawValue
+                Button {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        selectedRaw = language.rawValue
+                    }
+                } label: {
+                    HStack(spacing: 12) {
+                        Text(language.flag)
+                            .font(.system(size: 22))
+                        Text(language.rawValue)
+                            .font(.system(size: 15, weight: .semibold, design: .rounded))
+                            .foregroundStyle(isSelected ? Color.qGrape2 : Color.qInk)
+                        Spacer()
+                        if isSelected {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundStyle(Color.qGrape2)
+                                .transition(.scale.combined(with: .opacity))
+                        }
+                    }
+                    .padding(.horizontal, 14).padding(.vertical, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(isSelected
+                                ? LinearGradient(colors: [Color.qGrape1.opacity(0.25), Color.qGrape2.opacity(0.12)], startPoint: .leading, endPoint: .trailing)
+                                : LinearGradient(colors: [Color.white.opacity(0.5), Color.white.opacity(0.4)], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(isSelected ? Color.qGrape1.opacity(0.6) : Color.white.opacity(0.6), lineWidth: 1.5)
+                            )
+                    )
+                }
+                .buttonStyle(.plain)
+                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isSelected)
+            }
+        }
+        .frame(maxWidth: .infinity)
     }
 }
 
