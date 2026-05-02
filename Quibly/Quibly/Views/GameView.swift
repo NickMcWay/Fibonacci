@@ -37,11 +37,12 @@ struct GameView: View {
                         .padding(.bottom, 8)
                     
                         Spacer()
-                            .frame(height: 100)
+                            .frame(height: 140)
                     
                     scoreHeader
                         .padding(.horizontal, 18)
                         .padding(.bottom, 6)
+                        .padding(.horizontal)
                         .frame(height: 50)
 
                     // Combo ribbon
@@ -78,11 +79,10 @@ struct GameView: View {
                             .animation(.spring(response: 0.4, dampingFraction: 0.7), value: vm.showBoardFullWarning)
                     }
 
-                    Spacer(minLength: 8)
-
                     powerUpBar
                         .padding(.horizontal, 16)
                         .padding(.bottom, 28)
+                        .padding(.horizontal)
                 }
 
                 // Board cleared celebration
@@ -128,6 +128,7 @@ struct GameView: View {
             .animation(.easeOut(duration: 0.2), value: showGameOverPopup)
             .animation(.easeInOut(duration: 0.25), value: vm.comboCount > 0)
         }
+        .ignoresSafeArea(edges: .top)
         .onAppear { audio.play() }
         .onChange(of: vm.powerUpAnimation) { _, anim in
             guard let anim else { return }
@@ -176,27 +177,32 @@ struct GameView: View {
     // MARK: - Top Bar
 
     private var topBar: some View {
-        HStack(spacing: 8) {
-            QCircleButton(size: 40, action: { showPausePopup = true }) {
-                Image(systemName: "pause.fill")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(Color.qInk)
+        ZStack{
+            HStack(spacing: 8) {
+                QCircleButton(size: 40, action: { showPausePopup = true }) {
+                    Image(systemName: "pause.fill")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(Color.qInk)
+                }
+                
+                Spacer()
+                
+                HStack(spacing: 6) {
+                    QCircleButton(size: 36, action: { showShop = true }) {
+                        Image(systemName: "cart.fill")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(Color.qInk)
+                    }
+                    QCircleButton(size: 36, action: { audio.toggleMute() }) {
+                        Image(systemName: audio.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundStyle(Color.qInk)
+                    }
+                }
             }
-
-   
-            modePill
-
-            HStack(spacing: 6) {
-                QCircleButton(size: 36, action: { showShop = true }) {
-                    Image(systemName: "cart.fill")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundStyle(Color.qInk)
-                }
-                QCircleButton(size: 36, action: { audio.toggleMute() }) {
-                    Image(systemName: audio.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(Color.qInk)
-                }
+            
+            if settings.gameMode == .blitz || settings.gameMode == .daily {
+                modePill
             }
         }
     }
@@ -208,6 +214,7 @@ struct GameView: View {
         return HStack(spacing: 6) {
             switch settings.gameMode {
             case .classic:
+                EmptyView()
 //                Image(systemName: "clock.fill")
 //                    .font(.system(size: 13, weight: .semibold))
 //                    .foregroundStyle(Color.qInk)
@@ -222,6 +229,7 @@ struct GameView: View {
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .foregroundStyle(urgent ? Color.qCoral2 : Color.qInk)
             case .zen:
+                EmptyView()
 //                Image(systemName: "leaf.fill")
 //                    .font(.system(size: 13, weight: .semibold))
 //                    .foregroundStyle(Color.qMint2)
@@ -239,9 +247,9 @@ struct GameView: View {
         }
         .padding(.horizontal, 12).padding(.vertical, 5)
         .background(
-            Capsule()
-                .fill(urgent ? Color.qCoral1.opacity(0.2) : Color.white.opacity(0.55))
-                .overlay(Capsule().stroke(urgent ? Color.qCoral1.opacity(0.5) : Color.white.opacity(0.85), lineWidth: 1))
+                    Capsule()
+                        .fill(urgent ? Color.qCoral1.opacity(0.2) : Color.white.opacity(0.55))
+                        .overlay(Capsule().stroke(urgent ? Color.qCoral1.opacity(0.5) : Color.white.opacity(0.85), lineWidth: 1))
         )
         .animation(.easeInOut(duration: 0.3), value: urgent)
     }
@@ -251,7 +259,7 @@ struct GameView: View {
     private var scoreHeader: some View {
         VStack(spacing: 8) {
             HStack(spacing: 0) {
-                scoreColumn(label: "Score", value: "\(vm.score)", large: true)
+                scoreColumn(label: "Score", value: "\(vm.score)")
                 Divider()
                     .overlay(Color.qInk.opacity(0.18))
                     .padding(.vertical, 4)
@@ -596,3 +604,4 @@ struct BoardClearedCelebration: View {
         }
     }
 }
+

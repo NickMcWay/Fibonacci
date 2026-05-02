@@ -276,6 +276,7 @@ struct ModesView: View {
                         .padding(8)
                 }
             }
+            .ignoresSafeArea(edges: .top)
             .opacity(mode.locked ? 0.72 : 1.0)
             .scaleEffect(isSelected && !mode.locked ? 1.025 : 1.0)
             .animation(.spring(response: 0.28, dampingFraction: 0.68), value: isSelected)

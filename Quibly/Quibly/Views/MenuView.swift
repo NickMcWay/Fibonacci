@@ -38,7 +38,7 @@ struct MenuView: View {
                         // Board preview
                         VStack(spacing: 20){
                             Spacer()
-                                .frame(height: 250)
+                                .frame(height: 220)
                             // Stats row
                             HStack(spacing: 8) {
                                 QStatChip(
@@ -96,7 +96,7 @@ struct MenuView: View {
                             // Bottom nav
                             bottomNav
                                 .padding(.horizontal, 16)
-                                .padding(.horizontal)
+                                .padding()
                                 .padding(.bottom, geo.safeAreaInsets.bottom + 8)
                                 .frame(maxWidth: .infinity)
                         }
