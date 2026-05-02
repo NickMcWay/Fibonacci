@@ -143,11 +143,17 @@ final class GameViewModel: ObservableObject {
 
         if settings.gameMode == .daily {
             spawnDailyTiles()
-        } else {
+        } else if settings.gameMode == .zen {
             for _ in 0..<2 {
                 if let t = LetterSpawnEngine.spawnTile(for: board, language: settings.language) {
                     board.setTile(t, row: t.row, col: t.col)
                 }
+            }
+        } else {
+            let spawnCount = (board.size * board.size) / 2
+            for _ in 0..<spawnCount {
+                guard let t = LetterSpawnEngine.spawnTile(for: board, language: settings.language) else { break }
+                board.setTile(t, row: t.row, col: t.col)
             }
         }
         syncTiles()
