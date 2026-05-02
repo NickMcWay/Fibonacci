@@ -25,6 +25,9 @@ struct TutorialView: View {
 
     @State private var currentStep = 0
     @State private var direction: Int = 1  // 1 = forward, -1 = back
+    @AppStorage("SlideWords_SelectedLanguage") private var selectedLanguageRaw: String = GameLanguage.english.rawValue
+
+    private let languageStepIndex = 1
 
     private let steps: [TutorialStep] = [
         TutorialStep(
@@ -32,6 +35,12 @@ struct TutorialView: View {
             iconColors: [Color.qSun1, Color.qSun2],
             title: "Welcome to Quibly!",
             body: "A word-sliding puzzle game. Slide tiles across the board to form words and score points."
+        ),
+        TutorialStep(
+            icon: "globe",
+            iconColors: [Color.qGrape1, Color.qGrape2],
+            title: "Choose Your Language",
+            body: "Words are validated in your chosen language. You can change this any time in Settings."
         ),
         TutorialStep(
             icon: "square.grid.2x2.fill",
@@ -77,7 +86,10 @@ struct TutorialView: View {
                 VStack(spacing: 24) {
                     stepIcon
                     stepText
-                    if let illustration = steps[currentStep].illustration {
+                    if currentStep == languageStepIndex {
+                        LanguagePicker(selectedRaw: $selectedLanguageRaw)
+                            .transition(.opacity.combined(with: .scale(scale: 0.9)))
+                    } else if let illustration = steps[currentStep].illustration {
                         illustration
                             .transition(.opacity.combined(with: .scale(scale: 0.9)))
                     }
@@ -259,42 +271,82 @@ private struct BoardIllustration: View {
 // MARK: - Swipe Illustration
 
 private struct SwipeIllustration: View {
-    @State private var offsetX: CGFloat = 0
-    @State private var arrowOpacity: Double = 0.4
+    private let letters = ["W", "O", "R", "D"]
+    private let tileSize: CGFloat = 42
+    private let gap: CGFloat = 6
+
+    @State private var progress: CGFloat = 0
+
+    private var totalWidth: CGFloat { CGFloat(letters.count) * tileSize + CGFloat(letters.count - 1) * gap }
+    private func cx(_ i: Int) -> CGFloat { CGFloat(i) * (tileSize + gap) + tileSize / 2 }
+    private var startX: CGFloat { cx(0) }
+    private var endX: CGFloat { cx(letters.count - 1) }
+    private var fingerX: CGFloat { startX + progress * (endX - startX) }
+
+    private func isHighlighted(_ i: Int) -> Bool {
+        progress >= CGFloat(i) / CGFloat(letters.count - 1)
+    }
 
     var body: some View {
-        HStack(spacing: 16) {
-            swipeTile("W")
-            Image(systemName: "arrow.right")
-                .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(Color.qSky2)
-                .opacity(arrowOpacity)
-                .offset(x: offsetX)
-            swipeTile("O")
-            swipeTile("R")
-            swipeTile("D")
-        }
-        .padding(.horizontal, 16).padding(.vertical, 12)
-        .qCard(cornerRadius: 20)
-        .onAppear {
-            withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
-                offsetX = 6
-                arrowOpacity = 1.0
+        ZStack {
+            // Drawn line behind tiles
+            Path { p in
+                p.move(to: CGPoint(x: startX, y: tileSize / 2))
+                p.addLine(to: CGPoint(x: endX, y: tileSize / 2))
             }
+            .trim(from: 0, to: progress)
+            .stroke(
+                LinearGradient(colors: [Color.qSky1, Color.qSky2], startPoint: .leading, endPoint: .trailing),
+                style: StrokeStyle(lineWidth: 4, lineCap: .round)
+            )
+
+            // Tiles
+            HStack(spacing: gap) {
+                ForEach(Array(letters.enumerated()), id: \.offset) { i, letter in
+                    swipeTile(letter: letter, highlighted: isHighlighted(i))
+                }
+            }
+
+            // Finger circle
+            Circle()
+                .fill(Color.qSky1.opacity(0.4))
+                .overlay(Circle().stroke(Color.qSky2, lineWidth: 2.5))
+                .shadow(color: Color.qSky2.opacity(0.4), radius: 6, x: 0, y: 2)
+                .frame(width: tileSize + 10, height: tileSize + 10)
+                .offset(x: fingerX - totalWidth / 2)
+        }
+        .frame(width: totalWidth, height: tileSize)
+        .padding(.horizontal, 16).padding(.vertical, 14)
+        .qCard(cornerRadius: 20)
+        .onAppear { runLoop() }
+    }
+
+    private func runLoop() {
+        progress = 0
+        withAnimation(.easeInOut(duration: 1.4).delay(0.3)) {
+            progress = 1.0
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.4) {
+            withAnimation(.easeIn(duration: 0.15)) { progress = 0 }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { runLoop() }
         }
     }
 
-    private func swipeTile(_ letter: String) -> some View {
+    private func swipeTile(letter: String, highlighted: Bool) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 8)
-                .fill(LinearGradient(colors: [Color.qCream, Color(red: 1, green: 0.95, blue: 0.88)], startPoint: .top, endPoint: .bottom))
+                .fill(highlighted
+                    ? LinearGradient(colors: [Color.qSun1, Color.qSun2], startPoint: .top, endPoint: .bottom)
+                    : LinearGradient(colors: [Color.qCream, Color(red: 1, green: 0.95, blue: 0.88)], startPoint: .top, endPoint: .bottom)
+                )
                 .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white.opacity(0.75), lineWidth: 1))
                 .shadow(color: Color.qInk.opacity(0.15), radius: 0, x: 0, y: 2)
             Text(letter)
-                .font(.system(size: 14, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.qInk)
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundStyle(highlighted ? Color.qGoldDeep : Color.qInk)
         }
-        .frame(width: 38, height: 38)
+        .frame(width: tileSize, height: tileSize)
+        .animation(.easeInOut(duration: 0.15), value: highlighted)
     }
 }
 
@@ -330,6 +382,55 @@ private struct PowerUpIllustration: View {
         }
         .padding(.horizontal, 12).padding(.vertical, 10)
         .qCard(cornerRadius: 20)
+    }
+}
+
+// MARK: - Language Picker
+
+private struct LanguagePicker: View {
+    @Binding var selectedRaw: String
+
+    var body: some View {
+        VStack(spacing: 6) {
+            ForEach(GameLanguage.allCases) { language in
+                let isSelected = selectedRaw == language.rawValue
+                Button {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        selectedRaw = language.rawValue
+                    }
+                } label: {
+                    HStack(spacing: 12) {
+                        Text(language.flag)
+                            .font(.system(size: 22))
+                        Text(language.rawValue)
+                            .font(.system(size: 15, weight: .semibold, design: .rounded))
+                            .foregroundStyle(isSelected ? Color.qGrape2 : Color.qInk)
+                        Spacer()
+                        if isSelected {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundStyle(Color.qGrape2)
+                                .transition(.scale.combined(with: .opacity))
+                        }
+                    }
+                    .padding(.horizontal, 14).padding(.vertical, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(isSelected
+                                ? LinearGradient(colors: [Color.qGrape1.opacity(0.25), Color.qGrape2.opacity(0.12)], startPoint: .leading, endPoint: .trailing)
+                                : LinearGradient(colors: [Color.white.opacity(0.5), Color.white.opacity(0.4)], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(isSelected ? Color.qGrape1.opacity(0.6) : Color.white.opacity(0.6), lineWidth: 1.5)
+                            )
+                    )
+                }
+                .buttonStyle(.plain)
+                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isSelected)
+            }
+        }
+        .frame(maxWidth: .infinity)
     }
 }
 
