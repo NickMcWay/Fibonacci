@@ -63,6 +63,10 @@ enum GameEngine {
         current.setTile(spawnedTile, row: spawnedTile.row, col: spawnedTile.col)
         let spawnPos = (row: spawnedTile.row, col: spawnedTile.col)
 
+        if let secondTile = LetterSpawnEngine.spawnTile(for: current, language: language) {
+            current.setTile(secondTile, row: secondTile.row, col: secondTile.col)
+        }
+
         var totalPoints = 0
         var allWords: [String] = []
         var comboCount = 0
@@ -111,6 +115,11 @@ enum GameEngine {
         }
         var current = slid
         current.setTile(spawnedTile, row: spawnedTile.row, col: spawnedTile.col)
+
+        if let secondTile = LetterSpawnEngine.spawnTile(for: current, language: language) {
+            current.setTile(secondTile, row: secondTile.row, col: secondTile.col)
+        }
+
         let matches = WordValidator.findMatches(in: current, language: language)
         return (current, matches, (spawnedTile.row, spawnedTile.col))
     }
