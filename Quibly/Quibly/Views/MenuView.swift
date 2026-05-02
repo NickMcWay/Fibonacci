@@ -35,23 +35,6 @@ struct MenuView: View {
                     let h = geo.size.height
                     
                     ZStack(alignment: .top) {
-                        // Floating decorative tiles
-                        //                    decorativeTile("Q", size: 42, rotation: -12)
-                        //                        .floatingAnimation(delay: 0, duration: 3.4)
-                        //                        .position(x: 36, y: h * 0.158)
-                        //
-                        //                    decorativeTile("B", size: 38, rotation: 14)
-                        //                        .floatingAnimation(delay: 0.6, duration: 4.1)
-                        //                        .position(x: w - 36, y: h * 0.258)
-                        //
-                        //                    decorativeTile("Y", size: 34, rotation: 8)
-                        //                        .floatingAnimation(delay: 0.3, duration: 3.8)
-                        //                        .position(x: 38, y: h * 0.288)
-                        
-                        // Top bar
-                        
-                        
-                        
                         // Board preview
                         VStack(spacing: 20){
                             Spacer()
@@ -117,28 +100,28 @@ struct MenuView: View {
                                 .padding(.bottom, geo.safeAreaInsets.bottom + 8)
                                 .frame(maxWidth: .infinity)
                         }
-                        
-                        
+
+                        // Custom top bar — avoids iOS 26 automatic glass bubble treatment on toolbar items
+                        HStack(alignment: .center) {
+                            profileChip
+                            Spacer()
+                            HStack(spacing: 8) {
+                                dailyButton
+                                menuToolbarButton(action: { showSettings = true }) {
+                                    Image(systemName: "gearshape.fill")
+                                        .font(.system(size: 16, weight: .bold))
+                                        .foregroundStyle(Color.qInk)
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.top, geo.safeAreaInsets.top + 8)
+
                     }
                     .ignoresSafeArea(edges: .top)
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    profileChip
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    HStack(spacing: 8) {
-                        dailyButton
-                        QCircleButton(size: 36, action: { showSettings = true }) {
-                            Image(systemName: "gearshape.fill")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundStyle(Color.qInk)
-                        }
-                    }
-                }
-            }
+            .navigationBarHidden(true)
             .onAppear {
                 audio.play()
                 selectedLanguage = GameLanguage(rawValue: selectedLanguageRawValue) ?? .english
@@ -230,6 +213,22 @@ struct MenuView: View {
                 .frame(width: 18, height: 18)
                 .offset(x: 6, y: -6)
             }
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Toolbar Icon Button
+
+    private func menuToolbarButton<Content: View>(action: @escaping () -> Void, @ViewBuilder label: () -> Content) -> some View {
+        Button(action: action) {
+            label()
+                .frame(width: 36, height: 36)
+                .background(
+                    Circle()
+                        .fill(Color.white.opacity(0.55))
+                        .overlay(Circle().stroke(Color.white.opacity(0.85), lineWidth: 1.5))
+                        .shadow(color: Color.qInk.opacity(0.18), radius: 0, x: 0, y: 3)
+                )
         }
         .buttonStyle(.plain)
     }
