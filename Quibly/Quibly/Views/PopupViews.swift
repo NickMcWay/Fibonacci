@@ -605,7 +605,13 @@ struct QuestsPopupSheet: View {
 
 struct ProfilePopupSheet: View {
     @AppStorage("SlideWords_BestScore") private var bestScore: Int = 0
+    @AppStorage("SlideWords_TotalXP") private var totalXP: Int = 0
     @Environment(\.dismiss) private var dismiss
+
+    private let xpPerLevel = 500
+    private var level: Int { totalXP / xpPerLevel + 1 }
+    private var xpInLevel: Int { totalXP % xpPerLevel }
+    private var progress: Double { Double(xpInLevel) / Double(xpPerLevel) }
 
     var body: some View {
         VStack(spacing: 16) {
@@ -629,28 +635,31 @@ struct ProfilePopupSheet: View {
                 Text("Riley")
                     .font(.system(size: 22, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.qInk)
-                Text("Level 12 · 7-day streak 🔥")
+                Text("Level \(level)")
                     .font(.system(size: 12, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.qInkSoft)
             }
 
             // XP Bar
-            ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 999)
-                    .fill(Color.qInk.opacity(0.10))
+            VStack(spacing: 3) {
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 999)
+                        .fill(Color.qInk.opacity(0.10))
+                        .frame(height: 8)
+                    GeometryReader { geo in
+                        RoundedRectangle(cornerRadius: 999)
+                            .fill(LinearGradient(colors: [Color.qSun1, Color.qBubble2, Color.qGrape1], startPoint: .leading, endPoint: .trailing))
+                            .frame(width: max(geo.size.width * progress, progress > 0 ? 8 : 0), height: 8)
+                    }
                     .frame(height: 8)
-                RoundedRectangle(cornerRadius: 999)
-                    .fill(LinearGradient(colors: [Color.qSun1, Color.qBubble2, Color.qGrape1], startPoint: .leading, endPoint: .trailing))
-                    .frame(height: 8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .mask(
-                        GeometryReader { geo in
-                            HStack(spacing: 0) {
-                                Color.black.frame(width: geo.size.width * 0.62)
-                                Color.clear
-                            }
-                        }
-                    )
+                }
+                HStack {
+                    Text("Lvl \(level)")
+                    Spacer()
+                    Text("\(xpInLevel) / \(xpPerLevel) xp")
+                }
+                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.qInk.opacity(0.65))
             }
             .padding(.horizontal, 22)
 
