@@ -22,7 +22,7 @@ struct MenuView: View {
 
     private let previewLetters: [[String]] = [
         ["Q","U","I","B"],
-        ["L","E","A","R"],
+        ["L","P","A","R"],
         ["P","L","A","Y"],
         ["W","O","R","D"]
     ]
@@ -250,7 +250,7 @@ struct MenuView: View {
     }
 
     private func isHighlighted(row: Int, col: Int) -> Bool {
-        (row == 1 && col == 1) || (row == 2 && (1...3).contains(col))
+        (row == 2 && (0...3).contains(col))
     }
 
     private func previewTile(letter: String, highlighted: Bool) -> some View {
