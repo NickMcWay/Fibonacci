@@ -1,5 +1,6 @@
 import StoreKit
 import SwiftUI
+import Combine
 
 // Manages all In-App Purchase products and transactions via StoreKit 2.
 @MainActor
@@ -92,7 +93,7 @@ final class StoreManager: ObservableObject {
         Task.detached { [weak self] in
             for await result in Transaction.updates {
                 do {
-                    let transaction = try self?.verified(result)
+                    let transaction = try await self?.verified(result)
                     if let id = ProductID(rawValue: transaction?.productID ?? "") {
                         await MainActor.run { self?.deliverCoins(id.coinReward) }
                     }

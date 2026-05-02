@@ -169,6 +169,7 @@ struct ShopView: View {
                         startPoint: .top, endPoint: .bottom
                     )
                 )
+            }
 
             // Purchasing overlay
             if store.isPurchasing {
