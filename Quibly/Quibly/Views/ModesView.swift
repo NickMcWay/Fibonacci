@@ -33,31 +33,41 @@ struct ModesView: View {
     private let languages: [GameLanguage] = GameLanguage.allCases
 
     var body: some View {
-        DreamBackground {
-            ZStack(alignment: .top) {
-                ScrollView {
-                    VStack(spacing: 0) {
-                        Spacer().frame(height: 110)
-
-                        VStack(spacing: 14) {
-                            languagePicker
-                            modeTiles
-                            boardSizePicker
-                            startButton
+        NavigationView{
+            DreamBackground {
+                ZStack(alignment: .top) {
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            Spacer().frame(height: 110)
+                            
+                            VStack(spacing: 14) {
+                                languagePicker
+                                boardSizePicker
+                                modeTiles
+                                startButton
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.bottom, 40)
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 40)
                     }
                 }
-
-                // Top bar
-                HStack {
+            }
+            .onAppear {
+                switch selectedVariant {
+                case .small:  selectedModeId = "classic"
+                case .medium: selectedModeId = "extended"
+                case .large:  selectedModeId = "challenge"
+                }
+            }
+            .toolbar{
+                ToolbarItem(placement:.topBarLeading) {
                     QCircleButton(size: 40, action: { dismiss(); onBack?() }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundStyle(Color.qInk)
                     }
-                    Spacer()
+                }
+                ToolbarItem(placement: .principal) {
                     VStack(spacing: 2) {
                         Text("Modes")
                             .font(.system(size: 22, weight: .semibold, design: .rounded))
@@ -68,18 +78,7 @@ struct ModesView: View {
                             .foregroundStyle(Color.white.opacity(0.75))
                             .shadow(color: Color.qInk.opacity(0.3), radius: 0, x: 0, y: 1)
                     }
-                    Spacer()
-                    Color.clear.frame(width: 40, height: 40)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 56)
-            }
-        }
-        .onAppear {
-            switch selectedVariant {
-            case .small:  selectedModeId = "classic"
-            case .medium: selectedModeId = "extended"
-            case .large:  selectedModeId = "challenge"
             }
         }
     }
