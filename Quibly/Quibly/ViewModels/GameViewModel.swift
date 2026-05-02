@@ -42,6 +42,10 @@ final class GameViewModel: ObservableObject {
     @Published var isBombArmed: Bool = false
     @Published var isWildArmed: Bool = false
 
+    // Blitz mode
+    @Published var timeRemaining: Int = 90
+    private var blitzTimerTask: Task<Void, Never>?
+
     // Hint system
     @Published var showHintButton: Bool = false
     @Published var showMatchHighlights: Bool = false
@@ -53,6 +57,7 @@ final class GameViewModel: ObservableObject {
 
     var boardSize: Int { board.size }
     var language: GameLanguage { settings.language }
+    var gameMode: GameMode { settings.gameMode }
 
     func scrabbleValue(for letter: Character) -> Int {
         let lower = Character(String(letter).lowercased())
@@ -117,9 +122,13 @@ final class GameViewModel: ObservableObject {
     // MARK: - Game Lifecycle
 
     func startNewGame() {
+        blitzTimerTask?.cancel()
+        blitzTimerTask = nil
+
         board = BoardModel(size: settings.boardVariant.rawValue)
         score = 0
         isGameOver = false
+        timeRemaining = 90
         lastWords = []
         lastPointsEarned = 0
         comboCount = 0
@@ -132,12 +141,61 @@ final class GameViewModel: ObservableObject {
         isWildArmed = false
         resetHintState()
 
-        for _ in 0..<2 {
-            if let t = LetterSpawnEngine.spawnTile(for: board, language: settings.language) {
-                board.setTile(t, row: t.row, col: t.col)
+        if settings.gameMode == .daily {
+            spawnDailyTiles()
+        } else {
+            for _ in 0..<2 {
+                if let t = LetterSpawnEngine.spawnTile(for: board, language: settings.language) {
+                    board.setTile(t, row: t.row, col: t.col)
+                }
             }
         }
         syncTiles()
+
+        if settings.gameMode == .blitz {
+            startBlitzTimer()
+        }
+    }
+
+    private func startBlitzTimer() {
+        blitzTimerTask = Task {
+            while timeRemaining > 0 && !isGameOver {
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                guard !Task.isCancelled else { return }
+                if timeRemaining > 0 { timeRemaining -= 1 }
+                if timeRemaining == 0 { isGameOver = true }
+            }
+        }
+    }
+
+    private func spawnDailyTiles() {
+        let cal = Calendar.current
+        let now = Date()
+        let seed = UInt64(
+            cal.component(.year,  from: now) * 1_000_000 +
+            cal.component(.month, from: now) * 10_000 +
+            cal.component(.day,   from: now) * 100 +
+            settings.boardVariant.rawValue
+        )
+        var rng = SeededRNG(seed: seed)
+
+        // Simple weighted letter pool weighted toward common letters
+        let pool: [Character] = Array(
+            "eeeeeeeeaaaaaaaaiiiiioooooouuurrrrrssssttttllllnnnnndddddcccchhhpppggmmbbffwwvvyykjxqz"
+        )
+
+        var positions = board.emptyPositions
+        for i in stride(from: positions.count - 1, through: 1, by: -1) {
+            let j = Int(rng.next() % UInt64(i + 1))
+            positions.swapAt(i, j)
+        }
+        for i in 0..<min(2, positions.count) {
+            let letter = pool[Int(rng.next() % UInt64(pool.count))]
+            let pos = positions[i]
+            var tile = Tile(letter: letter, row: pos.row, col: pos.col)
+            tile.isNew = true
+            board.setTile(tile, row: pos.row, col: pos.col)
+        }
     }
 
     func loadDebugBoard(_ name: String) {
@@ -181,7 +239,7 @@ final class GameViewModel: ObservableObject {
             isAnimating = false
 
             if slideResult.spawnedPosition == nil {
-                if GameEngine.isGameOver(board: board) {
+                if settings.gameMode != .zen && GameEngine.isGameOver(board: board) {
                     isGameOver = true
                 } else {
                     showBoardFullWarning = true
@@ -191,7 +249,7 @@ final class GameViewModel: ObservableObject {
                     }
                 }
             } else if slideResult.matches.isEmpty {
-                if GameEngine.isGameOver(board: board) { isGameOver = true }
+                if settings.gameMode != .zen && GameEngine.isGameOver(board: board) { isGameOver = true }
             } else {
                 pendingSwipeMatches = slideResult.matches
                 pendingSwipeDirection = direction
@@ -273,7 +331,7 @@ final class GameViewModel: ObservableObject {
 
             if board.isEmpty {
                 triggerEmptyBoardEffect()
-            } else if result.isGameOver {
+            } else if result.isGameOver && settings.gameMode != .zen {
                 isGameOver = true
             }
         }
@@ -340,7 +398,7 @@ final class GameViewModel: ObservableObject {
 
             if board.isEmpty {
                 triggerEmptyBoardEffect()
-            } else if GameEngine.isGameOver(board: board) {
+            } else if settings.gameMode != .zen && GameEngine.isGameOver(board: board) {
                 isGameOver = true
             }
         }

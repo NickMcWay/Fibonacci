@@ -183,25 +183,8 @@ struct GameView: View {
                     .foregroundStyle(Color.qInk)
             }
 
-            Spacer()
-
-            // Timer pill (static display – hook into a real timer if needed)
-//            HStack(spacing: 6) {
-//                Image(systemName: "clock.fill")
-//                    .font(.system(size: 13, weight: .semibold))
-//                    .foregroundStyle(Color.qInk)
-//                Text("∞")
-//                    .font(.system(size: 14, weight: .semibold, design: .rounded))
-//                    .foregroundStyle(Color.qInk)
-//            }
-//            .padding(.horizontal, 12).padding(.vertical, 5)
-//            .background(
-//                Capsule()
-//                    .fill(Color.white.opacity(0.55))
-//                    .overlay(Capsule().stroke(Color.white.opacity(0.85), lineWidth: 1))
-//            )
-
-//            Spacer()
+   
+            modePill
 
             HStack(spacing: 6) {
                 QCircleButton(size: 36, action: { showShop = true }) {
@@ -216,6 +199,51 @@ struct GameView: View {
                 }
             }
         }
+    }
+
+    // MARK: - Mode Pill
+
+    private var modePill: some View {
+        let urgent = settings.gameMode == .blitz && vm.timeRemaining <= 15
+        return HStack(spacing: 6) {
+            switch settings.gameMode {
+            case .classic:
+//                Image(systemName: "clock.fill")
+//                    .font(.system(size: 13, weight: .semibold))
+//                    .foregroundStyle(Color.qInk)
+//                Text("∞")
+//                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+//                    .foregroundStyle(Color.qInk)
+            case .blitz:
+                Image(systemName: "timer")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(urgent ? Color.qCoral2 : Color.qInk)
+                Text(String(format: "%d:%02d", vm.timeRemaining / 60, vm.timeRemaining % 60))
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .foregroundStyle(urgent ? Color.qCoral2 : Color.qInk)
+            case .zen:
+//                Image(systemName: "leaf.fill")
+//                    .font(.system(size: 13, weight: .semibold))
+//                    .foregroundStyle(Color.qMint2)
+//                Text("ZEN")
+//                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+//                    .foregroundStyle(Color.qMint2)
+            case .daily:
+                Image(systemName: "calendar")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(Color.qSun2)
+                Text("TODAY")
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.qSun2)
+            }
+        }
+        .padding(.horizontal, 12).padding(.vertical, 5)
+        .background(
+            Capsule()
+                .fill(urgent ? Color.qCoral1.opacity(0.2) : Color.white.opacity(0.55))
+                .overlay(Capsule().stroke(urgent ? Color.qCoral1.opacity(0.5) : Color.white.opacity(0.85), lineWidth: 1))
+        )
+        .animation(.easeInOut(duration: 0.3), value: urgent)
     }
 
     // MARK: - Score Header
