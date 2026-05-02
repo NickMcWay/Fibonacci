@@ -28,54 +28,7 @@ struct SettingsView: View {
 
     var body: some View {
         NavigationView {
-            DreamBackground {
-                ZStack(alignment: .top) {
-                    ScrollView {
-                        VStack(spacing: 0) {
-                            Spacer().frame(height: 160)
-
-                            VStack(spacing: 0) {
-                                settingsGroup(title: "Audio & Haptics") {
-                                    toggleRow(icon: "speaker.wave.2.fill", label: "Sound effects",
-                                              binding: Binding(get: { soundOn }, set: { v in soundOn = v; audio.isSoundEnabled = v }))
-                                    toggleRow(icon: "music.note", label: "Music",
-                                              binding: Binding(get: { musicOn }, set: { v in musicOn = v; audio.isMusicEnabled = v }))
-                                    toggleRow(icon: "waveform", label: "Haptics", binding: $hapticsOn)
-                                }
-
-                                settingsGroup(title: "Gameplay") {
-                                    toggleRow(icon: "lightbulb.fill", label: "Auto-hints", sublabel: "Glow tiles after 10s", binding: $autoHints)
-                                    pickerRow(icon: "globe", label: "Language",
-                                              value: "\(selectedLanguage.flag) \(selectedLanguage.rawValue)") { showLanguagePicker = true }
-                                    pickerRow(icon: "square.grid.2x2.fill", label: "Default board",
-                                              value: "\(selectedVariant.displayName) (\(selectedVariant.label))") { showBoardPicker = true }
-                                }
-
-                                settingsGroup(title: "Look & Feel") {
-                                    toggleRow(icon: "moon.fill", label: "Dark mode", sublabel: "Use system setting", binding: $darkMode)
-                                    pickerRow(icon: "paintbrush.fill", label: "Tile theme", value: "Cream") { showThemeAlert = true }
-                                    pickerRow(icon: "sun.max.fill", label: "Background", value: "Dawn") { showBackgroundAlert = true }
-                                }
-
-                                settingsGroup(title: "Account") {
-                                    actionRow(icon: "heart.fill",       label: "Restore purchases")  { showRestoreAlert  = true }
-                                    actionRow(icon: "hand.raised.fill", label: "Privacy")             { showPrivacyAlert  = true }
-                                    actionRow(icon: "doc.text.fill",    label: "Terms of service")   { showTermsAlert    = true }
-                                }
-
-                                Text("Quibly v1.4.2 · made with 💜")
-                                    .font(.system(size: 11, weight: .bold, design: .rounded))
-                                    .foregroundStyle(Color.qInk.opacity(0.55))
-                                    .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.top, 20)
-                                    .padding(.bottom, 40)
-                            }
-                            .padding(.horizontal, 16)
-                        }
-                    }
-                }
-            }
+            settingsContent
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -141,6 +94,58 @@ struct SettingsView: View {
                 Button("Cancel", role: .cancel) {}
             } message: {
                 Text("View the full Quibly Terms of Service in your browser.")
+            }
+        }
+    }
+
+    // Extracted to help the type-checker
+    private var settingsContent: some View {
+        DreamBackground {
+            ZStack(alignment: .top) {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        Spacer().frame(height: 160)
+
+                        VStack(spacing: 0) {
+                            settingsGroup(title: "Audio & Haptics") {
+                                toggleRow(icon: "speaker.wave.2.fill", label: "Sound effects",
+                                          binding: Binding<Bool>(get: { soundOn }, set: { v in soundOn = v; audio.isSoundEnabled = v }))
+                                toggleRow(icon: "music.note", label: "Music",
+                                          binding: Binding<Bool>(get: { musicOn }, set: { v in musicOn = v; audio.isMusicEnabled = v }))
+                                toggleRow(icon: "waveform", label: "Haptics", binding: $hapticsOn)
+                            }
+
+                            settingsGroup(title: "Gameplay") {
+                                toggleRow(icon: "lightbulb.fill", label: "Auto-hints", sublabel: "Glow tiles after 10s", binding: $autoHints)
+                                pickerRow(icon: "globe", label: "Language",
+                                          value: "\(selectedLanguage.flag) \(selectedLanguage.rawValue)") { showLanguagePicker = true }
+                                pickerRow(icon: "square.grid.2x2.fill", label: "Default board",
+                                          value: "\(selectedVariant.displayName) (\(selectedVariant.label))") { showBoardPicker = true }
+                            }
+
+                            settingsGroup(title: "Look & Feel") {
+                                toggleRow(icon: "moon.fill", label: "Dark mode", sublabel: "Use system setting", binding: $darkMode)
+                                pickerRow(icon: "paintbrush.fill", label: "Tile theme", value: "Cream") { showThemeAlert = true }
+                                pickerRow(icon: "sun.max.fill", label: "Background", value: "Dawn") { showBackgroundAlert = true }
+                            }
+
+                            settingsGroup(title: "Account") {
+                                actionRow(icon: "heart.fill",       label: "Restore purchases")  { showRestoreAlert  = true }
+                                actionRow(icon: "hand.raised.fill", label: "Privacy")             { showPrivacyAlert  = true }
+                                actionRow(icon: "doc.text.fill",    label: "Terms of service")   { showTermsAlert    = true }
+                            }
+
+                            Text("Quibly v1.4.2 · made with 💜")
+                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.qInk.opacity(0.55))
+                                .multilineTextAlignment(.center)
+                                .frame(maxWidth: .infinity)
+                                .padding(.top, 20)
+                                .padding(.bottom, 40)
+                        }
+                        .padding(.horizontal, 16)
+                    }
+                }
             }
         }
     }
