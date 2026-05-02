@@ -354,110 +354,181 @@ struct BuyChargePopupSheet: View {
 struct DailyRewardPopupSheet: View {
     @Environment(\.dismiss) private var dismiss
 
-    private struct Day { let n: Int; let reward: String; let claimed: Bool; let today: Bool; let big: Bool }
+    private struct Day { let n: Int; let reward: String; let icon: String?; let claimed: Bool; let today: Bool }
     private let days: [Day] = [
-        .init(n: 1, reward: "+25",  claimed: true,  today: false, big: false),
-        .init(n: 2, reward: "+50",  claimed: true,  today: false, big: false),
-        .init(n: 3, reward: "💡",   claimed: false, today: true,  big: false),
-        .init(n: 4, reward: "+100", claimed: false, today: false, big: false),
-        .init(n: 5, reward: "🔀",   claimed: false, today: false, big: false),
-        .init(n: 6, reward: "+200", claimed: false, today: false, big: false),
-        .init(n: 7, reward: "🎁",   claimed: false, today: false, big: true),
+        .init(n: 1, reward: "+25",  icon: nil,             claimed: true,  today: false),
+        .init(n: 2, reward: "+50",  icon: nil,             claimed: true,  today: false),
+        .init(n: 3, reward: "+75",  icon: "lightbulb.fill", claimed: false, today: true),
+        .init(n: 4, reward: "+100", icon: nil,             claimed: false, today: false),
+        .init(n: 5, reward: "Shuffle", icon: "shuffle",    claimed: false, today: false),
+        .init(n: 6, reward: "+200", icon: nil,             claimed: false, today: false),
+        .init(n: 7, reward: "Chest", icon: "gift.fill",    claimed: false, today: false),
     ]
 
     var body: some View {
         ZStack {
             LinearGradient(
                 stops: [
-                    .init(color: Color.qBubble1, location: 0),
-                    .init(color: Color.qPeach1, location: 0.6),
-                    .init(color: Color.qSun1, location: 1),
+                    .init(color: Color.qBubble2.opacity(0.85), location: 0),
+                    .init(color: Color.qBubble1.opacity(0.8),  location: 0.4),
+                    .init(color: Color.qSun1.opacity(0.75),    location: 1),
                 ],
-                startPoint: .top, endPoint: .bottom
+                startPoint: .topLeading, endPoint: .bottomTrailing
             )
             .ignoresSafeArea()
 
-            VStack(spacing: 16) {
-                Capsule()
-                    .fill(Color.white.opacity(0.5))
-                    .frame(width: 36, height: 4)
-                    .padding(.top, 12)
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Handle
+                    Capsule()
+                        .fill(Color.white.opacity(0.55))
+                        .frame(width: 36, height: 4)
+                        .padding(.top, 12)
+                        .padding(.bottom, 24)
 
-                Text("Daily Reward 🎁")
-                    .font(.system(size: 26, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.qInk)
-                    .shadow(color: Color.white.opacity(0.4), radius: 0, x: 0, y: 1)
-
-                Text("Day 3 · keep your streak alive!")
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.qInkSoft)
-
-                // 7-day grid: row1 = days 1-4, row2 = days 5-6, row3 = day 7 full-width
-                VStack(spacing: 8) {
-                    HStack(spacing: 8) {
-                        ForEach(days.prefix(4), id: \.n) { dayBox($0) }
-                    }
-                    HStack(spacing: 8) {
-                        ForEach(days.dropFirst(4).prefix(2), id: \.n) { dayBox($0) }
-                        Spacer()
-                        Spacer()
-                    }
-                    dayBox(days[6])
-                }
-                .padding(.horizontal, 4)
-
-                Button { dismiss() } label: {
-                    HStack(spacing: 8) {
-                        Text("Claim Today")
-                            .font(.system(size: 18, weight: .semibold, design: .rounded))
-                            .foregroundStyle(Color.qGoldDeep)
-                        Image(systemName: "lightbulb.fill")
-                            .font(.system(size: 14, weight: .bold))
+                    // Hero gift icon
+                    ZStack {
+                        Circle()
+                            .fill(RadialGradient(
+                                colors: [Color(red: 1, green: 0.97, blue: 0.7), Color.qSun1],
+                                center: .topLeading, startRadius: 0, endRadius: 50
+                            ))
+                            .shadow(color: Color.qSun2.opacity(0.5), radius: 0, x: 0, y: 6)
+                            .shadow(color: Color.qSun2.opacity(0.3), radius: 20, x: 0, y: 10)
+                        Image(systemName: "gift.fill")
+                            .font(.system(size: 40, weight: .bold))
                             .foregroundStyle(Color.qGoldDeep)
                     }
+                    .frame(width: 96, height: 96)
+                    .floatingAnimation(delay: 0, duration: 2.8, distance: 5)
+                    .padding(.bottom, 18)
+
+                    // Title
+                    VStack(spacing: 6) {
+                        Text("Daily Reward")
+                            .font(.system(size: 32, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .shadow(color: Color.qInk.opacity(0.25), radius: 0, x: 0, y: 2)
+                        HStack(spacing: 6) {
+                            Image(systemName: "flame.fill")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundStyle(Color.qSun2)
+                            Text("Day 3 · Keep your streak alive!")
+                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Color.white.opacity(0.88))
+                        }
+                    }
+                    .padding(.bottom, 28)
+
+                    // 7-day grid — 4 across on top, then 3 across
+                    VStack(spacing: 10) {
+                        HStack(spacing: 10) {
+                            ForEach(days.prefix(4), id: \.n) { dayBox($0) }
+                        }
+                        HStack(spacing: 10) {
+                            ForEach(Array(days.dropFirst(4)), id: \.n) { dayBox($0) }
+                        }
+                    }
+                    .padding(.horizontal, 22)
+                    .padding(.bottom, 28)
+
+                    // Today's reward callout
+                    HStack(spacing: 12) {
+                        ZStack {
+                            Circle()
+                                .fill(LinearGradient(colors: [Color.qSun1, Color.qSun2], startPoint: .top, endPoint: .bottom))
+                                .shadow(color: Color.qSun2.opacity(0.4), radius: 0, x: 0, y: 3)
+                            Image(systemName: "lightbulb.fill")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundStyle(Color.qGoldDeep)
+                        }
+                        .frame(width: 44, height: 44)
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Today's Reward")
+                                .font(.system(size: 13, weight: .heavy, design: .rounded))
+                                .foregroundStyle(.white)
+                                .tracking(0.3)
+                            Text("+75 coins + 1 Hint power-up")
+                                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Color.white.opacity(0.85))
+                        }
+                        Spacer()
+                    }
+                    .padding(14)
+                    .background(
+                        RoundedRectangle(cornerRadius: 18)
+                            .fill(Color.white.opacity(0.2))
+                            .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white.opacity(0.4), lineWidth: 1))
+                    )
+                    .padding(.horizontal, 22)
+                    .padding(.bottom, 22)
+
+                    // Claim button
+                    Button { dismiss() } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "gift.fill")
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundStyle(Color.qGoldDeep)
+                            Text("Claim Today's Reward")
+                                .font(.system(size: 18, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Color.qGoldDeep)
+                        }
+                    }
+                    .buttonStyle(PuffyButtonStyle(variant: .gold))
+                    .padding(.horizontal, 22)
+                    .padding(.bottom, 40)
                 }
-                .buttonStyle(PuffyButtonStyle(variant: .gold))
-                .padding(.top, 4)
-                .padding(.bottom, 20)
             }
-            .padding(.horizontal, 22)
         }
+        .presentationDetents([.large])
+        .presentationDragIndicator(.hidden)
     }
 
     private func dayBox(_ day: Day) -> some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 6) {
             Text("Day \(day.n)")
                 .font(.system(size: 9, weight: .heavy, design: .rounded))
-                .foregroundStyle(day.today ? Color.white.opacity(0.95) : Color.qInk.opacity(0.60))
+                .foregroundStyle(day.today ? Color.white : Color.qInk.opacity(0.60))
                 .tracking(0.3)
-            Text(day.reward)
-                .font(.system(size: day.big ? 22 : 16, weight: .semibold, design: .rounded))
-                .foregroundStyle(day.today ? Color.white : Color.qInk)
-                .shadow(color: day.today ? Color(red: 0.71, green: 0.35, blue: 0).opacity(0.4) : Color.clear, radius: 0, x: 0, y: 1)
+
+            if let icon = day.icon {
+                Image(systemName: icon)
+                    .font(.system(size: day.n == 7 ? 24 : 18, weight: .bold))
+                    .foregroundStyle(day.today ? Color.white : Color.qInk)
+                    .shadow(color: day.today ? Color.qGoldDeep.opacity(0.4) : Color.clear, radius: 0, x: 0, y: 1)
+            } else {
+                Text(day.reward)
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(day.today ? Color.white : Color.qInk)
+                    .shadow(color: day.today ? Color.qGoldDeep.opacity(0.4) : Color.clear, radius: 0, x: 0, y: 1)
+            }
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 8)
+        .padding(.vertical, 12)
         .background(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: 16)
                 .fill(day.today
                     ? LinearGradient(colors: [Color.qSun1, Color.qSun2], startPoint: .top, endPoint: .bottom)
-                    : LinearGradient(colors: [Color.white.opacity(day.claimed ? 0.5 : 0.7), Color.white.opacity(day.claimed ? 0.4 : 0.6)], startPoint: .top, endPoint: .bottom)
+                    : LinearGradient(
+                        colors: [Color.white.opacity(day.claimed ? 0.45 : 0.65), Color.white.opacity(day.claimed ? 0.35 : 0.55)],
+                        startPoint: .top, endPoint: .bottom
+                      )
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(day.today ? Color.white.opacity(0.5) : Color.qInk.opacity(0.18), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(day.today ? Color.white.opacity(0.55) : Color.qInk.opacity(0.15), lineWidth: 1)
                 )
-                .shadow(color: day.today ? Color.qSun2.opacity(0.4) : Color.clear, radius: 0, x: 0, y: 3)
+                .shadow(color: day.today ? Color.qSun2.opacity(0.45) : Color.clear, radius: 0, x: 0, y: 3)
         )
         .overlay(alignment: .topTrailing) {
             if day.claimed {
                 Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(Color.qMint2)
-                    .offset(x: 4, y: -4)
+                    .offset(x: 5, y: -5)
             }
         }
-        .opacity(day.claimed && !day.today ? 0.55 : 1.0)
+        .opacity(day.claimed && !day.today ? 0.5 : 1.0)
         .wiggle(active: day.today)
     }
 }
@@ -469,134 +540,227 @@ struct QuestsPopupSheet: View {
 
     private struct Quest { let name: String; let icon: String; let color: [Color]; let progress: Int; let total: Int; let reward: Int }
     private let quests: [Quest] = [
-        .init(name: "Score 500 in one game",    icon: "trophy.fill",  color: [Color.qSun1, Color.qSun2],     progress: 320, total: 500, reward: 50),
+        .init(name: "Score 500 in one game",     icon: "trophy.fill",  color: [Color.qSun1, Color.qSun2],     progress: 320, total: 500, reward: 50),
         .init(name: "Spell 5 words ≥ 5 letters", icon: "textformat",   color: [Color.qGrape1, Color.qGrape2], progress: 3,   total: 5,   reward: 30),
         .init(name: "Trigger a ×3 combo",        icon: "flame.fill",   color: [Color.qCoral1, Color.qCoral2], progress: 0,   total: 1,   reward: 75),
     ]
 
+    private var completedCount: Int { quests.filter { $0.progress >= $0.total }.count }
+
     var body: some View {
-        VStack(spacing: 16) {
-            Capsule()
-                .fill(Color.secondary.opacity(0.35))
-                .frame(width: 36, height: 4)
-                .padding(.top, 12)
-
-            HStack {
-                Text("Daily Quests")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.qInk)
-                Spacer()
-                Button { dismiss() } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(Color.qInk.opacity(0.4))
-                }
-                .buttonStyle(.plain)
-            }
-            .padding(.horizontal, 18)
-
-            VStack(spacing: 10) {
-                ForEach(quests.indices, id: \.self) { i in
-                    questRow(quests[i])
-                }
-            }
-            .padding(.horizontal, 18)
-
-            // Weekly chest
-            HStack(spacing: 10) {
-                Image(systemName: "crown.fill")
-                    .font(.system(size: 22, weight: .bold))
-                    .foregroundStyle(Color.qSun1)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Weekly Chest")
-                        .font(.system(size: 14, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.white)
-                    Text("Complete 21/30 quests to unlock")
-                        .font(.system(size: 11, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.white.opacity(0.9))
-                }
-                Spacer()
-                Text("21/30")
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-            }
-            .padding(10)
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(LinearGradient(colors: [Color.qGrape1, Color.qBubble2], startPoint: .leading, endPoint: .trailing))
+        ZStack {
+            LinearGradient(
+                stops: [
+                    .init(color: Color(red: 0.40, green: 0.82, blue: 0.62), location: 0),
+                    .init(color: Color.qBubble1.opacity(0.85), location: 0.5),
+                    .init(color: Color.qSun1.opacity(0.7), location: 1),
+                ],
+                startPoint: .topLeading, endPoint: .bottomTrailing
             )
-            .padding(.horizontal, 18)
-            .padding(.bottom, 24)
+            .ignoresSafeArea()
+
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Handle
+                    Capsule()
+                        .fill(Color.white.opacity(0.55))
+                        .frame(width: 36, height: 4)
+                        .padding(.top, 12)
+                        .padding(.bottom, 22)
+
+                    // Header
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Daily Quests")
+                                .font(.system(size: 30, weight: .bold, design: .rounded))
+                                .foregroundStyle(.white)
+                                .shadow(color: Color.qInk.opacity(0.25), radius: 0, x: 0, y: 2)
+                            Text("Resets in 6h 42m")
+                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Color.white.opacity(0.8))
+                        }
+                        Spacer()
+                        Button { dismiss() } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.system(size: 28))
+                                .foregroundStyle(Color.white.opacity(0.65))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.horizontal, 22)
+                    .padding(.bottom, 18)
+
+                    // Progress summary card
+                    HStack(spacing: 16) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("\(completedCount) of \(quests.count) done")
+                                .font(.system(size: 22, weight: .bold, design: .rounded))
+                                .foregroundStyle(.white)
+                            Text("Today's challenges")
+                                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Color.white.opacity(0.8))
+                        }
+                        Spacer()
+                        HStack(spacing: 10) {
+                            ForEach(quests.indices, id: \.self) { i in
+                                let done = quests[i].progress >= quests[i].total
+                                ZStack {
+                                    Circle()
+                                        .fill(done
+                                            ? LinearGradient(colors: [Color.qMint1, Color.qMint2], startPoint: .top, endPoint: .bottom)
+                                            : LinearGradient(colors: [Color.white.opacity(0.3), Color.white.opacity(0.15)], startPoint: .top, endPoint: .bottom)
+                                        )
+                                        .shadow(color: done ? Color.qMint2.opacity(0.4) : Color.clear, radius: 0, x: 0, y: 2)
+                                    Image(systemName: done ? "checkmark" : "\(i + 1)")
+                                        .font(.system(size: 11, weight: .heavy))
+                                        .foregroundStyle(.white)
+                                }
+                                .frame(width: 28, height: 28)
+                            }
+                        }
+                    }
+                    .padding(18)
+                    .background(
+                        RoundedRectangle(cornerRadius: 22)
+                            .fill(Color.white.opacity(0.2))
+                            .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.white.opacity(0.4), lineWidth: 1))
+                    )
+                    .padding(.horizontal, 22)
+                    .padding(.bottom, 20)
+
+                    // Quest cards
+                    VStack(spacing: 14) {
+                        ForEach(quests.indices, id: \.self) { i in
+                            questCard(quests[i])
+                        }
+                    }
+                    .padding(.horizontal, 22)
+                    .padding(.bottom, 22)
+
+                    // Weekly chest
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("WEEKLY CHEST")
+                            .font(.system(size: 11, weight: .heavy, design: .rounded))
+                            .foregroundStyle(Color.white.opacity(0.85))
+                            .tracking(0.8)
+                            .padding(.horizontal, 2)
+
+                        HStack(spacing: 16) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 18)
+                                    .fill(LinearGradient(colors: [Color.qGrape1, Color.qGrape2], startPoint: .top, endPoint: .bottom))
+                                    .shadow(color: Color.qGrape2.opacity(0.45), radius: 0, x: 0, y: 4)
+                                Image(systemName: "crown.fill")
+                                    .font(.system(size: 30, weight: .bold))
+                                    .foregroundStyle(Color.qSun1)
+                                    .shadow(color: Color.qSun2.opacity(0.5), radius: 0, x: 0, y: 2)
+                            }
+                            .frame(width: 68, height: 68)
+
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Complete 30 quests")
+                                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+                                    .foregroundStyle(.white)
+                                Text("21 of 30 weekly quests done")
+                                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                                    .foregroundStyle(Color.white.opacity(0.75))
+                                ZStack(alignment: .leading) {
+                                    RoundedRectangle(cornerRadius: 999)
+                                        .fill(Color.white.opacity(0.25))
+                                        .frame(height: 8)
+                                    GeometryReader { geo in
+                                        RoundedRectangle(cornerRadius: 999)
+                                            .fill(LinearGradient(colors: [Color.qSun1, Color.qSun2], startPoint: .leading, endPoint: .trailing))
+                                            .frame(width: geo.size.width * (21.0 / 30.0), height: 8)
+                                    }
+                                    .frame(height: 8)
+                                }
+                            }
+
+                            Text("21/30")
+                                .font(.system(size: 20, weight: .bold, design: .rounded))
+                                .foregroundStyle(.white)
+                        }
+                    }
+                    .padding(18)
+                    .background(
+                        RoundedRectangle(cornerRadius: 22)
+                            .fill(Color.white.opacity(0.18))
+                            .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.white.opacity(0.35), lineWidth: 1))
+                    )
+                    .padding(.horizontal, 22)
+                    .padding(.bottom, 36)
+                }
+            }
         }
+        .presentationDetents([.large])
+        .presentationDragIndicator(.hidden)
     }
 
-    private func questRow(_ quest: Quest) -> some View {
+    private func questCard(_ quest: Quest) -> some View {
         let pct = min(1.0, Double(quest.progress) / Double(quest.total))
         let done = quest.progress >= quest.total
 
-        return HStack(spacing: 10) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(LinearGradient(colors: quest.color, startPoint: .top, endPoint: .bottom))
-                    .shadow(color: quest.color.last!.opacity(0.3), radius: 0, x: 0, y: 2)
-                Image(systemName: quest.icon)
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(.white)
-            }
-            .frame(width: 42, height: 42)
-
-            VStack(alignment: .leading, spacing: 5) {
-                Text(quest.name)
-                    .font(.system(size: 14, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.qInk)
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 999)
-                        .fill(Color.qInk.opacity(0.10))
-                        .frame(height: 8)
-                    RoundedRectangle(cornerRadius: 999)
-                        .fill(LinearGradient(colors: [Color.qMint1, Color.qMint2], startPoint: .leading, endPoint: .trailing))
-                        .frame(width: nil, height: 8)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .mask(
-                            GeometryReader { geo in
-                                HStack(spacing: 0) {
-                                    Color.black.frame(width: geo.size.width * pct)
-                                    Color.clear
-                                }
-                            }
-                        )
+        return VStack(spacing: 14) {
+            HStack(spacing: 14) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(LinearGradient(colors: quest.color, startPoint: .top, endPoint: .bottom))
+                        .shadow(color: quest.color.last!.opacity(0.4), radius: 0, x: 0, y: 3)
+                    Image(systemName: quest.icon)
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundStyle(.white)
                 }
-                Text("\(quest.progress)/\(quest.total)")
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.qInkSoft)
-            }
+                .frame(width: 56, height: 56)
 
-            HStack(spacing: 4) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(quest.name)
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.white)
+                    Text("\(quest.progress) / \(quest.total)")
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.white.opacity(0.75))
+                }
+
+                Spacer()
+
                 if done {
-                    Image(systemName: "checkmark").font(.system(size: 12, weight: .heavy))
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundStyle(Color.qMint1)
+                        .shadow(color: Color.qMint2.opacity(0.4), radius: 0, x: 0, y: 2)
                 } else {
-                    Circle()
-                        .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 6))
-                        .frame(width: 12, height: 12)
+                    VStack(spacing: 2) {
+                        Circle()
+                            .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 8))
+                            .frame(width: 18, height: 18)
+                        Text("+\(quest.reward)")
+                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.qSun1)
+                    }
                 }
-                Text(done ? "Claim" : "\(quest.reward)")
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
             }
-            .foregroundStyle(done ? Color.white : Color.qGoldDeep)
-            .padding(.horizontal, 10).padding(.vertical, 6)
-            .background(
-                Capsule()
-                    .fill(done
-                        ? LinearGradient(colors: [Color.qMint1, Color.qMint2], startPoint: .top, endPoint: .bottom)
-                        : LinearGradient(colors: [Color(red: 1, green: 0.97, blue: 0.85), Color(red: 1, green: 0.89, blue: 0.60)], startPoint: .top, endPoint: .bottom)
-                    )
-                    .shadow(color: Color.black.opacity(0.18), radius: 0, x: 0, y: 2)
-            )
+
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 999)
+                    .fill(Color.white.opacity(0.25))
+                    .frame(height: 10)
+                GeometryReader { geo in
+                    RoundedRectangle(cornerRadius: 999)
+                        .fill(done
+                            ? LinearGradient(colors: [Color.qMint1, Color.qMint2], startPoint: .leading, endPoint: .trailing)
+                            : LinearGradient(colors: [Color.white.opacity(0.9), Color.white.opacity(0.65)], startPoint: .leading, endPoint: .trailing)
+                        )
+                        .frame(width: max(geo.size.width * pct, pct > 0 ? 10 : 0), height: 10)
+                }
+                .frame(height: 10)
+            }
         }
-        .padding(12)
+        .padding(18)
         .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color.qInk.opacity(0.05))
+            RoundedRectangle(cornerRadius: 22)
+                .fill(Color.white.opacity(0.18))
+                .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.white.opacity(0.35), lineWidth: 1))
         )
     }
 }
@@ -605,94 +769,207 @@ struct QuestsPopupSheet: View {
 
 struct ProfilePopupSheet: View {
     @AppStorage("SlideWords_BestScore") private var bestScore: Int = 0
-    @AppStorage("SlideWords_TotalXP") private var totalXP: Int = 0
+    @AppStorage("SlideWords_TotalXP")   private var totalXP: Int  = 0
+    @AppStorage("SlideWords_Coins")     private var coins: Int     = 125
+    @AppStorage("SlideWords_Streak")    private var streak: Int    = 7
     @Environment(\.dismiss) private var dismiss
 
     private let xpPerLevel = 500
-    private var level: Int { totalXP / xpPerLevel + 1 }
+    private var level: Int  { totalXP / xpPerLevel + 1 }
     private var xpInLevel: Int { totalXP % xpPerLevel }
     private var progress: Double { Double(xpInLevel) / Double(xpPerLevel) }
 
+    private struct Badge { let icon: String; let name: String; let unlocked: Bool; let color: [Color] }
+    private let badges: [Badge] = [
+        .init(icon: "star.fill",     name: "First Word",  unlocked: true,  color: [Color.qSun1, Color.qSun2]),
+        .init(icon: "flame.fill",    name: "On Fire",     unlocked: true,  color: [Color.qCoral1, Color.qCoral2]),
+        .init(icon: "trophy.fill",   name: "High Score",  unlocked: true,  color: [Color.qGrape1, Color.qGrape2]),
+        .init(icon: "bolt.fill",     name: "Blitz King",  unlocked: false, color: [Color.qSky1, Color.qSky2]),
+        .init(icon: "crown.fill",    name: "Word Master", unlocked: false, color: [Color.qMint1, Color.qMint2]),
+    ]
+
     var body: some View {
-        VStack(spacing: 16) {
-            Capsule()
-                .fill(Color.secondary.opacity(0.35))
-                .frame(width: 36, height: 4)
-                .padding(.top, 12)
+        ZStack {
+            LinearGradient(
+                stops: [
+                    .init(color: Color.qGrape2.opacity(0.9), location: 0),
+                    .init(color: Color.qBubble1.opacity(0.75), location: 0.45),
+                    .init(color: Color.qSun1.opacity(0.6), location: 1),
+                ],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
 
-            ZStack {
-                Circle()
-                    .fill(LinearGradient(colors: [Color.qBubble1, Color.qGrape1], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .shadow(color: Color.qInk.opacity(0.35), radius: 0, x: 0, y: 4)
-                Text("R")
-                    .font(.system(size: 36, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-                    .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 2)
-            }
-            .frame(width: 80, height: 80)
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Handle
+                    Capsule()
+                        .fill(Color.white.opacity(0.55))
+                        .frame(width: 36, height: 4)
+                        .padding(.top, 12)
+                        .padding(.bottom, 28)
 
-            VStack(spacing: 4) {
-                Text("Riley")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.qInk)
-                Text("Level \(level)")
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.qInkSoft)
-            }
+                    // Hero — avatar + name + level badge
+                    VStack(spacing: 14) {
+                        ZStack {
+                            Circle()
+                                .fill(LinearGradient(colors: [Color.qBubble1, Color.qGrape1], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                .shadow(color: Color.qInk.opacity(0.35), radius: 0, x: 0, y: 6)
+                                .shadow(color: Color.qGrape2.opacity(0.45), radius: 24, x: 0, y: 12)
+                            Text("R")
+                                .font(.system(size: 54, weight: .bold, design: .rounded))
+                                .foregroundStyle(.white)
+                                .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 2)
+                        }
+                        .frame(width: 114, height: 114)
+                        .floatingAnimation(delay: 0, duration: 3.2, distance: 5)
 
-            // XP Bar
-            VStack(spacing: 3) {
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 999)
-                        .fill(Color.qInk.opacity(0.10))
-                        .frame(height: 8)
-                    GeometryReader { geo in
-                        RoundedRectangle(cornerRadius: 999)
-                            .fill(LinearGradient(colors: [Color.qSun1, Color.qBubble2, Color.qGrape1], startPoint: .leading, endPoint: .trailing))
-                            .frame(width: max(geo.size.width * progress, progress > 0 ? 8 : 0), height: 8)
+                        VStack(spacing: 6) {
+                            Text("Riley")
+                                .font(.system(size: 30, weight: .bold, design: .rounded))
+                                .foregroundStyle(.white)
+                                .shadow(color: Color.qInk.opacity(0.35), radius: 0, x: 0, y: 2)
+                            Text("⚡  LEVEL \(level)")
+                                .font(.system(size: 12, weight: .heavy, design: .rounded))
+                                .tracking(1.2)
+                                .foregroundStyle(Color.white.opacity(0.95))
+                                .padding(.horizontal, 14).padding(.vertical, 5)
+                                .background(Capsule().fill(Color.white.opacity(0.22)))
+                        }
                     }
-                    .frame(height: 8)
-                }
-                HStack {
-                    Text("Lvl \(level)")
-                    Spacer()
-                    Text("\(xpInLevel) / \(xpPerLevel) xp")
-                }
-                .font(.system(size: 10, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.qInk.opacity(0.65))
-            }
-            .padding(.horizontal, 22)
+                    .padding(.bottom, 28)
 
-            // Stats grid
-            HStack(spacing: 0) {
-                profileStat(label: "Best", value: "\(bestScore)")
-                Divider().frame(height: 36).overlay(Color.qInk.opacity(0.15))
-                profileStat(label: "Games", value: "48")
-                Divider().frame(height: 36).overlay(Color.qInk.opacity(0.15))
-                profileStat(label: "Longest", value: "QUIBLY")
-            }
-            .padding(.horizontal, 22)
+                    // XP progress card
+                    VStack(spacing: 10) {
+                        HStack {
+                            Text("PROGRESS TO LEVEL \(level + 1)")
+                                .font(.system(size: 10, weight: .heavy, design: .rounded))
+                                .foregroundStyle(Color.white.opacity(0.85))
+                                .tracking(0.8)
+                            Spacer()
+                            Text("\(xpInLevel) / \(xpPerLevel) XP")
+                                .font(.system(size: 12, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.white.opacity(0.85))
+                        }
+                        ZStack(alignment: .leading) {
+                            RoundedRectangle(cornerRadius: 999)
+                                .fill(Color.white.opacity(0.25))
+                                .frame(height: 14)
+                            GeometryReader { geo in
+                                RoundedRectangle(cornerRadius: 999)
+                                    .fill(LinearGradient(colors: [Color.qSun1, Color.qBubble2, Color.qGrape1], startPoint: .leading, endPoint: .trailing))
+                                    .frame(width: max(geo.size.width * progress, progress > 0 ? 14 : 0), height: 14)
+                                    .shadow(color: Color.qBubble2.opacity(0.5), radius: 4, x: 0, y: 0)
+                            }
+                            .frame(height: 14)
+                        }
+                    }
+                    .padding(18)
+                    .background(
+                        RoundedRectangle(cornerRadius: 22)
+                            .fill(Color.white.opacity(0.18))
+                            .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.white.opacity(0.35), lineWidth: 1))
+                    )
+                    .padding(.horizontal, 22)
+                    .padding(.bottom, 18)
 
-            Button { dismiss() } label: {
-                Text("Close")
-                    .font(.system(size: 17, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.qInk)
+                    // Stats grid 2 × 3
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                        profileStatCard(icon: "trophy.fill",        iconColor: Color.qSun2,    label: "Best",    value: "\(bestScore)")
+                        profileStatCard(icon: "flame.fill",         iconColor: Color.qCoral1,  label: "Streak",  value: "\(streak)d")
+                        profileStatCard(icon: "circle.fill",        iconColor: Color.qSun1,    label: "Coins",   value: "\(coins)")
+                        profileStatCard(icon: "gamecontroller.fill", iconColor: Color.qGrape1, label: "Games",   value: "48")
+                        profileStatCard(icon: "text.word.spacing",  iconColor: Color.qMint2,   label: "Words",   value: "324")
+                        profileStatCard(icon: "textformat.size",    iconColor: Color.qBubble2, label: "Longest", value: "QUIBLY")
+                    }
+                    .padding(.horizontal, 22)
+                    .padding(.bottom, 20)
+
+                    // Achievements
+                    VStack(alignment: .leading, spacing: 14) {
+                        HStack {
+                            Text("ACHIEVEMENTS")
+                                .font(.system(size: 11, weight: .heavy, design: .rounded))
+                                .foregroundStyle(Color.white.opacity(0.85))
+                                .tracking(0.8)
+                            Spacer()
+                            Text("3 / 5 unlocked")
+                                .font(.system(size: 11, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Color.white.opacity(0.65))
+                        }
+                        HStack(spacing: 0) {
+                            ForEach(badges.indices, id: \.self) { i in
+                                badgeCell(badges[i])
+                            }
+                        }
+                    }
+                    .padding(18)
+                    .background(
+                        RoundedRectangle(cornerRadius: 22)
+                            .fill(Color.white.opacity(0.18))
+                            .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.white.opacity(0.35), lineWidth: 1))
+                    )
+                    .padding(.horizontal, 22)
+                    .padding(.bottom, 28)
+
+                    Button { dismiss() } label: {
+                        Text("Close Profile")
+                            .font(.system(size: 17, weight: .semibold, design: .rounded))
+                            .foregroundStyle(Color.qInk)
+                    }
+                    .buttonStyle(PuffyButtonStyle(variant: .ghost))
+                    .padding(.horizontal, 44)
+                    .padding(.bottom, 40)
+                }
             }
-            .buttonStyle(PuffyButtonStyle(variant: .ghost))
-            .padding(.horizontal, 22)
-            .padding(.bottom, 24)
         }
+        .presentationDetents([.large])
+        .presentationDragIndicator(.hidden)
     }
 
-    private func profileStat(label: String, value: String) -> some View {
-        VStack(spacing: 3) {
-            Text(label.uppercased())
-                .font(.system(size: 9, weight: .heavy, design: .rounded))
-                .foregroundStyle(Color.qInk.opacity(0.60))
-                .tracking(0.6)
+    private func profileStatCard(icon: String, iconColor: Color, label: String, value: String) -> some View {
+        VStack(spacing: 7) {
+            Image(systemName: icon)
+                .font(.system(size: 22, weight: .bold))
+                .foregroundStyle(iconColor)
             Text(value)
-                .font(.system(size: 18, weight: .semibold, design: .rounded))
-                .foregroundStyle(Color.qInk)
+                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+                .minimumScaleFactor(0.65)
+                .lineLimit(1)
+            Text(label)
+                .font(.system(size: 10, weight: .semibold, design: .rounded))
+                .foregroundStyle(Color.white.opacity(0.72))
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 16)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(Color.white.opacity(0.18))
+                .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white.opacity(0.32), lineWidth: 1))
+        )
+    }
+
+    private func badgeCell(_ badge: Badge) -> some View {
+        VStack(spacing: 6) {
+            ZStack {
+                Circle()
+                    .fill(badge.unlocked
+                        ? LinearGradient(colors: badge.color, startPoint: .top, endPoint: .bottom)
+                        : LinearGradient(colors: [Color.white.opacity(0.18), Color.white.opacity(0.08)], startPoint: .top, endPoint: .bottom)
+                    )
+                    .shadow(color: badge.unlocked ? badge.color.last!.opacity(0.45) : Color.clear, radius: 0, x: 0, y: 3)
+                Image(systemName: badge.unlocked ? badge.icon : "lock.fill")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(badge.unlocked ? .white : Color.white.opacity(0.35))
+            }
+            .frame(width: 48, height: 48)
+            Text(badge.name)
+                .font(.system(size: 9, weight: .semibold, design: .rounded))
+                .foregroundStyle(badge.unlocked ? Color.white.opacity(0.9) : Color.white.opacity(0.35))
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
         }
         .frame(maxWidth: .infinity)
     }

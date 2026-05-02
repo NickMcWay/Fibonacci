@@ -7,8 +7,12 @@ struct MenuView: View {
     @AppStorage("SlideWords_BestScore")         private var bestScore: Int    = 0
     @AppStorage("SlideWords_Coins")             private var coins: Int        = 125
     @AppStorage("SlideWords_Streak")            private var streak: Int       = 7
+    @AppStorage("SlideWords_TotalXP")           private var totalXP: Int      = 0
     @AppStorage("SlideWords_SelectedLanguage")  private var selectedLanguageRawValue: String = GameLanguage.english.rawValue
     @AppStorage("SlideWords_SelectedVariant")   private var selectedVariantRawValue:  Int    = BoardVariant.small.rawValue
+
+    private var profileLevel: Int { totalXP / 500 + 1 }
+    private var profileXPProgress: Double { Double(totalXP % 500) / 500.0 }
 
     @State private var selectedLanguage: GameLanguage = .english
     @State private var selectedVariant:  BoardVariant = .small
@@ -156,6 +160,15 @@ struct MenuView: View {
                             startPoint: .topLeading, endPoint: .bottomTrailing
                         ))
                         .shadow(color: Color.qInk.opacity(0.35), radius: 0, x: 0, y: 3)
+                    // XP ring around avatar
+                    Circle()
+                        .trim(from: 0, to: profileXPProgress)
+                        .stroke(
+                            LinearGradient(colors: [Color.qSun1, Color.qBubble2], startPoint: .leading, endPoint: .trailing),
+                            style: StrokeStyle(lineWidth: 3, lineCap: .round)
+                        )
+                        .rotationEffect(.degrees(-90))
+                        .frame(width: 44, height: 44)
                     Text("R")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundStyle(.white)
@@ -163,7 +176,7 @@ struct MenuView: View {
                 .frame(width: 40, height: 40)
 
                 VStack(alignment: .leading, spacing: 1) {
-                    Text("LVL 12")
+                    Text("LVL \(profileLevel)")
                         .font(.system(size: 9, weight: .heavy, design: .rounded))
                         .foregroundStyle(Color.white.opacity(0.85))
                         .tracking(0.6)
