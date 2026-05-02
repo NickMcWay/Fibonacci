@@ -84,11 +84,6 @@ struct SettingsView: View {
                         .foregroundStyle(Color.white)
                         .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 2)
                 }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    // Keep spacing symmetrical with a clear view matching the button size
-                    Color.clear.frame(width: 40, height: 40)
-                }
             }
         }
     }

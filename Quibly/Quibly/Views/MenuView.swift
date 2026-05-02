@@ -115,13 +115,11 @@ struct MenuView: View {
                             }
                         }
                         .padding(.horizontal, 16)
-                        .padding(.top, geo.safeAreaInsets.top + 8)
+                        .padding(.top, 40)
 
                     }
-                    .ignoresSafeArea(edges: .top)
                 }
             }
-            .navigationBarHidden(true)
             .onAppear {
                 audio.play()
                 selectedLanguage = GameLanguage(rawValue: selectedLanguageRawValue) ?? .english
