@@ -19,7 +19,8 @@ struct FibonacciApp: App {
 // Routes between the menu and the active game.
 struct ContentRouter: View {
     @State private var activeSettings: GameSettings? = nil
-    @AppStorage("SlideWords_DarkMode") private var darkMode: Bool = false
+    @AppStorage("SlideWords_DarkMode")       private var darkMode: Bool = false
+    @AppStorage("SlideWords_HasSeenTutorial") private var hasSeenTutorial: Bool = false
 
     var body: some View {
         Group {
@@ -46,5 +47,11 @@ struct ContentRouter: View {
             }
         }
         .preferredColorScheme(darkMode ? .dark : .light)
+        .fullScreenCover(isPresented: .init(
+            get: { !hasSeenTutorial },
+            set: { if !$0 { hasSeenTutorial = true } }
+        )) {
+            TutorialView(onDismiss: { hasSeenTutorial = true })
+        }
     }
 }
