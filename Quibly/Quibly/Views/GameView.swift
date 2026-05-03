@@ -85,6 +85,19 @@ struct GameView: View {
                         .padding(.horizontal)
                 }
 
+                // Score milestone toast
+                if vm.isNewPersonalBest && !vm.isGameOver {
+                    PersonalBestBanner()
+                        .allowsHitTesting(false)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                }
+                if let milestone = vm.currentMilestone {
+                    MilestoneToast(points: milestone)
+                        .id(milestone)
+                        .allowsHitTesting(false)
+                        .transition(.scale(scale: 0.7).combined(with: .opacity))
+                }
+
                 // Board cleared celebration
                 if vm.showEmptyBoardEffect {
                     BoardClearedCelebration()
@@ -100,8 +113,10 @@ struct GameView: View {
                 if showGameOverPopup {
                     GameOverPopup(
                         score: vm.score,
-                        words: vm.lastWords.count,
+                        words: vm.wordsFoundThisSession,
                         bestCombo: vm.comboCount,
+                        currentStreak: StreakManager.shared.currentStreak,
+                        streakJustExtended: vm.streakExtendedThisSession,
                         onMenu: {
                             showGameOverPopup = false
                             onReturnToMenu()
@@ -127,6 +142,8 @@ struct GameView: View {
             .animation(.easeOut(duration: 0.2), value: showPausePopup)
             .animation(.easeOut(duration: 0.2), value: showGameOverPopup)
             .animation(.easeInOut(duration: 0.25), value: vm.comboCount > 0)
+            .animation(.spring(response: 0.35, dampingFraction: 0.6), value: vm.currentMilestone)
+            .animation(.easeInOut(duration: 0.35), value: vm.isNewPersonalBest)
         }
         .ignoresSafeArea(edges: .top)
         .onAppear { audio.play() }
@@ -527,6 +544,89 @@ struct GameView: View {
     private func playWildAnimation() {
         withAnimation(.easeIn(duration: 0.12))        { wildFlash = 0.5 }
         withAnimation(.easeOut(duration: 0.4).delay(0.12)) { wildFlash = 0 }
+    }
+}
+
+// MARK: - Milestone Toast
+
+struct MilestoneToast: View {
+    let points: Int
+    @State private var visible = false
+
+    private var label: String {
+        points >= 1_000 ? "\(points / 1_000)K pts!" : "\(points) pts!"
+    }
+
+    var body: some View {
+        VStack {
+            HStack(spacing: 8) {
+                Image(systemName: "target")
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(Color.qGoldDeep)
+                Text(label)
+                    .font(.system(size: 16, weight: .heavy, design: .rounded))
+                    .foregroundStyle(Color.qGoldDeep)
+                Image(systemName: "star.fill")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(Color.qSun2)
+            }
+            .padding(.horizontal, 18).padding(.vertical, 10)
+            .background(
+                Capsule()
+                    .fill(LinearGradient(
+                        colors: [Color(red: 1, green: 0.97, blue: 0.85), Color.qSun1],
+                        startPoint: .top, endPoint: .bottom
+                    ))
+                    .overlay(Capsule().stroke(Color.white.opacity(0.8), lineWidth: 1.5))
+                    .shadow(color: Color(red: 0.71, green: 0.43, blue: 0).opacity(0.45), radius: 0, x: 0, y: 4)
+                    .shadow(color: Color(red: 0.71, green: 0.43, blue: 0).opacity(0.2), radius: 10, x: 0, y: 6)
+            )
+            .scaleEffect(visible ? 1.0 : 0.6)
+            .opacity(visible ? 1.0 : 0)
+
+            Spacer()
+        }
+        .padding(.top, 110)
+        .onAppear {
+            withAnimation(.spring(response: 0.32, dampingFraction: 0.58)) { visible = true }
+        }
+    }
+}
+
+// MARK: - Personal Best Banner
+
+struct PersonalBestBanner: View {
+    @State private var visible = false
+
+    var body: some View {
+        VStack {
+            HStack(spacing: 8) {
+                Image(systemName: "trophy.fill")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(Color.qGoldDeep)
+                Text("New Personal Best!")
+                    .font(.system(size: 15, weight: .heavy, design: .rounded))
+                    .foregroundStyle(Color.qGoldDeep)
+            }
+            .padding(.horizontal, 18).padding(.vertical, 10)
+            .background(
+                Capsule()
+                    .fill(LinearGradient(
+                        colors: [Color(red: 1, green: 0.97, blue: 0.85), Color.qSun1],
+                        startPoint: .top, endPoint: .bottom
+                    ))
+                    .overlay(Capsule().stroke(Color.white.opacity(0.8), lineWidth: 1.5))
+                    .shadow(color: Color(red: 0.71, green: 0.43, blue: 0).opacity(0.45), radius: 0, x: 0, y: 4)
+            )
+            .offset(y: visible ? 0 : -60)
+            .opacity(visible ? 1.0 : 0)
+
+            Spacer()
+        }
+        .padding(.top, 60)
+        .onAppear {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.65)) { visible = true }
+        }
     }
 }
 
