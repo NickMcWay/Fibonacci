@@ -15,7 +15,14 @@ final class GameViewModel: ObservableObject {
     @Published var tiles: [Tile] = []
     @Published var score: Int = 0
     @Published var bestScore: Int = 0
-    @Published var isGameOver: Bool = false
+    @Published var isGameOver: Bool = false {
+        didSet {
+            if isGameOver && !oldValue {
+                let played = UserDefaults.standard.integer(forKey: gamesPlayedKey) + 1
+                UserDefaults.standard.set(played, forKey: gamesPlayedKey)
+            }
+        }
+    }
     @Published var lastWords: [String] = []
     @Published var lastPointsEarned: Int = 0
     @Published var comboCount: Int = 0
@@ -76,6 +83,9 @@ final class GameViewModel: ObservableObject {
     private let bombChargesKey    = "SlideWords_BombCharges"
     private let shuffleChargesKey = "SlideWords_ShuffleCharges"
     private let wildChargesKey    = "SlideWords_WildCharges"
+    private let gamesPlayedKey    = "SlideWords_GamesPlayed"
+    private let totalWordsKey     = "SlideWords_TotalWords"
+    private let longestWordKey    = "SlideWords_LongestWord"
     private var pendingSwipeDirection: SwipeDirection = .left
     private var hintTimerTask: Task<Void, Never>?
 
@@ -308,6 +318,13 @@ final class GameViewModel: ObservableObject {
 
             lastWords = result.clearedWords
             comboCount = result.comboCount
+
+            let newTotal = UserDefaults.standard.integer(forKey: totalWordsKey) + result.clearedWords.count
+            UserDefaults.standard.set(newTotal, forKey: totalWordsKey)
+            let prevLongest = UserDefaults.standard.string(forKey: longestWordKey) ?? ""
+            if let best = result.clearedWords.max(by: { $0.count < $1.count }), best.count > prevLongest.count {
+                UserDefaults.standard.set(best.uppercased(), forKey: longestWordKey)
+            }
             coins += coinTilesUsed * coinPerCoinTile
 
             withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
@@ -379,6 +396,13 @@ final class GameViewModel: ObservableObject {
 
         lastWords = [word]
         comboCount = 0
+
+        let newTotal = UserDefaults.standard.integer(forKey: totalWordsKey) + 1
+        UserDefaults.standard.set(newTotal, forKey: totalWordsKey)
+        let prevLongest = UserDefaults.standard.string(forKey: longestWordKey) ?? ""
+        if resolvedWord.count > prevLongest.count {
+            UserDefaults.standard.set(resolvedWord.uppercased(), forKey: longestWordKey)
+        }
 
         withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
             syncTiles()
