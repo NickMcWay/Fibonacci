@@ -847,7 +847,7 @@ struct ProfilePopupSheet: View {
     @AppStorage("SlideWords_Streak")      private var streak:      Int    = 0
     @AppStorage("SlideWords_GamesPlayed") private var gamesPlayed: Int    = 0
     @AppStorage("SlideWords_TotalWords")  private var totalWords:  Int    = 0
-    @AppStorage("SlideWords_LongestWord") private var longestWord: String = ""
+    @AppStorage("SlideWords_BestWord") private var longestWord: String = ""
     @Environment(\.dismiss) private var dismiss
 
     private let xpPerLevel = 500
@@ -963,7 +963,7 @@ struct ProfilePopupSheet: View {
                         profileStatCard(icon: "circle.fill",        iconColor: Color.qSun1,    label: "Coins",   value: "\(coins)")
                         profileStatCard(icon: "gamecontroller.fill", iconColor: Color.qGrape1, label: "Games",   value: "\(gamesPlayed)")
                         profileStatCard(icon: "text.word.spacing",  iconColor: Color.qMint2,   label: "Words",   value: "\(totalWords)")
-                        profileStatCard(icon: "textformat.size",    iconColor: Color.qBubble2, label: "Longest", value: longestWord.isEmpty ? "—" : longestWord)
+                        profileStatCard(icon: "star.fill",          iconColor: Color.qBubble2, label: "Top Word", value: longestWord.isEmpty ? "—" : longestWord)
                     }
                     .padding(.horizontal, 22)
                     .padding(.bottom, 20)
