@@ -15,14 +15,7 @@ final class GameViewModel: ObservableObject {
     @Published var tiles: [Tile] = []
     @Published var score: Int = 0
     @Published var bestScore: Int = 0
-    @Published var isGameOver: Bool = false {
-        didSet {
-            if isGameOver && !oldValue {
-                let played = UserDefaults.standard.integer(forKey: gamesPlayedKey) + 1
-                UserDefaults.standard.set(played, forKey: gamesPlayedKey)
-            }
-        }
-    }
+    @Published var isGameOver: Bool = false
     @Published var lastWords: [String] = []
     @Published var lastPointsEarned: Int = 0
     @Published var comboCount: Int = 0
@@ -102,7 +95,7 @@ final class GameViewModel: ObservableObject {
     private let wildChargesKey    = "SlideWords_WildCharges"
     private let gamesPlayedKey    = "SlideWords_GamesPlayed"
     private let totalWordsKey     = "SlideWords_TotalWords"
-    private let longestWordKey    = "SlideWords_LongestWord"
+    private let bestWordKey       = "SlideWords_BestWord"
     private var pendingSwipeDirection: SwipeDirection = .left
     private var hintTimerTask: Task<Void, Never>?
 
@@ -151,6 +144,9 @@ final class GameViewModel: ObservableObject {
     func startNewGame() {
         blitzTimerTask?.cancel()
         blitzTimerTask = nil
+
+        let played = UserDefaults.standard.integer(forKey: gamesPlayedKey) + 1
+        UserDefaults.standard.set(played, forKey: gamesPlayedKey)
 
         board = BoardModel(size: settings.boardVariant.rawValue)
         score = 0
@@ -362,9 +358,11 @@ final class GameViewModel: ObservableObject {
 
             let newTotal = UserDefaults.standard.integer(forKey: totalWordsKey) + result.clearedWords.count
             UserDefaults.standard.set(newTotal, forKey: totalWordsKey)
-            let prevLongest = UserDefaults.standard.string(forKey: longestWordKey) ?? ""
-            if let best = result.clearedWords.max(by: { $0.count < $1.count }), best.count > prevLongest.count {
-                UserDefaults.standard.set(best.uppercased(), forKey: longestWordKey)
+            let prevBestWord = UserDefaults.standard.string(forKey: bestWordKey) ?? ""
+            let prevBestScore = GameEngine.wordScore(prevBestWord, language: settings.language)
+            if let best = result.clearedWords.max(by: { GameEngine.wordScore($0, language: settings.language) < GameEngine.wordScore($1, language: settings.language) }),
+               GameEngine.wordScore(best, language: settings.language) > prevBestScore {
+                UserDefaults.standard.set(best.uppercased(), forKey: bestWordKey)
             }
             coins += coinTilesUsed * coinPerCoinTile
             checkMilestones()
@@ -447,9 +445,9 @@ final class GameViewModel: ObservableObject {
 
         let newTotal = UserDefaults.standard.integer(forKey: totalWordsKey) + 1
         UserDefaults.standard.set(newTotal, forKey: totalWordsKey)
-        let prevLongest = UserDefaults.standard.string(forKey: longestWordKey) ?? ""
-        if resolvedWord.count > prevLongest.count {
-            UserDefaults.standard.set(resolvedWord.uppercased(), forKey: longestWordKey)
+        let prevBestWord = UserDefaults.standard.string(forKey: bestWordKey) ?? ""
+        if GameEngine.wordScore(resolvedWord, language: settings.language) > GameEngine.wordScore(prevBestWord, language: settings.language) {
+            UserDefaults.standard.set(resolvedWord.uppercased(), forKey: bestWordKey)
         }
 
         withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
