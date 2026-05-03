@@ -33,7 +33,7 @@ struct GameView: View {
                 VStack(spacing: 20) {
                     topBar
                         .padding(.horizontal, 16)
-                        .padding(.top, 40)
+                        .padding(.top, 56)
                         .padding(.bottom, 8)
                     
                         Spacer()
