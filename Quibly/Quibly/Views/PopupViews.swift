@@ -382,7 +382,7 @@ struct DailyRewardPopupSheet: View {
                         .frame(width: CGFloat.random(in: 4...8), height: CGFloat.random(in: 4...8))
                         .position(
                             x: CGFloat(i) / 12 * geo.size.width + CGFloat(i * 37 % 80) - 40,
-                            y: CGFloat(i * 73 % Int(geo.size.height))
+                            y: geo.size.height > 0 ? CGFloat(i * 73 % Int(geo.size.height)) : 0
                         )
                 }
             }
@@ -571,7 +571,7 @@ struct QuestsPopupSheet: View {
                         .frame(width: CGFloat.random(in: 4...8), height: CGFloat.random(in: 4...8))
                         .position(
                             x: CGFloat(i) / 12 * geo.size.width + CGFloat(i * 37 % 80) - 40,
-                            y: CGFloat(i * 73 % Int(geo.size.height))
+                            y: geo.size.height > 0 ? CGFloat(i * 73 % Int(geo.size.height)) : 0
                         )
                 }
             }
@@ -629,9 +629,15 @@ struct QuestsPopupSheet: View {
                                             : LinearGradient(colors: [Color.qInk.opacity(0.12), Color.qInk.opacity(0.06)], startPoint: .top, endPoint: .bottom)
                                         )
                                         .shadow(color: done ? Color.qMint2.opacity(0.4) : Color.clear, radius: 0, x: 0, y: 2)
-                                    Image(systemName: done ? "checkmark" : "\(i + 1)")
-                                        .font(.system(size: 11, weight: .heavy))
-                                        .foregroundStyle(done ? Color.white : Color.qInk)
+                                    if done {
+                                        Image(systemName: "checkmark")
+                                            .font(.system(size: 11, weight: .heavy))
+                                            .foregroundStyle(Color.white)
+                                    } else {
+                                        Text("\(i + 1)")
+                                            .font(.system(size: 11, weight: .heavy, design: .rounded))
+                                            .foregroundStyle(Color.qInk)
+                                    }
                                 }
                                 .frame(width: 28, height: 28)
                             }
@@ -811,7 +817,7 @@ struct ProfilePopupSheet: View {
                         .frame(width: CGFloat.random(in: 4...8), height: CGFloat.random(in: 4...8))
                         .position(
                             x: CGFloat(i) / 12 * geo.size.width + CGFloat(i * 37 % 80) - 40,
-                            y: CGFloat(i * 73 % Int(geo.size.height))
+                            y: geo.size.height > 0 ? CGFloat(i * 73 % Int(geo.size.height)) : 0
                         )
                 }
             }
