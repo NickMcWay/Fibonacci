@@ -49,6 +49,16 @@ final class GameViewModel: ObservableObject {
     @Published var isBombArmed: Bool = false
     @Published var isWildArmed: Bool = false
 
+    // Streak / session
+    @Published var wordsFoundThisSession: Int = 0
+    @Published var streakExtendedThisSession: Bool = false
+
+    // Score milestones (2048-style escalation)
+    @Published var currentMilestone: Int? = nil
+    @Published var isNewPersonalBest: Bool = false
+    private var lastTriggeredMilestone: Int = 0
+    private static let milestones = [100, 250, 500, 1_000, 2_000, 5_000]
+
     // Blitz mode
     @Published var timeRemaining: Int = 90
     private var blitzTimerTask: Task<Void, Never>?
@@ -154,6 +164,11 @@ final class GameViewModel: ObservableObject {
         showBoardFullWarning = false
         isBombArmed = false
         isWildArmed = false
+        wordsFoundThisSession = 0
+        streakExtendedThisSession = StreakManager.shared.recordPlay()
+        currentMilestone = nil
+        isNewPersonalBest = false
+        lastTriggeredMilestone = 0
         resetHintState()
 
         if settings.gameMode == .daily {
@@ -331,6 +346,7 @@ final class GameViewModel: ObservableObject {
             UserDefaults.standard.set(totalXP, forKey: totalXPKey)
 
             lastWords = result.clearedWords
+            wordsFoundThisSession += result.clearedWords.count
             comboCount = result.comboCount
 
             let newTotal = UserDefaults.standard.integer(forKey: totalWordsKey) + result.clearedWords.count
@@ -340,6 +356,7 @@ final class GameViewModel: ObservableObject {
                 UserDefaults.standard.set(best.uppercased(), forKey: longestWordKey)
             }
             coins += coinTilesUsed * coinPerCoinTile
+            checkMilestones()
 
             withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
                 syncTiles()
@@ -413,7 +430,9 @@ final class GameViewModel: ObservableObject {
         UserDefaults.standard.set(totalXP2, forKey: totalXPKey)
 
         lastWords = [word]
+        wordsFoundThisSession += 1
         comboCount = 0
+        checkMilestones()
 
         let newTotal = UserDefaults.standard.integer(forKey: totalWordsKey) + 1
         UserDefaults.standard.set(newTotal, forKey: totalWordsKey)
@@ -470,6 +489,25 @@ final class GameViewModel: ObservableObject {
 
         let letterMultiplier = max(1, resolved.count)
         return baseScore * letterMultiplier
+    }
+
+    // MARK: - Score Milestones
+
+    private func checkMilestones() {
+        if score > bestScore && !isNewPersonalBest {
+            isNewPersonalBest = true
+        }
+        for m in GameViewModel.milestones.reversed() {
+            if score >= m && lastTriggeredMilestone < m {
+                lastTriggeredMilestone = m
+                currentMilestone = m
+                Task {
+                    try? await Task.sleep(nanoseconds: 1_800_000_000)
+                    if currentMilestone == m { currentMilestone = nil }
+                }
+                break
+            }
+        }
     }
 
     // MARK: - Hint Timer
@@ -615,6 +653,7 @@ final class GameViewModel: ObservableObject {
             bestScore = score
             UserDefaults.standard.set(bestScore, forKey: bestScoreKey)
         }
+        checkMilestones()
 
         powerUpAnimation = .bomb
         withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {

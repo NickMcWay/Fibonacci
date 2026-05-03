@@ -12,6 +12,8 @@ struct GameOverPopup: View {
     let score: Int
     let words: Int
     let bestCombo: Int
+    let currentStreak: Int
+    let streakJustExtended: Bool
     let onMenu: () -> Void
     let onPlayAgain: () -> Void
 
@@ -65,24 +67,8 @@ struct GameOverPopup: View {
                             .fill(Color.white.opacity(0.65))
                     )
 
-                    // Coin earned chip
-                    HStack(spacing: 8) {
-                        Circle()
-                            .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 8))
-                            .frame(width: 16, height: 16)
-                        Text("+85 earned")
-                            .font(.system(size: 14, weight: .semibold, design: .rounded))
-                            .foregroundStyle(Color.qGoldDeep)
-                    }
-                    .padding(.horizontal, 14).padding(.vertical, 6)
-                    .background(
-                        Capsule()
-                            .fill(LinearGradient(
-                                colors: [Color(red: 1, green: 0.97, blue: 0.85), Color(red: 1, green: 0.89, blue: 0.60)],
-                                startPoint: .top, endPoint: .bottom
-                            ))
-                            .shadow(color: Color(red: 0.71, green: 0.43, blue: 0).opacity(0.3), radius: 0, x: 0, y: 2)
-                    )
+                    // Streak card
+                    streakCard
 
                     // Buttons
                     HStack(spacing: 8) {
@@ -123,6 +109,81 @@ struct GameOverPopup: View {
             .padding(.horizontal, 28)
             .transition(.scale(scale: 0.8).combined(with: .opacity))
             .animation(.spring(response: 0.38, dampingFraction: 0.65), value: true)
+        }
+    }
+
+    private var streakCard: some View {
+        let isMilestone = streakJustExtended && [3, 7, 14, 30, 100].contains(currentStreak)
+        return HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(LinearGradient(
+                        colors: streakJustExtended
+                            ? [Color.qSun1, Color.qSun2]
+                            : [Color(red: 1, green: 0.85, blue: 0.77), Color(red: 1, green: 0.72, blue: 0.53)],
+                        startPoint: .top, endPoint: .bottom
+                    ))
+                    .shadow(color: Color.qSun2.opacity(streakJustExtended ? 0.45 : 0.2), radius: 0, x: 0, y: 3)
+                Image(systemName: "flame.fill")
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundStyle(streakJustExtended ? Color.qGoldDeep : Color.white.opacity(0.75))
+            }
+            .frame(width: 48, height: 48)
+            .wiggle(active: isMilestone)
+
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 8) {
+                    Text("\(currentStreak) Day Streak")
+                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.qInk)
+                    if streakJustExtended {
+                        Text("+1")
+                            .font(.system(size: 11, weight: .heavy, design: .rounded))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 7).padding(.vertical, 3)
+                            .background(
+                                Capsule().fill(Color.qSun2)
+                                    .shadow(color: Color(red: 0.71, green: 0.27, blue: 0).opacity(0.4), radius: 0, x: 0, y: 2)
+                            )
+                    }
+                }
+                Group {
+                    if let label = milestoneLabel(currentStreak), streakJustExtended {
+                        Text(label).foregroundStyle(Color.qMint2)
+                    } else if streakJustExtended {
+                        Text("Keep the flame alive!").foregroundStyle(Color.qInkSoft)
+                    } else {
+                        Text("Play tomorrow to keep your streak").foregroundStyle(Color.qInkSoft)
+                    }
+                }
+                .font(.system(size: 12, weight: .semibold, design: .rounded))
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 14).padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(LinearGradient(
+                    colors: streakJustExtended
+                        ? [Color(red: 1, green: 0.97, blue: 0.85), Color(red: 1, green: 0.89, blue: 0.60)]
+                        : [Color.white.opacity(0.60), Color.white.opacity(0.45)],
+                    startPoint: .top, endPoint: .bottom
+                ))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(streakJustExtended ? Color.qSun1.opacity(0.5) : Color.qInk.opacity(0.12), lineWidth: 1)
+                )
+        )
+    }
+
+    private func milestoneLabel(_ streak: Int) -> String? {
+        switch streak {
+        case 3:   return "Hat-trick! 🎯"
+        case 7:   return "Week Warrior! ⚡"
+        case 14:  return "Fortnight Streak! 💪"
+        case 30:  return "Monthly Master! 👑"
+        case 100: return "Centurion! 🏆"
+        default:  return nil
         }
     }
 
