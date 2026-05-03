@@ -362,6 +362,22 @@ final class WordValidator {
         return WordMatch(word: resolved, positions: positions)
     }
 
+    /// Filters a list of matches so no two matches share a tile position.
+    /// Longer matches take priority; among equal-length matches the first one wins.
+    static func deduplicateMatches(_ matches: [WordMatch]) -> [WordMatch] {
+        let sorted = matches.sorted { $0.positions.count > $1.positions.count }
+        var claimed = Set<String>()
+        var result: [WordMatch] = []
+        for match in sorted {
+            let keys = match.positions.map { "\($0.row),\($0.col)" }
+            if keys.allSatisfy({ !claimed.contains($0) }) {
+                result.append(match)
+                keys.forEach { claimed.insert($0) }
+            }
+        }
+        return result
+    }
+
     static func hasMatch(in board: BoardModel, language: GameLanguage = .english) -> Bool {
         !findMatches(in: board, language: language).isEmpty
     }
