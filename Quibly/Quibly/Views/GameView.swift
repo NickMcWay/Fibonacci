@@ -201,7 +201,7 @@ struct GameView: View {
                 }
             }
             
-            if settings.gameMode == .blitz || settings.gameMode == .daily {
+            if settings.gameMode == .blitz || settings.gameMode == .daily || settings.gameMode == .swipeLimited {
                 modePill
             }
         }
@@ -210,17 +210,13 @@ struct GameView: View {
     // MARK: - Mode Pill
 
     private var modePill: some View {
-        let urgent = settings.gameMode == .blitz && vm.timeRemaining <= 15
+        let blitzUrgent = settings.gameMode == .blitz && vm.timeRemaining <= 15
+        let sprintUrgent = settings.gameMode == .swipeLimited && vm.swipesRemaining <= 5
+        let urgent = blitzUrgent || sprintUrgent
         return HStack(spacing: 6) {
             switch settings.gameMode {
             case .classic:
                 EmptyView()
-//                Image(systemName: "clock.fill")
-//                    .font(.system(size: 13, weight: .semibold))
-//                    .foregroundStyle(Color.qInk)
-//                Text("∞")
-//                    .font(.system(size: 14, weight: .semibold, design: .rounded))
-//                    .foregroundStyle(Color.qInk)
             case .blitz:
                 Image(systemName: "timer")
                     .font(.system(size: 13, weight: .semibold))
@@ -230,12 +226,6 @@ struct GameView: View {
                     .foregroundStyle(urgent ? Color.qCoral2 : Color.qInk)
             case .zen:
                 EmptyView()
-//                Image(systemName: "leaf.fill")
-//                    .font(.system(size: 13, weight: .semibold))
-//                    .foregroundStyle(Color.qMint2)
-//                Text("ZEN")
-//                    .font(.system(size: 14, weight: .semibold, design: .rounded))
-//                    .foregroundStyle(Color.qMint2)
             case .daily:
                 Image(systemName: "calendar")
                     .font(.system(size: 13, weight: .semibold))
@@ -243,13 +233,23 @@ struct GameView: View {
                 Text("TODAY")
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.qSun2)
+            case .swipeLimited:
+                Image(systemName: "arrow.trianglehead.2.clockwise")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(urgent ? Color.qCoral2 : Color.qInk)
+                Text("\(vm.swipesRemaining)")
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .foregroundStyle(urgent ? Color.qCoral2 : Color.qInk)
+                Text("left")
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(urgent ? Color.qCoral2.opacity(0.8) : Color.qInk.opacity(0.65))
             }
         }
         .padding(.horizontal, 12).padding(.vertical, 5)
         .background(
-                    Capsule()
-                        .fill(urgent ? Color.qCoral1.opacity(0.2) : Color.white.opacity(0.55))
-                        .overlay(Capsule().stroke(urgent ? Color.qCoral1.opacity(0.5) : Color.white.opacity(0.85), lineWidth: 1))
+            Capsule()
+                .fill(urgent ? Color.qCoral1.opacity(0.2) : Color.white.opacity(0.55))
+                .overlay(Capsule().stroke(urgent ? Color.qCoral1.opacity(0.5) : Color.white.opacity(0.85), lineWidth: 1))
         )
         .animation(.easeInOut(duration: 0.3), value: urgent)
     }
