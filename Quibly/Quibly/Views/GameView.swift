@@ -197,6 +197,11 @@ struct GameView: View {
             ) { count in vm.shopBuyWilds(count: count) }
             .presentationDetents([.height(360)])
         }
+        .onChange(of: showShop)          { _, showing in if showing { vm.cancelNoWordTimer() } }
+        .onChange(of: showBuyHintSheet)  { _, showing in if showing { vm.cancelNoWordTimer() } }
+        .onChange(of: showBuyShuffleSheet) { _, showing in if showing { vm.cancelNoWordTimer() } }
+        .onChange(of: showBuyBombSheet)  { _, showing in if showing { vm.cancelNoWordTimer() } }
+        .onChange(of: showBuyWildSheet)  { _, showing in if showing { vm.cancelNoWordTimer() } }
     }
 
     // MARK: - Top Bar
