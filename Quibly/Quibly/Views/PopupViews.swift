@@ -855,14 +855,14 @@ struct ProfilePopupSheet: View {
     private var xpInLevel: Int { totalXP % xpPerLevel }
     private var progress: Double { Double(xpInLevel) / Double(xpPerLevel) }
 
-    private struct Badge { let icon: String; let name: String; let unlocked: Bool; let color: [Color] }
-    private let badges: [Badge] = [
-        .init(icon: "star.fill",     name: "First Word",  unlocked: true,  color: [Color.qSun1, Color.qSun2]),
-        .init(icon: "flame.fill",    name: "On Fire",     unlocked: true,  color: [Color.qCoral1, Color.qCoral2]),
-        .init(icon: "trophy.fill",   name: "High Score",  unlocked: true,  color: [Color.qGrape1, Color.qGrape2]),
-        .init(icon: "bolt.fill",     name: "Blitz King",  unlocked: false, color: [Color.qSky1, Color.qSky2]),
-        .init(icon: "crown.fill",    name: "Word Master", unlocked: false, color: [Color.qMint1, Color.qMint2]),
-    ]
+    private struct Badge { let icon: String; let name: String; let unlocked: Bool; let color: [Color]; let hint: String }
+    private var badges: [Badge] {[
+        .init(icon: "star.fill",   name: "First Word",  unlocked: totalWords >= 1,    color: [Color.qSun1,   Color.qSun2],   hint: "Play your first word"),
+        .init(icon: "flame.fill",  name: "On Fire",     unlocked: streak >= 3,         color: [Color.qCoral1, Color.qCoral2], hint: "3-day streak"),
+        .init(icon: "trophy.fill", name: "High Score",  unlocked: bestScore >= 500,    color: [Color.qGrape1, Color.qGrape2], hint: "Score 500+ pts"),
+        .init(icon: "bolt.fill",   name: "Blitz King",  unlocked: gamesPlayed >= 10,   color: [Color.qSky1,   Color.qSky2],   hint: "Play 10 games"),
+        .init(icon: "crown.fill",  name: "Word Master", unlocked: totalWords >= 100,   color: [Color.qMint1,  Color.qMint2],  hint: "Find 100 words"),
+    ]}
 
     var body: some View {
         ZStack {
@@ -976,7 +976,7 @@ struct ProfilePopupSheet: View {
                                 .foregroundStyle(Color.qInk.opacity(0.7))
                                 .tracking(0.8)
                             Spacer()
-                            Text("3 / 5 unlocked")
+                            Text("\(badges.filter(\.unlocked).count) / \(badges.count) unlocked")
                                 .font(.system(size: 11, weight: .semibold, design: .rounded))
                                 .foregroundStyle(Color.qInk.opacity(0.5))
                         }
@@ -1040,7 +1040,7 @@ struct ProfilePopupSheet: View {
                     .foregroundStyle(badge.unlocked ? .white : Color.qInk.opacity(0.35))
             }
             .frame(width: 48, height: 48)
-            Text(badge.name)
+            Text(badge.unlocked ? badge.name : badge.hint)
                 .font(.system(size: 9, weight: .semibold, design: .rounded))
                 .foregroundStyle(badge.unlocked ? Color.qInk : Color.qInk.opacity(0.35))
                 .multilineTextAlignment(.center)
