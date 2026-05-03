@@ -53,6 +53,10 @@ final class GameViewModel: ObservableObject {
     @Published var timeRemaining: Int = 90
     private var blitzTimerTask: Task<Void, Never>?
 
+    // Swipe-limited mode
+    @Published var swipesRemaining: Int = 30
+    let swipeLimitTotal: Int = 30
+
     // Hint system
     @Published var showHintButton: Bool = false
     @Published var showMatchHighlights: Bool = false
@@ -139,6 +143,7 @@ final class GameViewModel: ObservableObject {
         score = 0
         isGameOver = false
         timeRemaining = 90
+        swipesRemaining = swipeLimitTotal
         lastWords = []
         lastPointsEarned = 0
         comboCount = 0
@@ -235,6 +240,10 @@ final class GameViewModel: ObservableObject {
             return
         }
 
+        if settings.gameMode == .swipeLimited {
+            swipesRemaining = max(0, swipesRemaining - 1)
+        }
+
         isAnimating = true
         board = slideResult.board
 
@@ -247,6 +256,11 @@ final class GameViewModel: ObservableObject {
         Task {
             try? await Task.sleep(nanoseconds: 350_000_000)
             isAnimating = false
+
+            if settings.gameMode == .swipeLimited && swipesRemaining == 0 {
+                isGameOver = true
+                return
+            }
 
             if slideResult.spawnedPosition == nil {
                 if settings.gameMode != .zen && GameEngine.isGameOver(board: board) {
@@ -369,6 +383,10 @@ final class GameViewModel: ObservableObject {
             return
         }
 
+        if settings.gameMode == .swipeLimited {
+            swipesRemaining = max(0, swipesRemaining - 1)
+        }
+
         isAnimating = true
 
         let resolvedWord = WordValidator.resolveWord(for: word, language: settings.language) ?? word.lowercased()
@@ -420,7 +438,9 @@ final class GameViewModel: ObservableObject {
             try? await Task.sleep(nanoseconds: 120_000_000)
             isAnimating = false
 
-            if board.isEmpty {
+            if settings.gameMode == .swipeLimited && swipesRemaining == 0 {
+                isGameOver = true
+            } else if board.isEmpty {
                 triggerEmptyBoardEffect()
             } else if settings.gameMode != .zen && GameEngine.isGameOver(board: board) {
                 isGameOver = true

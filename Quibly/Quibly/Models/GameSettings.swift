@@ -102,6 +102,7 @@ enum GameMode {
     case zen
     case blitz
     case daily
+    case swipeLimited
 }
 
 // MARK: - Game Settings

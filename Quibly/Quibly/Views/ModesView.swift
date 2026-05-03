@@ -26,6 +26,7 @@ struct ModesView: View {
         .init(id: "blitz",     icon: "⚡", label: "Blitz",        desc: "90 seconds · score sprint",      gradient: [Color.qSky1, Color.qSky2],         locked: false, badge: "NEW",   unlock: nil),
         .init(id: "zen",       icon: "🍃", label: "Zen",          desc: "No game-over · just vibes",      gradient: [Color.qMint1, Color.qMint2],       locked: false, badge: nil,     unlock: nil),
         .init(id: "daily",     icon: "📅", label: "Daily Puzzle", desc: "Same board worldwide",           gradient: [Color.qSun1, Color(red: 1, green: 0.69, blue: 0.23)], locked: false, badge: "TODAY", unlock: nil),
+        .init(id: "sprint",    icon: "🎯", label: "Sprint",       desc: "30 moves · max score",           gradient: [Color(red: 0.38, green: 0.88, blue: 0.82), Color(red: 0.10, green: 0.68, blue: 0.72)], locked: false, badge: "NEW",   unlock: nil),
         .init(id: "duel",      icon: "⚔️", label: "Duel",         desc: "Async vs. friends",              gradient: [Color.qCoral1, Color.qCoral2],     locked: true,  badge: nil,     unlock: "Lvl 15"),
     ]
 
@@ -33,10 +34,11 @@ struct ModesView: View {
 
     private var derivedGameMode: GameMode {
         switch selectedModeId {
-        case "blitz": return .blitz
-        case "zen":   return .zen
-        case "daily": return .daily
-        default:      return .classic
+        case "blitz":  return .blitz
+        case "zen":    return .zen
+        case "daily":  return .daily
+        case "sprint": return .swipeLimited
+        default:       return .classic
         }
     }
 
@@ -160,13 +162,13 @@ struct ModesView: View {
             .padding(.horizontal, 2)
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                ForEach(modes.dropLast(), id: \.id) { mode in
+                ForEach(modes.prefix(4), id: \.id) { mode in
                     modeTile(mode)
                 }
             }
 
-            if let last = modes.last {
-                modeTile(last, fullWidth: true)
+            ForEach(modes.dropFirst(4), id: \.id) { mode in
+                modeTile(mode, fullWidth: true)
             }
         }
         .padding(12)
@@ -184,6 +186,7 @@ struct ModesView: View {
             case "challenge": selectedVariant = .large
             case "blitz":     selectedVariant = .small
             case "daily":     selectedVariant = .small
+            case "sprint":    selectedVariant = .small
             default: break
             }
         } label: {
