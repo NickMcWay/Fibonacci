@@ -165,7 +165,7 @@ struct GameView: View {
             }
         }
         .fullScreenCover(isPresented: $showShop, onDismiss: { vm.syncFromDefaults() }) { ShopView(onBack: { showShop = false }) }
-        .sheet(isPresented: $showBuyHintSheet) {
+        .sheet(isPresented: $showBuyHintSheet, onDismiss: { vm.resumeNoWordTimer() }) {
             BuyChargePopupSheet(
                 powerUpName: "Hint", icon: "lightbulb.fill",
                 iconGradient: [Color.qSun1, Color.qSun2],
@@ -173,7 +173,7 @@ struct GameView: View {
             ) { count in vm.shopBuyHints(count: count) }
             .presentationDetents([.height(360)])
         }
-        .sheet(isPresented: $showBuyShuffleSheet) {
+        .sheet(isPresented: $showBuyShuffleSheet, onDismiss: { vm.resumeNoWordTimer() }) {
             BuyChargePopupSheet(
                 powerUpName: "Shuffle", icon: "shuffle",
                 iconGradient: [Color.qSky1, Color.qSky2],
@@ -181,7 +181,7 @@ struct GameView: View {
             ) { count in vm.shopBuyShuffles(count: count) }
             .presentationDetents([.height(360)])
         }
-        .sheet(isPresented: $showBuyBombSheet) {
+        .sheet(isPresented: $showBuyBombSheet, onDismiss: { vm.resumeNoWordTimer() }) {
             BuyChargePopupSheet(
                 powerUpName: "Bomb", icon: "burst.fill",
                 iconGradient: [Color.qCoral1, Color.qCoral2],
@@ -189,7 +189,7 @@ struct GameView: View {
             ) { count in vm.shopBuyBombs(count: count) }
             .presentationDetents([.height(360)])
         }
-        .sheet(isPresented: $showBuyWildSheet) {
+        .sheet(isPresented: $showBuyWildSheet, onDismiss: { vm.resumeNoWordTimer() }) {
             BuyChargePopupSheet(
                 powerUpName: "Joker", icon: "wand.and.stars",
                 iconGradient: [Color.qGrape1, Color.qGrape2],
@@ -197,11 +197,11 @@ struct GameView: View {
             ) { count in vm.shopBuyWilds(count: count) }
             .presentationDetents([.height(360)])
         }
-        .onChange(of: showShop)          { _, showing in if showing { vm.cancelNoWordTimer() } }
-        .onChange(of: showBuyHintSheet)  { _, showing in if showing { vm.cancelNoWordTimer() } }
-        .onChange(of: showBuyShuffleSheet) { _, showing in if showing { vm.cancelNoWordTimer() } }
-        .onChange(of: showBuyBombSheet)  { _, showing in if showing { vm.cancelNoWordTimer() } }
-        .onChange(of: showBuyWildSheet)  { _, showing in if showing { vm.cancelNoWordTimer() } }
+        .onChange(of: showShop)            { _, showing in if showing { vm.cancelNoWordTimer() } }
+        .onChange(of: showBuyHintSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: showBuyShuffleSheet) { _, showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: showBuyBombSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: showBuyWildSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
     }
 
     // MARK: - Top Bar

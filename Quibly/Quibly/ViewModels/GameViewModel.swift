@@ -69,6 +69,10 @@ final class GameViewModel: ObservableObject {
     // No-word countdown (10 s idle → 5 s visible → game over)
     @Published var noWordCountdown: Int? = nil
     private var noWordTimerTask: Task<Void, Never>?
+    private var noWordTimerPhaseStart: Date? = nil
+    private var noWordTimerIsPaused: Bool = false
+    private var noWordPausedRemainingNanos: UInt64? = nil
+    private var noWordPausedCountdown: Int? = nil
 
     // Hint system
     @Published var showHintButton: Bool = false
@@ -552,11 +556,64 @@ final class GameViewModel: ObservableObject {
         noWordTimerTask?.cancel()
         noWordTimerTask = nil
         noWordCountdown = nil
+        noWordTimerPhaseStart = nil
+        noWordTimerIsPaused = false
+        noWordPausedRemainingNanos = nil
+        noWordPausedCountdown = nil
+    }
+
+    func pauseNoWordTimer() {
+        guard noWordTimerTask != nil || noWordTimerIsPaused else { return }
+        guard !noWordTimerIsPaused else { return }
+        noWordTimerIsPaused = true
+        noWordTimerTask?.cancel()
+        noWordTimerTask = nil
+        if let countdown = noWordCountdown {
+            noWordPausedCountdown = countdown
+            noWordPausedRemainingNanos = nil
+        } else if let start = noWordTimerPhaseStart {
+            let elapsed = UInt64(max(0, Date().timeIntervalSince(start)) * 1_000_000_000)
+            noWordPausedRemainingNanos = elapsed < 10_000_000_000 ? 10_000_000_000 - elapsed : 0
+            noWordPausedCountdown = nil
+        }
+    }
+
+    func resumeNoWordTimer() {
+        guard noWordTimerIsPaused else { return }
+        noWordTimerIsPaused = false
+        let remainingNanos = noWordPausedRemainingNanos ?? 0
+        let startCountdown = noWordPausedCountdown
+        noWordPausedRemainingNanos = nil
+        noWordPausedCountdown = nil
+        noWordTimerTask = Task {
+            do {
+                if let fromCountdown = startCountdown {
+                    for seconds in stride(from: fromCountdown, through: 1, by: -1) {
+                        guard !Task.isCancelled else { return }
+                        noWordCountdown = seconds
+                        try await Task.sleep(nanoseconds: 1_000_000_000)
+                    }
+                } else {
+                    if remainingNanos > 0 {
+                        try await Task.sleep(nanoseconds: remainingNanos)
+                    }
+                    for seconds in stride(from: 5, through: 1, by: -1) {
+                        guard !Task.isCancelled else { return }
+                        noWordCountdown = seconds
+                        try await Task.sleep(nanoseconds: 1_000_000_000)
+                    }
+                }
+                guard !Task.isCancelled else { return }
+                noWordCountdown = nil
+                isGameOver = true
+            } catch {}
+        }
     }
 
     private func startNoWordTimer() {
         guard settings.gameMode != .zen else { return }
         cancelNoWordTimer()
+        noWordTimerPhaseStart = Date()
         noWordTimerTask = Task {
             do {
                 try await Task.sleep(nanoseconds: 10_000_000_000)
