@@ -171,8 +171,8 @@ struct PausePopup: View {
 
                     Button(action: onRestart) {
                         HStack(spacing: 8) {
-                            Image(systemName: "shuffle").font(.system(size: 14, weight: .bold)).foregroundStyle(Color.qInk)
-                            Text("Restart").font(.system(size: 18, weight: .semibold, design: .rounded)).foregroundStyle(Color.qInk)
+                            Image(systemName: "shuffle").font(.system(size: 14, weight: .bold)).foregroundStyle(Color.white)
+                            Text("Restart").font(.system(size: 18, weight: .semibold, design: .rounded)).foregroundStyle(Color.white)
                         }
                     }
                     .buttonStyle(PuffyButtonStyle(variant: .grape))
@@ -368,20 +368,31 @@ struct DailyRewardPopupSheet: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                stops: [
-                    .init(color: Color.qBubble2.opacity(0.85), location: 0),
-                    .init(color: Color.qBubble1.opacity(0.8),  location: 0.4),
-                    .init(color: Color.qSun1.opacity(0.75),    location: 1),
-                ],
-                startPoint: .topLeading, endPoint: .bottomTrailing
+                colors: [Color(red: 0.93, green: 0.89, blue: 1.0),
+                         Color(red: 1.0, green: 0.88, blue: 0.93),
+                         Color(red: 1.0, green: 0.95, blue: 0.85)],
+                startPoint: .top, endPoint: .bottom
             )
             .ignoresSafeArea()
+
+            GeometryReader { geo in
+                ForEach(0..<12, id: \.self) { i in
+                    Circle()
+                        .fill(Color.white.opacity(0.7))
+                        .frame(width: CGFloat.random(in: 4...8), height: CGFloat.random(in: 4...8))
+                        .position(
+                            x: CGFloat(i) / 12 * geo.size.width + CGFloat(i * 37 % 80) - 40,
+                            y: CGFloat(i * 73 % Int(geo.size.height))
+                        )
+                }
+            }
+            .allowsHitTesting(false)
 
             ScrollView {
                 VStack(spacing: 0) {
                     // Handle
                     Capsule()
-                        .fill(Color.white.opacity(0.55))
+                        .fill(Color.qInk.opacity(0.2))
                         .frame(width: 36, height: 4)
                         .padding(.top, 12)
                         .padding(.bottom, 24)
@@ -407,15 +418,15 @@ struct DailyRewardPopupSheet: View {
                     VStack(spacing: 6) {
                         Text("Daily Reward")
                             .font(.system(size: 32, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .shadow(color: Color.qInk.opacity(0.25), radius: 0, x: 0, y: 2)
+                            .foregroundStyle(Color.qInk)
+                            .shadow(color: Color.qInk.opacity(0.12), radius: 0, x: 0, y: 2)
                         HStack(spacing: 6) {
                             Image(systemName: "flame.fill")
                                 .font(.system(size: 13, weight: .bold))
                                 .foregroundStyle(Color.qSun2)
                             Text("Day 3 · Keep your streak alive!")
                                 .font(.system(size: 14, weight: .semibold, design: .rounded))
-                                .foregroundStyle(Color.qInk.opacity(0.88))
+                                .foregroundStyle(Color.qInk.opacity(0.7))
                         }
                     }
                     .padding(.bottom, 28)
@@ -446,20 +457,16 @@ struct DailyRewardPopupSheet: View {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("Today's Reward")
                                 .font(.system(size: 13, weight: .heavy, design: .rounded))
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color.qInk)
                                 .tracking(0.3)
                             Text("+75 coins + 1 Hint power-up")
                                 .font(.system(size: 12, weight: .semibold, design: .rounded))
-                                .foregroundStyle(Color.qInk.opacity(0.85))
+                                .foregroundStyle(Color.qInk.opacity(0.7))
                         }
                         Spacer()
                     }
                     .padding(14)
-                    .background(
-                        RoundedRectangle(cornerRadius: 18)
-                            .fill(Color.white.opacity(0.2))
-                            .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white.opacity(0.4), lineWidth: 1))
-                    )
+                    .qCard(cornerRadius: 18)
                     .padding(.horizontal, 22)
                     .padding(.bottom, 22)
 
@@ -488,7 +495,7 @@ struct DailyRewardPopupSheet: View {
         VStack(spacing: 6) {
             Text("Day \(day.n)")
                 .font(.system(size: 9, weight: .heavy, design: .rounded))
-                .foregroundStyle(day.today ? Color.qInk : Color.qInk.opacity(0.60))
+                .foregroundStyle(day.today ? Color.white : Color.qInk.opacity(0.60))
                 .tracking(0.3)
 
             if let icon = day.icon {
@@ -499,7 +506,7 @@ struct DailyRewardPopupSheet: View {
             } else {
                 Text(day.reward)
                     .font(.system(size: 14, weight: .bold, design: .rounded))
-                    .foregroundStyle(day.today ? Color.qInk : Color.qInk)
+                    .foregroundStyle(day.today ? Color.white : Color.qInk)
                     .shadow(color: day.today ? Color.qGoldDeep.opacity(0.4) : Color.clear, radius: 0, x: 0, y: 1)
             }
         }
@@ -550,20 +557,31 @@ struct QuestsPopupSheet: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                stops: [
-                    .init(color: Color(red: 0.40, green: 0.82, blue: 0.62), location: 0),
-                    .init(color: Color.qBubble1.opacity(0.85), location: 0.5),
-                    .init(color: Color.qSun1.opacity(0.7), location: 1),
-                ],
-                startPoint: .topLeading, endPoint: .bottomTrailing
+                colors: [Color(red: 0.93, green: 0.89, blue: 1.0),
+                         Color(red: 1.0, green: 0.88, blue: 0.93),
+                         Color(red: 1.0, green: 0.95, blue: 0.85)],
+                startPoint: .top, endPoint: .bottom
             )
             .ignoresSafeArea()
+
+            GeometryReader { geo in
+                ForEach(0..<12, id: \.self) { i in
+                    Circle()
+                        .fill(Color.white.opacity(0.7))
+                        .frame(width: CGFloat.random(in: 4...8), height: CGFloat.random(in: 4...8))
+                        .position(
+                            x: CGFloat(i) / 12 * geo.size.width + CGFloat(i * 37 % 80) - 40,
+                            y: CGFloat(i * 73 % Int(geo.size.height))
+                        )
+                }
+            }
+            .allowsHitTesting(false)
 
             ScrollView {
                 VStack(spacing: 0) {
                     // Handle
                     Capsule()
-                        .fill(Color.white.opacity(0.55))
+                        .fill(Color.qInk.opacity(0.2))
                         .frame(width: 36, height: 4)
                         .padding(.top, 12)
                         .padding(.bottom, 22)
@@ -574,16 +592,16 @@ struct QuestsPopupSheet: View {
                             Text("Daily Quests")
                                 .font(.system(size: 30, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.qInk)
-                                .shadow(color: Color.qInk.opacity(0.25), radius: 0, x: 0, y: 2)
+                                .shadow(color: Color.qInk.opacity(0.12), radius: 0, x: 0, y: 2)
                             Text("Resets in 6h 42m")
                                 .font(.system(size: 13, weight: .semibold, design: .rounded))
-                                .foregroundStyle(Color.qInk.opacity(0.8))
+                                .foregroundStyle(Color.qInk.opacity(0.6))
                         }
                         Spacer()
                         Button { dismiss() } label: {
                             Image(systemName: "xmark.circle.fill")
                                 .font(.system(size: 28))
-                                .foregroundStyle(Color.white.opacity(0.65))
+                                .foregroundStyle(Color.qInk.opacity(0.65))
                         }
                         .buttonStyle(.plain)
                     }
@@ -598,7 +616,7 @@ struct QuestsPopupSheet: View {
                                 .foregroundStyle(Color.qInk)
                             Text("Today's challenges")
                                 .font(.system(size: 12, weight: .semibold, design: .rounded))
-                                .foregroundStyle(Color.qInk.opacity(0.8))
+                                .foregroundStyle(Color.qInk.opacity(0.6))
                         }
                         Spacer()
                         HStack(spacing: 10) {
@@ -608,23 +626,19 @@ struct QuestsPopupSheet: View {
                                     Circle()
                                         .fill(done
                                             ? LinearGradient(colors: [Color.qMint1, Color.qMint2], startPoint: .top, endPoint: .bottom)
-                                            : LinearGradient(colors: [Color.white.opacity(0.3), Color.white.opacity(0.15)], startPoint: .top, endPoint: .bottom)
+                                            : LinearGradient(colors: [Color.qInk.opacity(0.12), Color.qInk.opacity(0.06)], startPoint: .top, endPoint: .bottom)
                                         )
                                         .shadow(color: done ? Color.qMint2.opacity(0.4) : Color.clear, radius: 0, x: 0, y: 2)
                                     Image(systemName: done ? "checkmark" : "\(i + 1)")
                                         .font(.system(size: 11, weight: .heavy))
-                                        .foregroundStyle(.white)
+                                        .foregroundStyle(done ? Color.white : Color.qInk)
                                 }
                                 .frame(width: 28, height: 28)
                             }
                         }
                     }
                     .padding(18)
-                    .background(
-                        RoundedRectangle(cornerRadius: 22)
-                            .fill(Color.white.opacity(0.2))
-                            .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.white.opacity(0.4), lineWidth: 1))
-                    )
+                    .qCard(cornerRadius: 22)
                     .padding(.horizontal, 22)
                     .padding(.bottom, 20)
 
@@ -641,7 +655,7 @@ struct QuestsPopupSheet: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("WEEKLY CHEST")
                             .font(.system(size: 11, weight: .heavy, design: .rounded))
-                            .foregroundStyle(Color.qInk.opacity(0.85))
+                            .foregroundStyle(Color.qInk.opacity(0.7))
                             .tracking(0.8)
                             .padding(.horizontal, 2)
 
@@ -663,10 +677,10 @@ struct QuestsPopupSheet: View {
                                     .foregroundStyle(Color.qInk)
                                 Text("21 of 30 weekly quests done")
                                     .font(.system(size: 11, weight: .medium, design: .rounded))
-                                    .foregroundStyle(Color.qInk.opacity(0.75))
+                                    .foregroundStyle(Color.qInk.opacity(0.6))
                                 ZStack(alignment: .leading) {
                                     RoundedRectangle(cornerRadius: 999)
-                                        .fill(Color.white.opacity(0.25))
+                                        .fill(Color.qInk.opacity(0.12))
                                         .frame(height: 8)
                                     GeometryReader { geo in
                                         RoundedRectangle(cornerRadius: 999)
@@ -683,11 +697,7 @@ struct QuestsPopupSheet: View {
                         }
                     }
                     .padding(18)
-                    .background(
-                        RoundedRectangle(cornerRadius: 22)
-                            .fill(Color.white.opacity(0.18))
-                            .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.white.opacity(0.35), lineWidth: 1))
-                    )
+                    .qCard(cornerRadius: 22)
                     .padding(.horizontal, 22)
                     .padding(.bottom, 36)
                 }
@@ -719,7 +729,7 @@ struct QuestsPopupSheet: View {
                         .foregroundStyle(Color.qInk)
                     Text("\(quest.progress) / \(quest.total)")
                         .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.qInk.opacity(0.75))
+                        .foregroundStyle(Color.qInk.opacity(0.6))
                 }
 
                 Spacer()
@@ -736,28 +746,20 @@ struct QuestsPopupSheet: View {
                             .frame(width: 18, height: 18)
                         Text("+\(quest.reward)")
                             .font(.system(size: 13, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.qSun1)
+                            .foregroundStyle(Color.qGoldDeep)
                     }
                 }
             }
 
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 999)
-                    .fill(Color.white.opacity(0.25))
+                    .fill(Color.qInk.opacity(0.12))
                     .frame(height: 10)
                 GeometryReader { geo in
                     RoundedRectangle(cornerRadius: 999)
-                        .fill(
-                            done
-                                ? LinearGradient(colors: [Color.qMint1, Color.qMint2], startPoint: .leading, endPoint: .trailing)
-                                : LinearGradient(
-                                    colors: [
-                                        (quest.color.first ?? .white).opacity(0.9),
-                                        (quest.color.last  ?? .white).opacity(0.65)
-                                    ],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
+                        .fill(done
+                            ? LinearGradient(colors: [Color.qMint1, Color.qMint2], startPoint: .leading, endPoint: .trailing)
+                            : LinearGradient(colors: [Color.qGrape1.opacity(0.7), Color.qGrape2.opacity(0.7)], startPoint: .leading, endPoint: .trailing)
                         )
                         .frame(width: max(geo.size.width * pct, pct > 0 ? 10 : 0), height: 10)
                 }
@@ -765,11 +767,7 @@ struct QuestsPopupSheet: View {
             }
         }
         .padding(18)
-        .background(
-            RoundedRectangle(cornerRadius: 22)
-                .fill(Color.white.opacity(0.18))
-                .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.white.opacity(0.35), lineWidth: 1))
-        )
+        .qCard(cornerRadius: 22)
     }
 }
 
@@ -799,20 +797,31 @@ struct ProfilePopupSheet: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                stops: [
-                    .init(color: Color.qGrape2.opacity(0.9), location: 0),
-                    .init(color: Color.qBubble1.opacity(0.75), location: 0.45),
-                    .init(color: Color.qSun1.opacity(0.6), location: 1),
-                ],
-                startPoint: .topLeading, endPoint: .bottomTrailing
+                colors: [Color(red: 0.93, green: 0.89, blue: 1.0),
+                         Color(red: 1.0, green: 0.88, blue: 0.93),
+                         Color(red: 1.0, green: 0.95, blue: 0.85)],
+                startPoint: .top, endPoint: .bottom
             )
             .ignoresSafeArea()
+
+            GeometryReader { geo in
+                ForEach(0..<12, id: \.self) { i in
+                    Circle()
+                        .fill(Color.white.opacity(0.7))
+                        .frame(width: CGFloat.random(in: 4...8), height: CGFloat.random(in: 4...8))
+                        .position(
+                            x: CGFloat(i) / 12 * geo.size.width + CGFloat(i * 37 % 80) - 40,
+                            y: CGFloat(i * 73 % Int(geo.size.height))
+                        )
+                }
+            }
+            .allowsHitTesting(false)
 
             ScrollView {
                 VStack(spacing: 0) {
                     // Handle
                     Capsule()
-                        .fill(Color.white.opacity(0.55))
+                        .fill(Color.qInk.opacity(0.2))
                         .frame(width: 36, height: 4)
                         .padding(.top, 12)
                         .padding(.bottom, 28)
@@ -835,14 +844,14 @@ struct ProfilePopupSheet: View {
                         VStack(spacing: 6) {
                             Text("Riley")
                                 .font(.system(size: 30, weight: .bold, design: .rounded))
-                                .foregroundStyle(.white)
-                                .shadow(color: Color.qInk.opacity(0.35), radius: 0, x: 0, y: 2)
+                                .foregroundStyle(Color.qInk)
+                                .shadow(color: Color.qInk.opacity(0.12), radius: 0, x: 0, y: 2)
                             Text("⚡  LEVEL \(level)")
                                 .font(.system(size: 12, weight: .heavy, design: .rounded))
                                 .tracking(1.2)
-                                .foregroundStyle(Color.qInk.opacity(0.95))
+                                .foregroundStyle(Color.qInk)
                                 .padding(.horizontal, 14).padding(.vertical, 5)
-                                .background(Capsule().fill(Color.white.opacity(0.22)))
+                                .background(Capsule().fill(Color.qInk.opacity(0.08)))
                         }
                     }
                     .padding(.bottom, 28)
@@ -852,16 +861,16 @@ struct ProfilePopupSheet: View {
                         HStack {
                             Text("PROGRESS TO LEVEL \(level + 1)")
                                 .font(.system(size: 10, weight: .heavy, design: .rounded))
-                                .foregroundStyle(Color.qInk.opacity(0.85))
+                                .foregroundStyle(Color.qInk.opacity(0.7))
                                 .tracking(0.8)
                             Spacer()
                             Text("\(xpInLevel) / \(xpPerLevel) XP")
                                 .font(.system(size: 12, weight: .bold, design: .rounded))
-                                .foregroundStyle(Color.qInk.opacity(0.85))
+                                .foregroundStyle(Color.qInk.opacity(0.7))
                         }
                         ZStack(alignment: .leading) {
                             RoundedRectangle(cornerRadius: 999)
-                                .fill(Color.white.opacity(0.25))
+                                .fill(Color.qInk.opacity(0.12))
                                 .frame(height: 14)
                             GeometryReader { geo in
                                 RoundedRectangle(cornerRadius: 999)
@@ -873,11 +882,7 @@ struct ProfilePopupSheet: View {
                         }
                     }
                     .padding(18)
-                    .background(
-                        RoundedRectangle(cornerRadius: 22)
-                            .fill(Color.white.opacity(0.18))
-                            .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.white.opacity(0.35), lineWidth: 1))
-                    )
+                    .qCard(cornerRadius: 22)
                     .padding(.horizontal, 22)
                     .padding(.bottom, 18)
 
@@ -898,12 +903,12 @@ struct ProfilePopupSheet: View {
                         HStack {
                             Text("ACHIEVEMENTS")
                                 .font(.system(size: 11, weight: .heavy, design: .rounded))
-                                .foregroundStyle(Color.qInk.opacity(0.85))
+                                .foregroundStyle(Color.qInk.opacity(0.7))
                                 .tracking(0.8)
                             Spacer()
                             Text("3 / 5 unlocked")
                                 .font(.system(size: 11, weight: .semibold, design: .rounded))
-                                .foregroundStyle(Color.qInk.opacity(0.65))
+                                .foregroundStyle(Color.qInk.opacity(0.5))
                         }
                         HStack(spacing: 0) {
                             ForEach(badges.indices, id: \.self) { i in
@@ -912,11 +917,7 @@ struct ProfilePopupSheet: View {
                         }
                     }
                     .padding(18)
-                    .background(
-                        RoundedRectangle(cornerRadius: 22)
-                            .fill(Color.white.opacity(0.18))
-                            .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.white.opacity(0.35), lineWidth: 1))
-                    )
+                    .qCard(cornerRadius: 22)
                     .padding(.horizontal, 22)
                     .padding(.bottom, 28)
 
@@ -942,21 +943,17 @@ struct ProfilePopupSheet: View {
                 .foregroundStyle(iconColor)
             Text(value)
                 .font(.system(size: 18, weight: .bold, design: .rounded))
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.qInk)
                 .minimumScaleFactor(0.65)
                 .lineLimit(1)
             Text(label)
                 .font(.system(size: 10, weight: .semibold, design: .rounded))
-                .foregroundStyle(Color.white.opacity(0.72))
+                .foregroundStyle(Color.qInk.opacity(0.6))
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color.white.opacity(0.18))
-                .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white.opacity(0.32), lineWidth: 1))
-        )
+        .qCard(cornerRadius: 18)
     }
 
     private func badgeCell(_ badge: Badge) -> some View {
@@ -965,17 +962,17 @@ struct ProfilePopupSheet: View {
                 Circle()
                     .fill(badge.unlocked
                         ? LinearGradient(colors: badge.color, startPoint: .top, endPoint: .bottom)
-                        : LinearGradient(colors: [Color.white.opacity(0.18), Color.white.opacity(0.08)], startPoint: .top, endPoint: .bottom)
+                        : LinearGradient(colors: [Color.qInk.opacity(0.12), Color.qInk.opacity(0.06)], startPoint: .top, endPoint: .bottom)
                     )
                     .shadow(color: badge.unlocked ? badge.color.last!.opacity(0.45) : Color.clear, radius: 0, x: 0, y: 3)
                 Image(systemName: badge.unlocked ? badge.icon : "lock.fill")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(badge.unlocked ? .white : Color.white.opacity(0.35))
+                    .foregroundStyle(badge.unlocked ? .white : Color.qInk.opacity(0.35))
             }
             .frame(width: 48, height: 48)
             Text(badge.name)
                 .font(.system(size: 9, weight: .semibold, design: .rounded))
-                .foregroundStyle(badge.unlocked ? Color.qInk.opacity(0.9) : Color.qInk.opacity(0.35))
+                .foregroundStyle(badge.unlocked ? Color.qInk : Color.qInk.opacity(0.35))
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity)
         }
@@ -1026,4 +1023,3 @@ struct LockedPopupSheet: View {
         }
     }
 }
-
