@@ -120,7 +120,9 @@ enum GameEngine {
             current.setTile(secondTile, row: secondTile.row, col: secondTile.col)
         }
 
-        let matches = WordValidator.findMatches(in: current, language: language)
+        let matches = WordValidator.deduplicateMatches(
+            WordValidator.findMatches(in: current, language: language)
+        )
         return (current, matches, (spawnedTile.row, spawnedTile.col))
     }
 

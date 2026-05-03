@@ -66,6 +66,9 @@ final class GameViewModel: ObservableObject {
     // Swipe-limited mode
     @Published var swipesRemaining: Int = 30
     let swipeLimitTotal: Int = 30
+    // No-word countdown (10 s idle → 5 s visible → game over)
+    @Published var noWordCountdown: Int? = nil
+    private var noWordTimerTask: Task<Void, Never>?
 
     // Hint system
     @Published var showHintButton: Bool = false
@@ -169,6 +172,7 @@ final class GameViewModel: ObservableObject {
         currentMilestone = nil
         isNewPersonalBest = false
         lastTriggeredMilestone = 0
+        cancelNoWordTimer()
         resetHintState()
 
         if settings.gameMode == .daily {
@@ -236,6 +240,7 @@ final class GameViewModel: ObservableObject {
         pendingSwipeMatches = []
         isBombArmed = false
         isWildArmed = false
+        cancelNoWordTimer()
         resetHintState()
         syncTiles()
     }
@@ -248,6 +253,7 @@ final class GameViewModel: ObservableObject {
         pendingSwipeMatches = []
         isBombArmed = false
         isWildArmed = false
+        cancelNoWordTimer()
         resetHintState()
 
         guard let slideResult = GameEngine.slideAndSpawn(board: board, direction: direction, language: settings.language) else {
@@ -288,7 +294,11 @@ final class GameViewModel: ObservableObject {
                     }
                 }
             } else if slideResult.matches.isEmpty {
-                if settings.gameMode != .zen && GameEngine.isGameOver(board: board) { isGameOver = true }
+                if settings.gameMode != .zen && GameEngine.isGameOver(board: board) {
+                    isGameOver = true
+                } else {
+                    startNoWordTimer()
+                }
             } else {
                 pendingSwipeMatches = slideResult.matches
                 pendingSwipeDirection = direction
@@ -301,6 +311,7 @@ final class GameViewModel: ObservableObject {
         guard !pendingSwipeMatches.isEmpty, hintCharges > 0 else { return }
         hintTimerTask?.cancel()
         hintTimerTask = nil
+        cancelNoWordTimer()
         hintCharges -= 1
         showMatchHighlights = true
         powerUpAnimation = .hint
@@ -535,6 +546,32 @@ final class GameViewModel: ObservableObject {
         showMatchHighlights = false
     }
 
+    // MARK: - No-word countdown
+
+    func cancelNoWordTimer() {
+        noWordTimerTask?.cancel()
+        noWordTimerTask = nil
+        noWordCountdown = nil
+    }
+
+    private func startNoWordTimer() {
+        guard settings.gameMode != .zen else { return }
+        cancelNoWordTimer()
+        noWordTimerTask = Task {
+            do {
+                try await Task.sleep(nanoseconds: 10_000_000_000)
+                for seconds in stride(from: 5, through: 1, by: -1) {
+                    guard !Task.isCancelled else { return }
+                    noWordCountdown = seconds
+                    try await Task.sleep(nanoseconds: 1_000_000_000)
+                }
+                guard !Task.isCancelled else { return }
+                noWordCountdown = nil
+                isGameOver = true
+            } catch {}
+        }
+    }
+
     // MARK: - Empty Board Effect
 
     private func triggerEmptyBoardEffect() {
@@ -579,6 +616,7 @@ final class GameViewModel: ObservableObject {
         guard !isAnimating, !isGameOver else { return }
         let tiles = board.cells.compactMap { $0 }
         guard tiles.count > 1 else { return }
+        cancelNoWordTimer()
 
         if shuffleCharges > 0 {
             shuffleCharges -= 1
@@ -626,6 +664,7 @@ final class GameViewModel: ObservableObject {
         guard canUseBomb, isBombArmed else { return }
 
         isBombArmed = false
+        cancelNoWordTimer()
         bombCharges -= 1
         isAnimating = true
 
@@ -700,6 +739,7 @@ final class GameViewModel: ObservableObject {
         guard board.tile(row: row, col: col) != nil else { return }
 
         isWildArmed = false
+        cancelNoWordTimer()
         wildCharges -= 1
 
         board.cells[board.index(row, col)]?.isJoker = true
@@ -720,6 +760,7 @@ final class GameViewModel: ObservableObject {
     func shopBuyHints(count: Int = 1) {
         let cost = hintCost * count
         guard coins >= cost else { return }
+        cancelNoWordTimer()
         coins -= cost
         hintCharges += count
         triggerHaptic(.light)
@@ -728,6 +769,7 @@ final class GameViewModel: ObservableObject {
     func shopBuyShuffles(count: Int = 1) {
         let cost = shuffleCost * count
         guard coins >= cost else { return }
+        cancelNoWordTimer()
         coins -= cost
         shuffleCharges += count
         triggerHaptic(.light)
@@ -736,6 +778,7 @@ final class GameViewModel: ObservableObject {
     func shopBuyBombs(count: Int = 1) {
         let cost = bombCost * count
         guard coins >= cost else { return }
+        cancelNoWordTimer()
         coins -= cost
         bombCharges += count
         triggerHaptic(.light)
@@ -744,6 +787,7 @@ final class GameViewModel: ObservableObject {
     func shopBuyWilds(count: Int = 1) {
         let cost = wildCost * count
         guard coins >= cost else { return }
+        cancelNoWordTimer()
         coins -= cost
         wildCharges += count
         triggerHaptic(.light)

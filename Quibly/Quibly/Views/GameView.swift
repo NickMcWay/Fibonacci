@@ -79,6 +79,14 @@ struct GameView: View {
                             .animation(.spring(response: 0.4, dampingFraction: 0.7), value: vm.showBoardFullWarning)
                     }
 
+                    if let countdown = vm.noWordCountdown {
+                        noWordCountdownBanner(seconds: countdown)
+                            .padding(.horizontal, 24)
+                            .padding(.top, 4)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                            .animation(.spring(response: 0.4, dampingFraction: 0.7), value: countdown)
+                    }
+
                     powerUpBar
                         .padding(.horizontal, 16)
                         .padding(.bottom, 28)
@@ -359,6 +367,20 @@ struct GameView: View {
         }
         .padding(.horizontal, 16).padding(.vertical, 10)
         .frame(maxWidth: .infinity)
+        .qCard(cornerRadius: 14)
+    }
+
+    private func noWordCountdownBanner(seconds: Int) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(Color.red)
+            Text("Swipe or act — game over in \(seconds)s!")
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.qInk)
+        }
+        .padding(.horizontal, 16).padding(.vertical, 10)
+        .frame(maxWidth: .infinity)
+        .background(Color.red.opacity(0.12))
         .qCard(cornerRadius: 14)
     }
 
