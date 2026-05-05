@@ -66,7 +66,8 @@ final class GameViewModel: ObservableObject {
     // Swipe-limited mode
     @Published var swipesRemaining: Int = 30
     let swipeLimitTotal: Int = 30
-    // No-word countdown (10 s idle → 5 s visible → game over)
+    // Inactivity timer: 15 s total — 10 s silent, then 5 s visible countdown → game over
+    // Resets on every valid action. Pauses while purchase sheet is open.
     @Published var noWordCountdown: Int? = nil
     private var noWordTimerTask: Task<Void, Never>?
     private var noWordTimerPhaseStart: Date? = nil
@@ -290,24 +291,25 @@ final class GameViewModel: ObservableObject {
             if slideResult.spawnedPosition == nil {
                 if settings.gameMode != .zen && GameEngine.isGameOver(board: board) {
                     isGameOver = true
-                } else {
-                    showBoardFullWarning = true
-                    Task {
-                        try? await Task.sleep(nanoseconds: 3_000_000_000)
-                        showBoardFullWarning = false
-                    }
+                    return
+                }
+                showBoardFullWarning = true
+                Task {
+                    try? await Task.sleep(nanoseconds: 3_000_000_000)
+                    showBoardFullWarning = false
                 }
             } else if slideResult.matches.isEmpty {
                 if settings.gameMode != .zen && GameEngine.isGameOver(board: board) {
                     isGameOver = true
-                } else {
-                    startNoWordTimer()
+                    return
                 }
             } else {
                 pendingSwipeMatches = slideResult.matches
                 pendingSwipeDirection = direction
                 startHintTimer()
             }
+
+            startInactivityTimer()
         }
     }
 
@@ -315,7 +317,6 @@ final class GameViewModel: ObservableObject {
         guard !pendingSwipeMatches.isEmpty, hintCharges > 0 else { return }
         hintTimerTask?.cancel()
         hintTimerTask = nil
-        cancelNoWordTimer()
         hintCharges -= 1
         showMatchHighlights = true
         powerUpAnimation = .hint
@@ -323,6 +324,7 @@ final class GameViewModel: ObservableObject {
             try? await Task.sleep(nanoseconds: 600_000_000)
             powerUpAnimation = nil
         }
+        startInactivityTimer()
     }
 
     func confirmPendingSwipeWords() {
@@ -396,6 +398,8 @@ final class GameViewModel: ObservableObject {
                 triggerEmptyBoardEffect()
             } else if result.isGameOver && settings.gameMode != .zen {
                 isGameOver = true
+            } else {
+                startInactivityTimer()
             }
         }
     }
@@ -478,6 +482,8 @@ final class GameViewModel: ObservableObject {
                 triggerEmptyBoardEffect()
             } else if settings.gameMode != .zen && GameEngine.isGameOver(board: board) {
                 isGameOver = true
+            } else {
+                startInactivityTimer()
             }
         }
     }
@@ -550,7 +556,7 @@ final class GameViewModel: ObservableObject {
         showMatchHighlights = false
     }
 
-    // MARK: - No-word countdown
+    // MARK: - Inactivity timer
 
     func cancelNoWordTimer() {
         noWordTimerTask?.cancel()
@@ -563,8 +569,7 @@ final class GameViewModel: ObservableObject {
     }
 
     func pauseNoWordTimer() {
-        guard noWordTimerTask != nil || noWordTimerIsPaused else { return }
-        guard !noWordTimerIsPaused else { return }
+        guard noWordTimerTask != nil, !noWordTimerIsPaused else { return }
         noWordTimerIsPaused = true
         noWordTimerTask?.cancel()
         noWordTimerTask = nil
@@ -572,8 +577,8 @@ final class GameViewModel: ObservableObject {
             noWordPausedCountdown = countdown
             noWordPausedRemainingNanos = nil
         } else if let start = noWordTimerPhaseStart {
-            let elapsed = UInt64(max(0, Date().timeIntervalSince(start)) * 1_000_000_000)
-            noWordPausedRemainingNanos = elapsed < 10_000_000_000 ? 10_000_000_000 - elapsed : 0
+            let remaining = max(0, 10.0 - Date().timeIntervalSince(start))
+            noWordPausedRemainingNanos = UInt64(remaining * 1_000_000_000)
             noWordPausedCountdown = nil
         }
     }
@@ -610,13 +615,15 @@ final class GameViewModel: ObservableObject {
         }
     }
 
-    private func startNoWordTimer() {
+    private func startInactivityTimer() {
         guard settings.gameMode != .zen else { return }
         cancelNoWordTimer()
         noWordTimerPhaseStart = Date()
         noWordTimerTask = Task {
             do {
+                // 10 s silent window
                 try await Task.sleep(nanoseconds: 10_000_000_000)
+                // 5 s visible countdown
                 for seconds in stride(from: 5, through: 1, by: -1) {
                     guard !Task.isCancelled else { return }
                     noWordCountdown = seconds
@@ -648,6 +655,7 @@ final class GameViewModel: ObservableObject {
             }
             try? await Task.sleep(nanoseconds: 1_500_000_000)
             showEmptyBoardEffect = false
+            startInactivityTimer()
         }
     }
 
@@ -708,6 +716,7 @@ final class GameViewModel: ObservableObject {
             try? await Task.sleep(nanoseconds: 700_000_000)
             powerUpAnimation = nil
         }
+        startInactivityTimer()
     }
 
     func toggleBombArm() {
@@ -773,6 +782,8 @@ final class GameViewModel: ObservableObject {
                 triggerEmptyBoardEffect()
             } else if GameEngine.isGameOver(board: board) {
                 isGameOver = true
+            } else {
+                startInactivityTimer()
             }
         }
 
@@ -796,7 +807,6 @@ final class GameViewModel: ObservableObject {
         guard board.tile(row: row, col: col) != nil else { return }
 
         isWildArmed = false
-        cancelNoWordTimer()
         wildCharges -= 1
 
         board.cells[board.index(row, col)]?.isJoker = true
@@ -810,6 +820,7 @@ final class GameViewModel: ObservableObject {
             try? await Task.sleep(nanoseconds: 700_000_000)
             powerUpAnimation = nil
         }
+        startInactivityTimer()
     }
 
     // MARK: - Shop Purchases
