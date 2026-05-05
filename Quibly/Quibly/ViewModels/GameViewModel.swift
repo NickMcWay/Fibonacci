@@ -577,7 +577,7 @@ final class GameViewModel: ObservableObject {
             noWordPausedCountdown = countdown
             noWordPausedRemainingNanos = nil
         } else if let start = noWordTimerPhaseStart {
-            let remaining = max(0, 10.0 - Date().timeIntervalSince(start))
+            let remaining = max(0, 5.0 - Date().timeIntervalSince(start))
             noWordPausedRemainingNanos = UInt64(remaining * 1_000_000_000)
             noWordPausedCountdown = nil
         }
@@ -602,7 +602,7 @@ final class GameViewModel: ObservableObject {
                     if remainingNanos > 0 {
                         try await Task.sleep(nanoseconds: remainingNanos)
                     }
-                    for seconds in stride(from: 5, through: 1, by: -1) {
+                    for seconds in stride(from: 10, through: 1, by: -1) {
                         guard !Task.isCancelled else { return }
                         noWordCountdown = seconds
                         try await Task.sleep(nanoseconds: 1_000_000_000)
@@ -621,10 +621,10 @@ final class GameViewModel: ObservableObject {
         noWordTimerPhaseStart = Date()
         noWordTimerTask = Task {
             do {
-                // 10 s silent window
-                try await Task.sleep(nanoseconds: 10_000_000_000)
-                // 5 s visible countdown
-                for seconds in stride(from: 5, through: 1, by: -1) {
+                // 5 s silent window
+                try await Task.sleep(nanoseconds: 5_000_000_000)
+                // 10 s visible countdown
+                for seconds in stride(from: 10, through: 1, by: -1) {
                     guard !Task.isCancelled else { return }
                     noWordCountdown = seconds
                     try await Task.sleep(nanoseconds: 1_000_000_000)
