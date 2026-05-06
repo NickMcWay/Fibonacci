@@ -34,6 +34,9 @@ final class AudioManager: ObservableObject {
     private var player: AVAudioPlayer?
     private var correctPlayer: AVAudioPlayer?
     private var wrongPlayer: AVAudioPlayer?
+    private var countdownPlayer: AVAudioPlayer?
+    private var registerPlayer: AVAudioPlayer?
+    private var countdownFadeTask: Task<Void, Never>?
     private let muteKey = "SlideWords_IsMuted"
 
     init() {
@@ -72,6 +75,8 @@ final class AudioManager: ObservableObject {
     private func setupEffects() {
         correctPlayer = loadEffect(named: "Correct")
         wrongPlayer = loadEffect(named: "Wrong")
+        countdownPlayer = loadCountdownEffect()
+        registerPlayer = loadEffect(named: "RegisterSound")
     }
 
     private func loadEffect(named name: String) -> AVAudioPlayer? {
@@ -122,7 +127,43 @@ final class AudioManager: ObservableObject {
         generator.impactOccurred(intensity: intensity)
     }
 
+    func playRegisterSound() {
+        playEffect(registerPlayer)
+    }
+
     func toggleMute() {
         isMuted.toggle()
+    }
+
+    // MARK: - Countdown Sound
+
+    private func loadCountdownEffect() -> AVAudioPlayer? {
+        guard let url = Bundle.main.url(forResource: "Countdown", withExtension: "mp3"),
+              let p = try? AVAudioPlayer(contentsOf: url) else { return nil }
+        p.numberOfLoops = 0
+        p.volume = 1.0
+        p.prepareToPlay()
+        return p
+    }
+
+    func playCountdownSound() {
+        guard !isMuted, isSoundEnabled else { return }
+        countdownFadeTask?.cancel()
+        countdownFadeTask = nil
+        countdownPlayer?.volume = 1.0
+        countdownPlayer?.currentTime = 0
+        countdownPlayer?.play()
+    }
+
+    func fadeOutCountdownSound(duration: TimeInterval = 0.2) {
+        countdownFadeTask?.cancel()
+        guard let p = countdownPlayer, p.isPlaying else { return }
+        p.setVolume(0, fadeDuration: duration)
+        countdownFadeTask = Task {
+            try? await Task.sleep(nanoseconds: UInt64((duration + 0.05) * 1_000_000_000))
+            guard !Task.isCancelled else { return }
+            p.stop()
+            p.volume = 1.0
+        }
     }
 }
