@@ -15,7 +15,14 @@ final class GameViewModel: ObservableObject {
     @Published var tiles: [Tile] = []
     @Published var score: Int = 0
     @Published var bestScore: Int = 0
-    @Published var isGameOver: Bool = false
+    @Published var isGameOver: Bool = false {
+        didSet {
+            if isGameOver && !oldValue {
+                let played = UserDefaults.standard.integer(forKey: gamesPlayedKey) + 1
+                UserDefaults.standard.set(played, forKey: gamesPlayedKey)
+            }
+        }
+    }
     @Published var lastWords: [String] = []
     @Published var lastPointsEarned: Int = 0
     @Published var comboCount: Int = 0
@@ -59,7 +66,7 @@ final class GameViewModel: ObservableObject {
     // Swipe-limited mode
     @Published var swipesRemaining: Int = 30
     let swipeLimitTotal: Int = 30
-    // Inactivity timer: 15 s total — 5 s silent, 5 s countdown sound, then 5 s visible countdown → game over
+    // Inactivity timer: 15 s total — 10 s silent, then 5 s visible countdown → game over
     // Resets on every valid action. Pauses while purchase sheet is open.
     @Published var noWordCountdown: Int? = nil
     private var noWordTimerTask: Task<Void, Never>?
@@ -67,9 +74,6 @@ final class GameViewModel: ObservableObject {
     private var noWordTimerIsPaused: Bool = false
     private var noWordPausedRemainingNanos: UInt64? = nil
     private var noWordPausedCountdown: Int? = nil
-    private var noWordSoundActive: Bool = false
-
-    weak var audioManager: AudioManager?
 
     // Hint system
     @Published var showHintButton: Bool = false
@@ -103,7 +107,7 @@ final class GameViewModel: ObservableObject {
     private let wildChargesKey    = "SlideWords_WildCharges"
     private let gamesPlayedKey    = "SlideWords_GamesPlayed"
     private let totalWordsKey     = "SlideWords_TotalWords"
-    private let bestWordKey       = "SlideWords_BestWord"
+    private let longestWordKey    = "SlideWords_LongestWord"
     private var pendingSwipeDirection: SwipeDirection = .left
     private var hintTimerTask: Task<Void, Never>?
 
@@ -152,9 +156,6 @@ final class GameViewModel: ObservableObject {
     func startNewGame() {
         blitzTimerTask?.cancel()
         blitzTimerTask = nil
-
-        let played = UserDefaults.standard.integer(forKey: gamesPlayedKey) + 1
-        UserDefaults.standard.set(played, forKey: gamesPlayedKey)
 
         board = BoardModel(size: settings.boardVariant.rawValue)
         score = 0
@@ -367,11 +368,9 @@ final class GameViewModel: ObservableObject {
 
             let newTotal = UserDefaults.standard.integer(forKey: totalWordsKey) + result.clearedWords.count
             UserDefaults.standard.set(newTotal, forKey: totalWordsKey)
-            let prevBestWord = UserDefaults.standard.string(forKey: bestWordKey) ?? ""
-            let prevBestScore = GameEngine.wordScore(prevBestWord, language: settings.language)
-            if let best = result.clearedWords.max(by: { GameEngine.wordScore($0, language: settings.language) < GameEngine.wordScore($1, language: settings.language) }),
-               GameEngine.wordScore(best, language: settings.language) > prevBestScore {
-                UserDefaults.standard.set(best.uppercased(), forKey: bestWordKey)
+            let prevLongest = UserDefaults.standard.string(forKey: longestWordKey) ?? ""
+            if let best = result.clearedWords.max(by: { $0.count < $1.count }), best.count > prevLongest.count {
+                UserDefaults.standard.set(best.uppercased(), forKey: longestWordKey)
             }
             coins += coinTilesUsed * coinPerCoinTile
             checkMilestones()
@@ -456,9 +455,9 @@ final class GameViewModel: ObservableObject {
 
         let newTotal = UserDefaults.standard.integer(forKey: totalWordsKey) + 1
         UserDefaults.standard.set(newTotal, forKey: totalWordsKey)
-        let prevBestWord = UserDefaults.standard.string(forKey: bestWordKey) ?? ""
-        if GameEngine.wordScore(resolvedWord, language: settings.language) > GameEngine.wordScore(prevBestWord, language: settings.language) {
-            UserDefaults.standard.set(resolvedWord.uppercased(), forKey: bestWordKey)
+        let prevLongest = UserDefaults.standard.string(forKey: longestWordKey) ?? ""
+        if resolvedWord.count > prevLongest.count {
+            UserDefaults.standard.set(resolvedWord.uppercased(), forKey: longestWordKey)
         }
 
         withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
@@ -567,10 +566,6 @@ final class GameViewModel: ObservableObject {
         noWordTimerIsPaused = false
         noWordPausedRemainingNanos = nil
         noWordPausedCountdown = nil
-        if noWordSoundActive {
-            audioManager?.fadeOutCountdownSound(duration: 0.2)
-            noWordSoundActive = false
-        }
     }
 
     func pauseNoWordTimer() {
@@ -582,13 +577,9 @@ final class GameViewModel: ObservableObject {
             noWordPausedCountdown = countdown
             noWordPausedRemainingNanos = nil
         } else if let start = noWordTimerPhaseStart {
-            let remaining = max(0, 10.0 - Date().timeIntervalSince(start))
+            let remaining = max(0, 5.0 - Date().timeIntervalSince(start))
             noWordPausedRemainingNanos = UInt64(remaining * 1_000_000_000)
             noWordPausedCountdown = nil
-        }
-        if noWordSoundActive {
-            audioManager?.fadeOutCountdownSound(duration: 0.2)
-            noWordSoundActive = false
         }
     }
 
@@ -602,34 +593,16 @@ final class GameViewModel: ObservableObject {
         noWordTimerTask = Task {
             do {
                 if let fromCountdown = startCountdown {
-                    // Resuming during the visible countdown — sound should be active.
-                    noWordSoundActive = true
-                    audioManager?.playCountdownSound()
                     for seconds in stride(from: fromCountdown, through: 1, by: -1) {
                         guard !Task.isCancelled else { return }
                         noWordCountdown = seconds
                         try await Task.sleep(nanoseconds: 1_000_000_000)
                     }
                 } else {
-                    // Resuming during the pre-countdown phase.
-                    // remainingNanos = time until visible countdown starts (≤10 s).
-                    // Sound starts when ≤5 s remain before the visible countdown.
-                    let soundThreshold: UInt64 = 5_000_000_000
-                    if remainingNanos > soundThreshold {
-                        let silenceRemaining = remainingNanos - soundThreshold
-                        try await Task.sleep(nanoseconds: silenceRemaining)
-                        guard !Task.isCancelled else { return }
-                        noWordSoundActive = true
-                        audioManager?.playCountdownSound()
-                        try await Task.sleep(nanoseconds: soundThreshold)
-                    } else {
-                        noWordSoundActive = true
-                        audioManager?.playCountdownSound()
-                        if remainingNanos > 0 {
-                            try await Task.sleep(nanoseconds: remainingNanos)
-                        }
+                    if remainingNanos > 0 {
+                        try await Task.sleep(nanoseconds: remainingNanos)
                     }
-                    for seconds in stride(from: 5, through: 1, by: -1) {
+                    for seconds in stride(from: 10, through: 1, by: -1) {
                         guard !Task.isCancelled else { return }
                         noWordCountdown = seconds
                         try await Task.sleep(nanoseconds: 1_000_000_000)
@@ -637,8 +610,6 @@ final class GameViewModel: ObservableObject {
                 }
                 guard !Task.isCancelled else { return }
                 noWordCountdown = nil
-                noWordSoundActive = false
-                // Sound is intentionally left playing while the game-over menu shows.
                 isGameOver = true
             } catch {}
         }
@@ -650,24 +621,16 @@ final class GameViewModel: ObservableObject {
         noWordTimerPhaseStart = Date()
         noWordTimerTask = Task {
             do {
-                // 5 s of pure silence
+                // 5 s silent window
                 try await Task.sleep(nanoseconds: 5_000_000_000)
-                guard !Task.isCancelled else { return }
-                // 10 s remain — start countdown sound
-                noWordSoundActive = true
-                audioManager?.playCountdownSound()
-                // 5 s with sound, still no visible indicator
-                try await Task.sleep(nanoseconds: 5_000_000_000)
-                // 5 s visible countdown
-                for seconds in stride(from: 5, through: 1, by: -1) {
+                // 10 s visible countdown
+                for seconds in stride(from: 10, through: 1, by: -1) {
                     guard !Task.isCancelled else { return }
                     noWordCountdown = seconds
                     try await Task.sleep(nanoseconds: 1_000_000_000)
                 }
                 guard !Task.isCancelled else { return }
                 noWordCountdown = nil
-                noWordSoundActive = false
-                // Sound is intentionally left playing while the game-over menu shows.
                 isGameOver = true
             } catch {}
         }
@@ -868,7 +831,6 @@ final class GameViewModel: ObservableObject {
         cancelNoWordTimer()
         coins -= cost
         hintCharges += count
-        audioManager?.playRegisterSound()
         triggerHaptic(.light)
     }
 
@@ -878,7 +840,6 @@ final class GameViewModel: ObservableObject {
         cancelNoWordTimer()
         coins -= cost
         shuffleCharges += count
-        audioManager?.playRegisterSound()
         triggerHaptic(.light)
     }
 
@@ -888,7 +849,6 @@ final class GameViewModel: ObservableObject {
         cancelNoWordTimer()
         coins -= cost
         bombCharges += count
-        audioManager?.playRegisterSound()
         triggerHaptic(.light)
     }
 
@@ -898,7 +858,6 @@ final class GameViewModel: ObservableObject {
         cancelNoWordTimer()
         coins -= cost
         wildCharges += count
-        audioManager?.playRegisterSound()
         triggerHaptic(.light)
     }
 
