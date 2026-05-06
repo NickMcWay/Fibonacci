@@ -124,7 +124,7 @@ struct SettingsView: View {
                             }
 
                             settingsGroup(title: "Look & Feel") {
-                                toggleRow(icon: "moon.fill", label: "Dark mode", sublabel: "Use system setting", binding: $darkMode)
+//                                toggleRow(icon: "moon.fill", label: "Dark mode", sublabel: "Use system setting", binding: $darkMode)
                                 pickerRow(icon: "paintbrush.fill", label: "Tile theme", value: "Cream") { showThemeAlert = true }
                                 pickerRow(icon: "sun.max.fill", label: "Background", value: "Dawn") { showBackgroundAlert = true }
                             }

@@ -1546,6 +1546,7 @@
       }
     },
     "Dark mode" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4366,6 +4367,7 @@
       }
     },
     "Use system setting" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
