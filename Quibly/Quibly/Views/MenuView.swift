@@ -11,7 +11,6 @@ struct MenuView: View {
     @AppStorage("SlideWords_SelectedLanguage")  private var selectedLanguageRawValue: String = GameLanguage.english.rawValue
     @AppStorage("SlideWords_SelectedVariant")   private var selectedVariantRawValue:  Int    = BoardVariant.small.rawValue
     @AppStorage("SlideWords_PlayerName")        private var playerName: String = ""
-    @AppStorage("SlideWords_DarkMode")          private var darkMode: Bool = false
 
     private var profileLevel: Int { totalXP / 500 + 1 }
     private var profileXPProgress: Double { Double(totalXP % 500) / 500.0 }
@@ -138,25 +137,17 @@ struct MenuView: View {
                 set: { _ in }
             )) {
                 NameEntryView(onSave: { name in playerName = name })
-                    .preferredColorScheme(darkMode ? .dark : .light)
             }
-            .fullScreenCover(isPresented: $showShop) {
-                ShopView(onBack: { showShop = false })
-                    .preferredColorScheme(darkMode ? .dark : .light)
-            }
-            .fullScreenCover(isPresented: $showModes) {
+            .fullScreenCover(isPresented: $showShop)     { ShopView(onBack: { showShop = false }) }
+            .fullScreenCover(isPresented: $showModes)    {
                 ModesView(
                     selectedLanguage: $selectedLanguage,
                     selectedVariant: $selectedVariant,
                     onBack: { showModes = false },
                     onStart: { settings in showModes = false; onStart(settings) }
                 )
-                .preferredColorScheme(darkMode ? .dark : .light)
             }
-            .fullScreenCover(isPresented: $showSettings) {
-                SettingsView(onBack: { showSettings = false })
-                    .preferredColorScheme(darkMode ? .dark : .light)
-            }
+            .fullScreenCover(isPresented: $showSettings) { SettingsView(onBack: { showSettings = false }) }
             .sheet(isPresented: $showProfile)  { ProfilePopupSheet() }
             .sheet(isPresented: $showDaily)    { DailyRewardPopupSheet() }
             .sheet(isPresented: $showQuests)   { QuestsPopupSheet() }
