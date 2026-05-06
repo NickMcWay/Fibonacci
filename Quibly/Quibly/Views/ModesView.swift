@@ -13,11 +13,11 @@ struct ModesView: View {
     private struct ModeConfig {
         let id: String
         let icon: String
-        let label: String
-        let desc: String
+        let label: LocalizedStringKey
+        let desc: LocalizedStringKey
         let gradient: [Color]
         let locked: Bool
-        let badge: String?
+        let badge: LocalizedStringKey?
         let unlock: String?
     }
 
@@ -118,7 +118,7 @@ struct ModesView: View {
                         Button { selectedLanguage = lang } label: {
                             HStack(spacing: 6) {
                                 Text(lang.flag).font(.system(size: 16))
-                                Text(lang.rawValue)
+                                Text(lang.displayName)
                                     .font(.system(size: 13, weight: .semibold, design: .rounded))
                                     .foregroundStyle(selected ? Color.white : Color.qInk)
                             }
@@ -309,7 +309,7 @@ struct ModesView: View {
                             Text("\(variant.rawValue)×\(variant.rawValue)")
                                 .font(.system(size: 18, weight: .semibold, design: .rounded))
                                 .foregroundStyle(selected ? .white : Color.qInk)
-                            Text(variant.label)
+                            Text(LocalizedStringKey(variant.label))
                                 .font(.system(size: 10, weight: .heavy, design: .rounded))
                                 .foregroundStyle(selected ? Color.white.opacity(0.85) : Color.qInk.opacity(0.65))
                         }

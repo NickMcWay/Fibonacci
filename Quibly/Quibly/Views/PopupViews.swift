@@ -187,9 +187,10 @@ struct GameOverPopup: View {
         }
     }
 
-    private func statCell(label: String, value: String) -> some View {
+    private func statCell(label: LocalizedStringKey, value: String) -> some View {
         VStack(spacing: 3) {
-            Text(label.uppercased())
+            Text(label)
+                .textCase(.uppercase)
                 .font(.system(size: 9, weight: .heavy, design: .rounded))
                 .foregroundStyle(Color.qInk.opacity(0.60))
                 .tracking(0.6)
@@ -1006,7 +1007,7 @@ struct ProfilePopupSheet: View {
         .presentationDragIndicator(.hidden)
     }
 
-    private func profileStatCard(icon: String, iconColor: Color, label: String, value: String) -> some View {
+    private func profileStatCard(icon: String, iconColor: Color, label: LocalizedStringKey, value: String) -> some View {
         VStack(spacing: 7) {
             Image(systemName: icon)
                 .font(.system(size: 22, weight: .bold))

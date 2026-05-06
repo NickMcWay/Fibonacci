@@ -23,8 +23,8 @@ struct ShopView: View {
     private struct PowerUp {
         let id: String
         let icon: String
-        let name: String
-        let desc: String
+        let name: LocalizedStringKey
+        let desc: LocalizedStringKey
         let cost: Int
         let gradient: [Color]
     }
@@ -126,7 +126,7 @@ struct ShopView: View {
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                             ForEach(themes.indices, id: \.self) { i in
                                 let t = themes[i]
-                                themeCard(name: t.name, gradient: t.bg, textColor: t.textColor, cost: t.cost, owned: t.owned, locked: t.locked)
+                                themeCard(name: LocalizedStringKey(t.name), gradient: t.bg, textColor: t.textColor, cost: t.cost, owned: t.owned, locked: t.locked)
                             }
                         }
 
@@ -373,7 +373,8 @@ struct ShopView: View {
                     Text("+\(pack.amount)")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundStyle(pack.accentColor)
-                    Text(pack.label.uppercased())
+                    Text(LocalizedStringKey(pack.label))
+                        .textCase(.uppercase)
                         .font(.system(size: 10, weight: .heavy, design: .rounded))
                         .foregroundStyle(Color.qInk.opacity(0.65))
                         .tracking(0.6)
@@ -481,7 +482,7 @@ struct ShopView: View {
 
     // MARK: - Theme Card
 
-    private func themeCard(name: String, gradient: [Color], textColor: Color, cost: Int, owned: Bool, locked: Bool) -> some View {
+    private func themeCard(name: LocalizedStringKey, gradient: [Color], textColor: Color, cost: Int, owned: Bool, locked: Bool) -> some View {
         VStack(spacing: 6) {
             HStack(spacing: 4) {
                 ForEach(["Q","U"], id: \.self) { letter in

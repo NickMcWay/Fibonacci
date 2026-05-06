@@ -5,11 +5,11 @@ import SwiftUI
 private struct TutorialStep {
     let icon: String
     let iconColors: [Color]
-    let title: String
-    let body: String
+    let title: LocalizedStringKey
+    let body: LocalizedStringKey
     let illustration: AnyView?
 
-    init(icon: String, iconColors: [Color], title: String, body: String, illustration: AnyView? = nil) {
+    init(icon: String, iconColors: [Color], title: LocalizedStringKey, body: LocalizedStringKey, illustration: AnyView? = nil) {
         self.icon = icon
         self.iconColors = iconColors
         self.title = title
@@ -353,7 +353,7 @@ private struct SwipeIllustration: View {
 // MARK: - Power-Up Illustration
 
 private struct PowerUpIllustration: View {
-    private let powerUps: [(String, [Color], String)] = [
+    private let powerUps: [(String, [Color], LocalizedStringKey)] = [
         ("lightbulb.fill", [Color.qSun1, Color.qSun2], "Hint"),
         ("shuffle",        [Color.qSky1, Color.qSky2], "Shuffle"),
         ("wand.and.stars", [Color.qGrape1, Color.qGrape2], "Joker"),
@@ -402,7 +402,7 @@ private struct LanguagePicker: View {
                     HStack(spacing: 12) {
                         Text(language.flag)
                             .font(.system(size: 22))
-                        Text(language.rawValue)
+                        Text(language.displayName)
                             .font(.system(size: 15, weight: .semibold, design: .rounded))
                             .foregroundStyle(isSelected ? Color.qGrape2 : Color.qInk)
                         Spacer()

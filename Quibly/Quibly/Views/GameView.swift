@@ -304,10 +304,11 @@ struct GameView: View {
                     .padding(.horizontal, 10)
                 HStack(spacing: 4) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("COINS")
+                        Text("Coins")
                             .font(.system(size: 9, weight: .heavy, design: .rounded))
                             .foregroundStyle(Color.qInkSoft)
                             .tracking(0.6)
+                            .textCase(.uppercase)
                         CoinChip(amount: vm.coins)
                     }
                     Spacer(minLength: 0)
@@ -324,12 +325,13 @@ struct GameView: View {
         .qCard(cornerRadius: 22)
     }
 
-    private func scoreColumn(label: String, value: String, large: Bool = false) -> some View {
+    private func scoreColumn(label: LocalizedStringKey, value: String, large: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(label.uppercased())
+            Text(label)
                 .font(.system(size: 9, weight: .heavy, design: .rounded))
                 .foregroundStyle(Color.qInkSoft)
                 .tracking(0.6)
+                .textCase(.uppercase)
             Text(value)
                 .font(.system(size: large ? 28 : 18, weight: .semibold, design: .rounded))
                 .foregroundStyle(Color.qInk)
@@ -458,7 +460,7 @@ struct GameView: View {
     }
 
     private func puButton(
-        label: String,
+        label: LocalizedStringKey,
         icon: String,
         gradient: [Color],
         charges: Int,

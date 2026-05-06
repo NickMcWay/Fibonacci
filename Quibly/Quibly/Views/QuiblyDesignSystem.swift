@@ -293,7 +293,7 @@ extension View {
 struct QStatChip: View {
     let icon: String        // SF Symbol name
     let iconColor: Color
-    let label: String
+    let label: LocalizedStringKey
     let value: String
     let gradient: [Color]
 
@@ -303,10 +303,11 @@ struct QStatChip: View {
                 .font(.system(size: 15, weight: .bold))
                 .foregroundStyle(iconColor)
             VStack(alignment: .leading, spacing: 1) {
-                Text(label.uppercased())
+                Text(label)
                     .font(.system(size: 9, weight: .heavy, design: .rounded))
                     .foregroundStyle(Color.qInk.opacity(0.65))
                     .tracking(0.6)
+                    .textCase(.uppercase)
                 Text(value)
                     .font(.system(size: 16, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.qInk)
@@ -330,8 +331,8 @@ struct QStatChip: View {
 // MARK: - Section Header (Shop)
 
 struct QSectionHeader: View {
-    let title: String
-    let subtitle: String
+    let title: LocalizedStringKey
+    let subtitle: LocalizedStringKey
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
