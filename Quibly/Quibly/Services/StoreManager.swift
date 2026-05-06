@@ -8,17 +8,17 @@ final class StoreManager: ObservableObject {
     static let shared = StoreManager()
 
     enum ProductID: String, CaseIterable {
-        case starterPack  = "com.quibly.coins.starter"   // 100 coins
-        case builderPack  = "com.quibly.coins.builder"   // 300 coins
-        case masterPack   = "com.quibly.coins.master"    // 750 coins
-        case sparkleBundle = "com.quibly.bundle.sparkle" // 1500 coins + power-ups
+        case starterPack  = "com.quibly.coins.starter"   // 1000 coins
+        case builderPack  = "com.quibly.coins.builder"   // 3000 coins
+        case masterPack   = "com.quibly.coins.master"    // 7500 coins
+        case sparkleBundle = "com.quibly.bundle.sparkle" // 15000 coins + power-ups
 
         var coinReward: Int {
             switch self {
-            case .starterPack:   return 100
-            case .builderPack:   return 300
-            case .masterPack:    return 750
-            case .sparkleBundle: return 1500
+            case .starterPack:   return 1000
+            case .builderPack:   return 3000
+            case .masterPack:    return 7500
+            case .sparkleBundle: return 15000
             }
         }
     }

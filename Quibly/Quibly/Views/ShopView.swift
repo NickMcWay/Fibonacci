@@ -55,13 +55,13 @@ struct ShopView: View {
     }
 
     private let coinPacks: [CoinPack] = [
-        .init(productID: .starterPack,  amount: 100,  label: "Starter",
+        .init(productID: .starterPack,  amount: 1000,  label: "Starter",
               tintColors: [Color(red: 0.85, green: 0.93, blue: 1.0), Color(red: 0.62, green: 0.79, blue: 1.0)],
               accentColor: Color(red: 0.23, green: 0.47, blue: 0.76), popular: false),
-        .init(productID: .builderPack,  amount: 300,  label: "Builder",
+        .init(productID: .builderPack,  amount: 3000,  label: "Builder",
               tintColors: [Color(red: 0.84, green: 0.97, blue: 0.85), Color(red: 0.55, green: 0.89, blue: 0.61)],
               accentColor: Color(red: 0.12, green: 0.61, blue: 0.36), popular: true),
-        .init(productID: .masterPack,   amount: 750,  label: "Master",
+        .init(productID: .masterPack,   amount: 7500,  label: "Master",
               tintColors: [Color(red: 1, green: 0.95, blue: 0.77), Color(red: 1, green: 0.81, blue: 0.42)],
               accentColor: Color(red: 0.65, green: 0.42, blue: 0), popular: false),
     ]
@@ -221,7 +221,7 @@ struct ShopView: View {
                         .foregroundStyle(Color.white)
                         .shadow(color: Color(red: 0.31, green: 0.12, blue: 0.51).opacity(0.45), radius: 0, x: 0, y: 2)
 
-                    Text("1,500 coins · 5 of every power-up · Sunset theme")
+                    Text("15,000 coins · 5 of every power-up · Sunset theme")
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.white.opacity(0.95))
 
