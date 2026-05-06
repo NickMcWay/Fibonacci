@@ -156,7 +156,6 @@ struct GameView: View {
         .ignoresSafeArea(edges: .top)
         .onAppear {
             audio.play()
-            vm.audioManager = audio
         }
         .onChange(of: vm.powerUpAnimation) { _, anim in
             guard let anim else { return }
