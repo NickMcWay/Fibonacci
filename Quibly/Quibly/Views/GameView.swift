@@ -204,6 +204,13 @@ struct GameView: View {
         .onChange(of: showBuyShuffleSheet) { _, showing in if showing { vm.pauseNoWordTimer() } }
         .onChange(of: showBuyBombSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
         .onChange(of: showBuyWildSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: vm.noWordCountdown)  { _, countdown in
+            if countdown == 10 {
+                audio.playCountdownSound()
+            } else if countdown == nil {
+                audio.fadeOutCountdownSound()
+            }
+        }
     }
 
     // MARK: - Top Bar
