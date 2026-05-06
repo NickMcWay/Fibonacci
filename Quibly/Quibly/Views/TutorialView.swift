@@ -26,8 +26,12 @@ struct TutorialView: View {
     @State private var currentStep = 0
     @State private var direction: Int = 1  // 1 = forward, -1 = back
     @AppStorage("SlideWords_SelectedLanguage") private var selectedLanguageRaw: String = GameLanguage.english.rawValue
+    @AppStorage("SlideWords_PlayerName") private var playerName: String = ""
+    @State private var nameInput: String = ""
+    @FocusState private var nameFocused: Bool
 
-    private let languageStepIndex = 1
+    private let nameStepIndex = 1
+    private let languageStepIndex = 2
 
     private let steps: [TutorialStep] = [
         TutorialStep(
@@ -35,6 +39,12 @@ struct TutorialView: View {
             iconColors: [Color.qSun1, Color.qSun2],
             title: "Welcome to Quibly!",
             body: "A word-sliding puzzle game. Slide tiles across the board to form words and score points."
+        ),
+        TutorialStep(
+            icon: "person.fill",
+            iconColors: [Color.qBubble1, Color.qGrape1],
+            title: "What's your name?",
+            body: "This is how you'll appear in the game."
         ),
         TutorialStep(
             icon: "globe",
@@ -86,7 +96,10 @@ struct TutorialView: View {
                 VStack(spacing: 24) {
                     stepIcon
                     stepText
-                    if currentStep == languageStepIndex {
+                    if currentStep == nameStepIndex {
+                        nameEntryField
+                            .transition(.opacity.combined(with: .scale(scale: 0.9)))
+                    } else if currentStep == languageStepIndex {
                         LanguagePicker(selectedRaw: $selectedLanguageRaw)
                             .transition(.opacity.combined(with: .scale(scale: 0.9)))
                     } else if let illustration = steps[currentStep].illustration {
@@ -121,6 +134,32 @@ struct TutorialView: View {
             }
         }
         .ignoresSafeArea(edges: .top)
+        .onChange(of: currentStep) { _, step in
+            if step == nameStepIndex { nameFocused = true }
+        }
+    }
+
+    // MARK: - Name Entry Field
+
+    private var isNameValid: Bool {
+        nameInput.trimmingCharacters(in: .whitespaces).count >= 2
+    }
+
+    private var nameEntryField: some View {
+        TextField("Enter your name", text: $nameInput)
+            .font(.system(size: 18, weight: .semibold, design: .rounded))
+            .foregroundStyle(Color.qInk)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .background(
+                RoundedRectangle(cornerRadius: 18)
+                    .fill(Color.white.opacity(0.92))
+                    .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white, lineWidth: 1.5))
+                    .shadow(color: Color.qInk.opacity(0.18), radius: 0, x: 0, y: 3)
+            )
+            .focused($nameFocused)
+            .onSubmit { if isNameValid { advance() } }
     }
 
     // MARK: - Icon
@@ -184,6 +223,7 @@ struct TutorialView: View {
     private var actionButtons: some View {
         let isLast = currentStep == steps.count - 1
         return VStack(spacing: 10) {
+            let nameBlocking = currentStep == nameStepIndex && !isNameValid
             Button(action: advance) {
                 HStack(spacing: 8) {
                     if isLast {
@@ -197,6 +237,8 @@ struct TutorialView: View {
             }
             .frame(maxWidth: .infinity)
             .buttonStyle(PuffyButtonStyle(variant: .gold))
+            .disabled(nameBlocking)
+            .opacity(nameBlocking ? 0.5 : 1.0)
 
             if currentStep > 0 {
                 Button(action: goBack) {
@@ -212,6 +254,11 @@ struct TutorialView: View {
     // MARK: - Navigation
 
     private func advance() {
+        if currentStep == nameStepIndex {
+            let trimmed = nameInput.trimmingCharacters(in: .whitespaces)
+            guard trimmed.count >= 2 else { return }
+            playerName = trimmed
+        }
         direction = 1
         if currentStep < steps.count - 1 {
             withAnimation { currentStep += 1 }

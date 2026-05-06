@@ -132,12 +132,6 @@ struct MenuView: View {
             }
             .onChange(of: selectedLanguage) { _, v in selectedLanguageRawValue = v.rawValue }
             .onChange(of: selectedVariant)  { _, v in selectedVariantRawValue  = v.rawValue }
-            .fullScreenCover(isPresented: .init(
-                get: { playerName.isEmpty },
-                set: { _ in }
-            )) {
-                NameEntryView(onSave: { name in playerName = name })
-            }
             .fullScreenCover(isPresented: $showShop)     { ShopView(onBack: { showShop = false }) }
             .fullScreenCover(isPresented: $showModes)    {
                 ModesView(
@@ -377,86 +371,7 @@ struct MenuView: View {
     }
 }
 
-// MARK: - Name Entry View
-
-struct NameEntryView: View {
-    var onSave: (String) -> Void
-
-    @State private var name: String = ""
-    @FocusState private var focused: Bool
-
-    private var trimmedName: String { name.trimmingCharacters(in: .whitespaces) }
-    private var isValid: Bool { trimmedName.count >= 2 }
-
-    var body: some View {
-        DreamBackground {
-            VStack(spacing: 32) {
-                Spacer()
-
-                ZStack {
-                    Circle()
-                        .fill(LinearGradient(
-                            colors: [Color.qBubble1, Color.qGrape1],
-                            startPoint: .topLeading, endPoint: .bottomTrailing
-                        ))
-                        .shadow(color: Color.qInk.opacity(0.35), radius: 0, x: 0, y: 3)
-                    Text(trimmedName.isEmpty ? "?" : String(trimmedName.prefix(1)).uppercased())
-                        .font(.system(size: 42, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.white)
-                }
-                .frame(width: 90, height: 90)
-                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: trimmedName.isEmpty)
-
-                VStack(spacing: 8) {
-                    Text("What's your name?")
-                        .font(.system(size: 28, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.white)
-                        .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 2)
-                    Text("This is how you'll appear in the game.")
-                        .font(.system(size: 15, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.white.opacity(0.75))
-                }
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-
-                TextField("Enter your name", text: $name)
-                    .font(.system(size: 18, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.qInk)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 18)
-                            .fill(Color.white.opacity(0.92))
-                            .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white, lineWidth: 1.5))
-                            .shadow(color: Color.qInk.opacity(0.18), radius: 0, x: 0, y: 3)
-                    )
-                    .padding(.horizontal, 40)
-                    .focused($focused)
-                    .onSubmit { if isValid { onSave(trimmedName) } }
-
-                Button(action: { if isValid { onSave(trimmedName) } }) {
-                    Text("Let's Play!")
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.qGoldDeep)
-                }
-                .frame(width: 240)
-                .buttonStyle(PuffyButtonStyle(variant: .gold))
-                .disabled(!isValid)
-                .opacity(isValid ? 1.0 : 0.5)
-
-                Spacer()
-            }
-        }
-        .onAppear { focused = true }
-    }
-}
-
 #Preview("Menu") {
     MenuView(onStart: { _ in })
         .environmentObject(AudioManager())
-}
-
-#Preview("Name Entry") {
-    NameEntryView(onSave: { _ in })
 }
