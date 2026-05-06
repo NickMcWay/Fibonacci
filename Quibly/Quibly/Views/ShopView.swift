@@ -11,6 +11,7 @@ struct ShopView: View {
     @AppStorage("SlideWords_WildCharges")    private var wildCharges:    Int = 1
 
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var audio: AudioManager
     @StateObject private var store = StoreManager.shared
     @StateObject private var ads   = AdManager.shared
 
@@ -186,7 +187,10 @@ struct ShopView: View {
 
     private var heroBundle: some View {
         Button {
-            Task { await store.purchase(.sparkleBundle) }
+            Task {
+                let success = await store.purchase(.sparkleBundle)
+                if success { audio.playRegisterSound() }
+            }
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 24)
@@ -306,6 +310,7 @@ struct ShopView: View {
                 case "bomb":    bombCharges += 1
                 default: break
                 }
+                audio.playRegisterSound()
             } label: {
                 HStack(spacing: 5) {
                     Circle()
@@ -341,7 +346,10 @@ struct ShopView: View {
         let isLoading = store.isPurchasing
 
         return Button {
-            Task { await store.purchase(pack.productID) }
+            Task {
+                let success = await store.purchase(pack.productID)
+                if success { audio.playRegisterSound() }
+            }
         } label: {
             ZStack(alignment: .top) {
                 RoundedRectangle(cornerRadius: 18)

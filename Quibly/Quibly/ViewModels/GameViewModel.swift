@@ -59,7 +59,7 @@ final class GameViewModel: ObservableObject {
     // Swipe-limited mode
     @Published var swipesRemaining: Int = 30
     let swipeLimitTotal: Int = 30
-    // Inactivity timer: 15 s total — 10 s silent, then 5 s visible countdown → game over
+    // Inactivity timer: 15 s total — 5 s silent, 5 s countdown sound, then 5 s visible countdown → game over
     // Resets on every valid action. Pauses while purchase sheet is open.
     @Published var noWordCountdown: Int? = nil
     private var noWordTimerTask: Task<Void, Never>?
@@ -67,6 +67,9 @@ final class GameViewModel: ObservableObject {
     private var noWordTimerIsPaused: Bool = false
     private var noWordPausedRemainingNanos: UInt64? = nil
     private var noWordPausedCountdown: Int? = nil
+    private var noWordSoundActive: Bool = false
+
+    weak var audioManager: AudioManager?
 
     // Hint system
     @Published var showHintButton: Bool = false
@@ -564,6 +567,10 @@ final class GameViewModel: ObservableObject {
         noWordTimerIsPaused = false
         noWordPausedRemainingNanos = nil
         noWordPausedCountdown = nil
+        if noWordSoundActive {
+            audioManager?.fadeOutCountdownSound(duration: 0.2)
+            noWordSoundActive = false
+        }
     }
 
     func pauseNoWordTimer() {
@@ -579,6 +586,10 @@ final class GameViewModel: ObservableObject {
             noWordPausedRemainingNanos = UInt64(remaining * 1_000_000_000)
             noWordPausedCountdown = nil
         }
+        if noWordSoundActive {
+            audioManager?.fadeOutCountdownSound(duration: 0.2)
+            noWordSoundActive = false
+        }
     }
 
     func resumeNoWordTimer() {
@@ -591,14 +602,32 @@ final class GameViewModel: ObservableObject {
         noWordTimerTask = Task {
             do {
                 if let fromCountdown = startCountdown {
+                    // Resuming during the visible countdown — sound should be active.
+                    noWordSoundActive = true
+                    audioManager?.playCountdownSound()
                     for seconds in stride(from: fromCountdown, through: 1, by: -1) {
                         guard !Task.isCancelled else { return }
                         noWordCountdown = seconds
                         try await Task.sleep(nanoseconds: 1_000_000_000)
                     }
                 } else {
-                    if remainingNanos > 0 {
-                        try await Task.sleep(nanoseconds: remainingNanos)
+                    // Resuming during the pre-countdown phase.
+                    // remainingNanos = time until visible countdown starts (≤10 s).
+                    // Sound starts when ≤5 s remain before the visible countdown.
+                    let soundThreshold: UInt64 = 5_000_000_000
+                    if remainingNanos > soundThreshold {
+                        let silenceRemaining = remainingNanos - soundThreshold
+                        try await Task.sleep(nanoseconds: silenceRemaining)
+                        guard !Task.isCancelled else { return }
+                        noWordSoundActive = true
+                        audioManager?.playCountdownSound()
+                        try await Task.sleep(nanoseconds: soundThreshold)
+                    } else {
+                        noWordSoundActive = true
+                        audioManager?.playCountdownSound()
+                        if remainingNanos > 0 {
+                            try await Task.sleep(nanoseconds: remainingNanos)
+                        }
                     }
                     for seconds in stride(from: 5, through: 1, by: -1) {
                         guard !Task.isCancelled else { return }
@@ -608,6 +637,8 @@ final class GameViewModel: ObservableObject {
                 }
                 guard !Task.isCancelled else { return }
                 noWordCountdown = nil
+                noWordSoundActive = false
+                // Sound is intentionally left playing while the game-over menu shows.
                 isGameOver = true
             } catch {}
         }
@@ -619,8 +650,14 @@ final class GameViewModel: ObservableObject {
         noWordTimerPhaseStart = Date()
         noWordTimerTask = Task {
             do {
-                // 10 s silent window
-                try await Task.sleep(nanoseconds: 10_000_000_000)
+                // 5 s of pure silence
+                try await Task.sleep(nanoseconds: 5_000_000_000)
+                guard !Task.isCancelled else { return }
+                // 10 s remain — start countdown sound
+                noWordSoundActive = true
+                audioManager?.playCountdownSound()
+                // 5 s with sound, still no visible indicator
+                try await Task.sleep(nanoseconds: 5_000_000_000)
                 // 5 s visible countdown
                 for seconds in stride(from: 5, through: 1, by: -1) {
                     guard !Task.isCancelled else { return }
@@ -629,6 +666,8 @@ final class GameViewModel: ObservableObject {
                 }
                 guard !Task.isCancelled else { return }
                 noWordCountdown = nil
+                noWordSoundActive = false
+                // Sound is intentionally left playing while the game-over menu shows.
                 isGameOver = true
             } catch {}
         }
@@ -829,6 +868,7 @@ final class GameViewModel: ObservableObject {
         cancelNoWordTimer()
         coins -= cost
         hintCharges += count
+        audioManager?.playRegisterSound()
         triggerHaptic(.light)
     }
 
@@ -838,6 +878,7 @@ final class GameViewModel: ObservableObject {
         cancelNoWordTimer()
         coins -= cost
         shuffleCharges += count
+        audioManager?.playRegisterSound()
         triggerHaptic(.light)
     }
 
@@ -847,6 +888,7 @@ final class GameViewModel: ObservableObject {
         cancelNoWordTimer()
         coins -= cost
         bombCharges += count
+        audioManager?.playRegisterSound()
         triggerHaptic(.light)
     }
 
@@ -856,6 +898,7 @@ final class GameViewModel: ObservableObject {
         cancelNoWordTimer()
         coins -= cost
         wildCharges += count
+        audioManager?.playRegisterSound()
         triggerHaptic(.light)
     }
 

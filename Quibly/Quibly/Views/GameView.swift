@@ -154,7 +154,10 @@ struct GameView: View {
             .animation(.easeInOut(duration: 0.35), value: vm.isNewPersonalBest)
         }
         .ignoresSafeArea(edges: .top)
-        .onAppear { audio.play() }
+        .onAppear {
+            audio.play()
+            vm.audioManager = audio
+        }
         .onChange(of: vm.powerUpAnimation) { _, anim in
             guard let anim else { return }
             switch anim {
