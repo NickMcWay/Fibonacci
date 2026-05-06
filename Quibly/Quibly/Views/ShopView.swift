@@ -301,16 +301,19 @@ struct ShopView: View {
             Spacer()
 
             Button {
-                guard canAfford else { return }
-                coins -= pu.cost
-                switch pu.id {
-                case "hint":    hintCharges += 1
-                case "shuffle": shuffleCharges += 1
-                case "joker":   wildCharges += 1
-                case "bomb":    bombCharges += 1
-                default: break
+                if canAfford {
+                    coins -= pu.cost
+                    switch pu.id {
+                    case "hint":    hintCharges += 1
+                    case "shuffle": shuffleCharges += 1
+                    case "joker":   wildCharges += 1
+                    case "bomb":    bombCharges += 1
+                    default: break
+                    }
+                    audio.playRegisterSound()
+                } else {
+                    audio.playWrongSelectionFeedback()
                 }
-                audio.playRegisterSound()
             } label: {
                 HStack(spacing: 5) {
                     Circle()
@@ -333,7 +336,6 @@ struct ShopView: View {
                 )
             }
             .buttonStyle(.plain)
-            .disabled(!canAfford)
         }
         .padding(12)
         .qCard(cornerRadius: 20)

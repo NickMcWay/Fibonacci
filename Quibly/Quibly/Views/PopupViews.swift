@@ -276,6 +276,7 @@ struct BuyChargePopupSheet: View {
     let onBuy: (Int) -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var audio: AudioManager
 
     var body: some View {
         VStack(spacing: 0) {
@@ -345,9 +346,12 @@ struct BuyChargePopupSheet: View {
     private func buyCard(qty: Int, cost: Int, popular: Bool) -> some View {
         let canAfford = coins >= cost
         return Button {
-            guard canAfford else { return }
-            onBuy(qty)
-            dismiss()
+            if canAfford {
+                onBuy(qty)
+                dismiss()
+            } else {
+                audio.playWrongSelectionFeedback()
+            }
         } label: {
             ZStack(alignment: .top) {
                 RoundedRectangle(cornerRadius: 18)
@@ -405,7 +409,6 @@ struct BuyChargePopupSheet: View {
             }
         }
         .buttonStyle(.plain)
-        .disabled(!canAfford)
         .opacity(canAfford ? 1 : 0.55)
     }
 }

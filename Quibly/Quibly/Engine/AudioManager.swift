@@ -129,6 +129,7 @@ final class AudioManager: ObservableObject {
 
     func playRegisterSound() {
         playEffect(registerPlayer)
+        playSubtleHaptic(intensity: 0.65)
     }
 
     func toggleMute() {
