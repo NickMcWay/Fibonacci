@@ -200,7 +200,8 @@ struct MenuView: View {
     // MARK: - Daily Button
 
     private var dailyButton: some View {
-        Button { showDaily = true } label: {
+        let canClaim = !DailyRewardManager.shared.hasClaimedToday
+        return Button { showDaily = true } label: {
             HStack(spacing: 6) {
                 Image(systemName: "gift.fill")
                     .font(.system(size: 13, weight: .bold))
@@ -220,16 +221,13 @@ struct MenuView: View {
                     .shadow(color: Color(red: 0.63, green: 0.12, blue: 0.35).opacity(0.4), radius: 0, x: 0, y: 3)
             )
             .overlay(alignment: .topTrailing) {
-                ZStack {
+                if canClaim {
                     Circle()
                         .fill(Color.qSun1)
                         .shadow(color: Color(red: 0.71, green: 0.43, blue: 0).opacity(0.4), radius: 0, x: 0, y: 2)
-                    Text("3")
-                        .font(.system(size: 10, weight: .heavy, design: .rounded))
-                        .foregroundStyle(Color.qGoldDeep)
+                        .frame(width: 12, height: 12)
+                        .offset(x: 4, y: -4)
                 }
-                .frame(width: 18, height: 18)
-                .offset(x: 6, y: -6)
             }
         }
         .buttonStyle(.plain)

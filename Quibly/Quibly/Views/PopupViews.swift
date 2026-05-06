@@ -418,17 +418,22 @@ struct BuyChargePopupSheet: View {
 
 struct DailyRewardPopupSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("SlideWords_Coins") private var coins: Int = 125
 
-    private struct Day { let n: Int; let reward: String; let icon: String?; let claimed: Bool; let today: Bool }
-    private let days: [Day] = [
-        .init(n: 1, reward: "+25",  icon: nil,             claimed: true,  today: false),
-        .init(n: 2, reward: "+50",  icon: nil,             claimed: true,  today: false),
-        .init(n: 3, reward: "+75",  icon: "lightbulb.fill", claimed: false, today: true),
-        .init(n: 4, reward: "+100", icon: nil,             claimed: false, today: false),
-        .init(n: 5, reward: "Shuffle", icon: "shuffle",    claimed: false, today: false),
-        .init(n: 6, reward: "+200", icon: nil,             claimed: false, today: false),
-        .init(n: 7, reward: "Chest", icon: "gift.fill",    claimed: false, today: false),
-    ]
+    private let manager = DailyRewardManager.shared
+    @State private var claimedToday: Bool = DailyRewardManager.shared.hasClaimedToday
+    @State private var currentDay:   Int  = DailyRewardManager.shared.currentDayInCycle
+    @State private var displayStreak: Int = DailyRewardManager.shared.streak
+
+    private var streakLabel: String {
+        let day = currentDay
+        let suffix = claimedToday ? " · Reward claimed!" : " · Keep your streak alive!"
+        return "Day \(day)\(suffix)"
+    }
+
+    private var todayIconName: String {
+        manager.dayConfigs[manager.todayRewardIndex].icon ?? "circle.fill"
+    }
 
     var body: some View {
         ZStack {
@@ -489,7 +494,7 @@ struct DailyRewardPopupSheet: View {
                             Image(systemName: "flame.fill")
                                 .font(.system(size: 13, weight: .bold))
                                 .foregroundStyle(Color.qSun2)
-                            Text("Day 3 · Keep your streak alive!")
+                            Text(streakLabel)
                                 .font(.system(size: 14, weight: .semibold, design: .rounded))
                                 .foregroundStyle(Color.qInk.opacity(0.7))
                         }
@@ -499,10 +504,10 @@ struct DailyRewardPopupSheet: View {
                     // 7-day grid — 4 across on top, then 3 across
                     VStack(spacing: 10) {
                         HStack(spacing: 10) {
-                            ForEach(days.prefix(4), id: \.n) { dayBox($0) }
+                            ForEach(1...4, id: \.self) { dayBox(dayNumber: $0) }
                         }
                         HStack(spacing: 10) {
-                            ForEach(Array(days.dropFirst(4)), id: \.n) { dayBox($0) }
+                            ForEach(5...7, id: \.self) { dayBox(dayNumber: $0) }
                         }
                     }
                     .padding(.horizontal, 22)
@@ -514,41 +519,62 @@ struct DailyRewardPopupSheet: View {
                             Circle()
                                 .fill(LinearGradient(colors: [Color.qSun1, Color.qSun2], startPoint: .top, endPoint: .bottom))
                                 .shadow(color: Color.qSun2.opacity(0.4), radius: 0, x: 0, y: 3)
-                            Image(systemName: "lightbulb.fill")
+                            Image(systemName: todayIconName)
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundStyle(Color.qGoldDeep)
                         }
                         .frame(width: 44, height: 44)
                         VStack(alignment: .leading, spacing: 3) {
-                            Text("Today's Reward")
+                            Text(claimedToday ? "Claimed!" : "Today's Reward")
                                 .font(.system(size: 13, weight: .heavy, design: .rounded))
                                 .foregroundStyle(Color.qInk)
                                 .tracking(0.3)
-                            Text("+75 coins + 1 Hint power-up")
+                            Text(manager.todayRewardDescription())
                                 .font(.system(size: 12, weight: .semibold, design: .rounded))
                                 .foregroundStyle(Color.qInk.opacity(0.7))
                         }
                         Spacer()
+                        if claimedToday {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 26, weight: .bold))
+                                .foregroundStyle(Color.qMint2)
+                        }
                     }
                     .padding(14)
                     .qCard(cornerRadius: 18)
                     .padding(.horizontal, 22)
                     .padding(.bottom, 22)
 
-                    // Claim button
-                    Button { dismiss() } label: {
-                        HStack(spacing: 10) {
-                            Image(systemName: "gift.fill")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundStyle(Color.qGoldDeep)
-                            Text("Claim Today's Reward")
+                    // Claim / close button
+                    if claimedToday {
+                        Button { dismiss() } label: {
+                            Text("Come back tomorrow!")
                                 .font(.system(size: 18, weight: .semibold, design: .rounded))
-                                .foregroundStyle(Color.qGoldDeep)
+                                .foregroundStyle(Color.qInk)
                         }
+                        .buttonStyle(PuffyButtonStyle(variant: .ghost))
+                        .padding(.horizontal, 22)
+                        .padding(.bottom, 40)
+                    } else {
+                        Button {
+                            manager.claimTodayReward()
+                            claimedToday  = true
+                            currentDay    = manager.currentDayInCycle
+                            displayStreak = manager.streak
+                        } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: "gift.fill")
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundStyle(Color.qGoldDeep)
+                                Text("Claim Today's Reward")
+                                    .font(.system(size: 18, weight: .semibold, design: .rounded))
+                                    .foregroundStyle(Color.qGoldDeep)
+                            }
+                        }
+                        .buttonStyle(PuffyButtonStyle(variant: .gold))
+                        .padding(.horizontal, 22)
+                        .padding(.bottom, 40)
                     }
-                    .buttonStyle(PuffyButtonStyle(variant: .gold))
-                    .padding(.horizontal, 22)
-                    .padding(.bottom, 40)
                 }
             }
         }
@@ -556,52 +582,58 @@ struct DailyRewardPopupSheet: View {
         .presentationDragIndicator(.hidden)
     }
 
-    private func dayBox(_ day: Day) -> some View {
+    @ViewBuilder
+    private func dayBox(dayNumber: Int) -> some View {
+        let cfg     = manager.dayConfigs[dayNumber - 1]
+        let claimed = manager.isClaimed(dayNumber: dayNumber)
+        let isToday = dayNumber == currentDay
+
         VStack(spacing: 6) {
-            Text("Day \(day.n)")
+            Text("Day \(dayNumber)")
                 .font(.system(size: 9, weight: .heavy, design: .rounded))
-                .foregroundStyle(day.today ? Color.white : Color.qInk.opacity(0.60))
+                .foregroundStyle(isToday ? Color.white : Color.qInk.opacity(0.60))
                 .tracking(0.3)
 
-            if let icon = day.icon {
+            if let icon = cfg.icon {
                 Image(systemName: icon)
-                    .font(.system(size: day.n == 7 ? 24 : 18, weight: .bold))
-                    .foregroundStyle(day.today ? Color.white : Color.qInk)
-                    .shadow(color: day.today ? Color.qGoldDeep.opacity(0.4) : Color.clear, radius: 0, x: 0, y: 1)
+                    .font(.system(size: dayNumber == 7 ? 24 : 18, weight: .bold))
+                    .foregroundStyle(isToday ? Color.white : Color.qInk)
+                    .shadow(color: isToday ? Color.qGoldDeep.opacity(0.4) : Color.clear, radius: 0, x: 0, y: 1)
             } else {
-                Text(day.reward)
+                Text(cfg.displayText)
                     .font(.system(size: 14, weight: .bold, design: .rounded))
-                    .foregroundStyle(day.today ? Color.white : Color.qInk)
-                    .shadow(color: day.today ? Color.qGoldDeep.opacity(0.4) : Color.clear, radius: 0, x: 0, y: 1)
+                    .foregroundStyle(isToday ? Color.white : Color.qInk)
+                    .shadow(color: isToday ? Color.qGoldDeep.opacity(0.4) : Color.clear, radius: 0, x: 0, y: 1)
             }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(day.today
+                .fill(isToday
                     ? LinearGradient(colors: [Color.qSun1, Color.qSun2], startPoint: .top, endPoint: .bottom)
                     : LinearGradient(
-                        colors: [Color.white.opacity(day.claimed ? 0.45 : 0.65), Color.white.opacity(day.claimed ? 0.35 : 0.55)],
+                        colors: [Color.white.opacity(claimed ? 0.45 : 0.65),
+                                 Color.white.opacity(claimed ? 0.35 : 0.55)],
                         startPoint: .top, endPoint: .bottom
                       )
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
-                        .stroke(day.today ? Color.white.opacity(0.55) : Color.qInk.opacity(0.15), lineWidth: 1)
+                        .stroke(isToday ? Color.white.opacity(0.55) : Color.qInk.opacity(0.15), lineWidth: 1)
                 )
-                .shadow(color: day.today ? Color.qSun2.opacity(0.45) : Color.clear, radius: 0, x: 0, y: 3)
+                .shadow(color: isToday ? Color.qSun2.opacity(0.45) : Color.clear, radius: 0, x: 0, y: 3)
         )
         .overlay(alignment: .topTrailing) {
-            if day.claimed {
+            if claimed {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(Color.qMint2)
                     .offset(x: 5, y: -5)
             }
         }
-        .opacity(day.claimed && !day.today ? 0.5 : 1.0)
-        .wiggle(active: day.today)
+        .opacity(claimed && !isToday ? 0.5 : 1.0)
+        .wiggle(active: isToday && !claimedToday)
     }
 }
 
