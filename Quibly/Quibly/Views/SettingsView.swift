@@ -96,6 +96,7 @@ struct SettingsView: View {
                 Text("View the full Quibly Terms of Service in your browser.")
             }
         }
+        .preferredColorScheme(darkMode ? .dark : .light)
     }
 
     // Extracted to help the type-checker
