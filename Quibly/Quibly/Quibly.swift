@@ -52,6 +52,7 @@ struct ContentRouter: View {
             set: { if !$0 { hasSeenTutorial = true } }
         )) {
             TutorialView(onDismiss: { hasSeenTutorial = true })
+                .preferredColorScheme(darkMode ? .dark : .light)
         }
     }
 }
