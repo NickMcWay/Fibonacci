@@ -77,6 +77,7 @@ final class AudioManager: ObservableObject {
         wrongPlayer = loadEffect(named: "Wrong")
         countdownPlayer = loadCountdownEffect()
         registerPlayer = loadEffect(named: "RegisterSound")
+        registerPlayer?.volume = 1.0
     }
 
     private func loadEffect(named name: String) -> AVAudioPlayer? {
