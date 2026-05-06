@@ -21,14 +21,34 @@ struct ModesView: View {
         let unlock: String?
     }
 
-    private let modes: [ModeConfig] = [
-        .init(id: "classic",   icon: "🟪", label: "Classic",      desc: "4×4 board · the original",       gradient: [Color.qGrape1, Color.qGrape2],     locked: false, badge: nil,     unlock: nil),
-        .init(id: "blitz",     icon: "⚡", label: "Blitz",        desc: "90 seconds · score sprint",      gradient: [Color.qSky1, Color.qSky2],         locked: false, badge: "NEW",   unlock: nil),
-        .init(id: "zen",       icon: "🍃", label: "Zen",          desc: "No game-over · just vibes",      gradient: [Color.qMint1, Color.qMint2],       locked: false, badge: nil,     unlock: nil),
-        .init(id: "daily",     icon: "📅", label: "Daily Puzzle", desc: "Same board worldwide",           gradient: [Color.qSun1, Color(red: 1, green: 0.69, blue: 0.23)], locked: false, badge: "TODAY", unlock: nil),
-        .init(id: "sprint",    icon: "🎯", label: "Sprint",       desc: "30 moves · max score",           gradient: [Color(red: 0.38, green: 0.88, blue: 0.82), Color(red: 0.10, green: 0.68, blue: 0.72)], locked: false, badge: "NEW",   unlock: nil),
-        .init(id: "duel",      icon: "⚔️", label: "Duel",         desc: "Async vs. friends",              gradient: [Color.qCoral1, Color.qCoral2],     locked: true,  badge: nil,     unlock: "Lvl 15"),
-    ]
+    private var dailyBestScore: Int {
+        UserDefaults.standard.integer(forKey: "DailyPuzzle_BestScore")
+    }
+
+    private var hasDailyBeenCompletedToday: Bool {
+        guard let date = UserDefaults.standard.object(forKey: "DailyPuzzle_CompletedDate") as? Date else { return false }
+        return Calendar.current.isDateInToday(date)
+    }
+
+    private var dailyDesc: String {
+        if hasDailyBeenCompletedToday && dailyBestScore > 0 {
+            return "Completed · Best: \(dailyBestScore)"
+        }
+        return "Same board worldwide"
+    }
+
+    private var dailyBadge: String? {
+        hasDailyBeenCompletedToday ? "DONE" : "TODAY"
+    }
+
+    private var modes: [ModeConfig] {[
+        .init(id: "classic",   icon: "🟪", label: "Classic",      desc: "4×4 board · the original",       gradient: [Color.qGrape1, Color.qGrape2],     locked: false, badge: nil,          unlock: nil),
+        .init(id: "blitz",     icon: "⚡", label: "Blitz",        desc: "90 seconds · score sprint",      gradient: [Color.qSky1, Color.qSky2],         locked: false, badge: "NEW",        unlock: nil),
+        .init(id: "zen",       icon: "🍃", label: "Zen",          desc: "No game-over · just vibes",      gradient: [Color.qMint1, Color.qMint2],       locked: false, badge: nil,          unlock: nil),
+        .init(id: "daily",     icon: "📅", label: "Daily Puzzle", desc: dailyDesc,                        gradient: [Color.qSun1, Color(red: 1, green: 0.69, blue: 0.23)], locked: false, badge: dailyBadge, unlock: nil),
+        .init(id: "sprint",    icon: "🎯", label: "Sprint",       desc: "30 moves · max score",           gradient: [Color(red: 0.38, green: 0.88, blue: 0.82), Color(red: 0.10, green: 0.68, blue: 0.72)], locked: false, badge: "NEW", unlock: nil),
+        .init(id: "duel",      icon: "⚔️", label: "Duel",         desc: "Async vs. friends",              gradient: [Color.qCoral1, Color.qCoral2],     locked: true,  badge: nil,          unlock: "Lvl 15"),
+    ]}
 
     private let languages: [GameLanguage] = GameLanguage.allCases
 

@@ -20,6 +20,9 @@ final class GameViewModel: ObservableObject {
             if isGameOver && !oldValue {
                 let played = UserDefaults.standard.integer(forKey: gamesPlayedKey) + 1
                 UserDefaults.standard.set(played, forKey: gamesPlayedKey)
+                if settings.gameMode == .daily {
+                    recordDailyPuzzleCompletion()
+                }
             }
         }
     }
@@ -97,17 +100,36 @@ final class GameViewModel: ObservableObject {
 
     private let settings: GameSettings
     private var board: BoardModel
-    private let bestScoreKey      = "SlideWords_BestScore"
-    private let coinsKey          = "SlideWords_Coins"
-    private let totalXPKey        = "SlideWords_TotalXP"
-    static let xpPerLevel: Int    = 500
-    private let hintChargesKey    = "SlideWords_HintCharges"
-    private let bombChargesKey    = "SlideWords_BombCharges"
-    private let shuffleChargesKey = "SlideWords_ShuffleCharges"
-    private let wildChargesKey    = "SlideWords_WildCharges"
-    private let gamesPlayedKey    = "SlideWords_GamesPlayed"
-    private let totalWordsKey     = "SlideWords_TotalWords"
-    private let longestWordKey    = "SlideWords_LongestWord"
+    private let bestScoreKey         = "SlideWords_BestScore"
+    private let coinsKey             = "SlideWords_Coins"
+    private let totalXPKey           = "SlideWords_TotalXP"
+    static let xpPerLevel: Int       = 500
+    private let hintChargesKey       = "SlideWords_HintCharges"
+    private let bombChargesKey       = "SlideWords_BombCharges"
+    private let shuffleChargesKey    = "SlideWords_ShuffleCharges"
+    private let wildChargesKey       = "SlideWords_WildCharges"
+    private let gamesPlayedKey       = "SlideWords_GamesPlayed"
+    private let totalWordsKey        = "SlideWords_TotalWords"
+    private let longestWordKey       = "SlideWords_LongestWord"
+    private let dailyCompletedKey    = "DailyPuzzle_CompletedDate"
+    private let dailyBestScoreKey    = "DailyPuzzle_BestScore"
+
+    var hasDailyPuzzleBeenCompletedToday: Bool {
+        guard let date = UserDefaults.standard.object(forKey: dailyCompletedKey) as? Date else { return false }
+        return Calendar.current.isDateInToday(date)
+    }
+
+    var dailyPuzzleBestScore: Int {
+        UserDefaults.standard.integer(forKey: dailyBestScoreKey)
+    }
+
+    private func recordDailyPuzzleCompletion() {
+        UserDefaults.standard.set(Date(), forKey: dailyCompletedKey)
+        let existing = UserDefaults.standard.integer(forKey: dailyBestScoreKey)
+        if score > existing {
+            UserDefaults.standard.set(score, forKey: dailyBestScoreKey)
+        }
+    }
     private var pendingSwipeDirection: SwipeDirection = .left
     private var hintTimerTask: Task<Void, Never>?
 
