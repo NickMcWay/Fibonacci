@@ -13,11 +13,11 @@ struct ModesView: View {
     private struct ModeConfig {
         let id: String
         let icon: String
-        let label: LocalizedStringKey
-        let desc: LocalizedStringKey
+        let label: String
+        let desc: String
         let gradient: [Color]
         let locked: Bool
-        let badge: LocalizedStringKey?
+        let badge: String?
         let unlock: String?
     }
 
