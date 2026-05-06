@@ -22,6 +22,16 @@ enum GameLanguage: String, CaseIterable, Identifiable {
         }
     }
 
+    var displayName: String {
+        switch self {
+        case .english: return "English"
+        case .dutch:   return "Nederlands"
+        case .german:  return "Deutsch"
+        case .french:  return "Français"
+        case .spanish: return "Español"
+        }
+    }
+
     // Standard Scrabble letter point values, keyed by lowercase Character.
     var scrabbleValues: [Character: Int] {
         switch self {

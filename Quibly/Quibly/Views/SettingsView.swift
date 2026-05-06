@@ -48,7 +48,7 @@ struct SettingsView: View {
             // Language picker
             .confirmationDialog("Select Language", isPresented: $showLanguagePicker, titleVisibility: .visible) {
                 ForEach(GameLanguage.allCases) { lang in
-                    Button("\(lang.flag)  \(lang.rawValue)") { selectedLanguageRaw = lang.rawValue }
+                    Button("\(lang.flag)  \(lang.displayName)") { selectedLanguageRaw = lang.rawValue }
                 }
                 Button("Cancel", role: .cancel) {}
             }
@@ -118,9 +118,9 @@ struct SettingsView: View {
                             settingsGroup(title: "Gameplay") {
                                 toggleRow(icon: "lightbulb.fill", label: "Auto-hints", sublabel: "Glow tiles after 10s", binding: $autoHints)
                                 pickerRow(icon: "globe", label: "Language",
-                                          value: "\(selectedLanguage.flag) \(selectedLanguage.rawValue)") { showLanguagePicker = true }
+                                          value: "\(selectedLanguage.flag) \(selectedLanguage.displayName)") { showLanguagePicker = true }
                                 pickerRow(icon: "square.grid.2x2.fill", label: "Default board",
-                                          value: "\(selectedVariant.displayName) (\(selectedVariant.label))") { showBoardPicker = true }
+                                          value: selectedVariant.displayName) { showBoardPicker = true }
                             }
 
                             settingsGroup(title: "Look & Feel") {
@@ -153,9 +153,10 @@ struct SettingsView: View {
     // MARK: - Settings Group
 
     @ViewBuilder
-    private func settingsGroup(title: String, @ViewBuilder content: () -> some View) -> some View {
+    private func settingsGroup(title: LocalizedStringKey, @ViewBuilder content: () -> some View) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(title.uppercased())
+            Text(title)
+                .textCase(.uppercase)
                 .font(.system(size: 13, weight: .heavy, design: .rounded))
                 .foregroundStyle(Color.white.opacity(0.95))
                 .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 1)
@@ -179,7 +180,7 @@ struct SettingsView: View {
 
     // MARK: - Toggle Row
 
-    private func toggleRow(icon: String, label: String, sublabel: String? = nil, binding: Binding<Bool>) -> some View {
+    private func toggleRow(icon: String, label: LocalizedStringKey, sublabel: LocalizedStringKey? = nil, binding: Binding<Bool>) -> some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
                 .font(.system(size: 17, weight: .semibold))
@@ -213,7 +214,7 @@ struct SettingsView: View {
 
     // MARK: - Picker Row
 
-    private func pickerRow(icon: String, label: String, value: String, action: @escaping () -> Void) -> some View {
+    private func pickerRow(icon: String, label: LocalizedStringKey, value: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 12) {
                 Image(systemName: icon)
@@ -250,7 +251,7 @@ struct SettingsView: View {
 
     // MARK: - Action Row
 
-    private func actionRow(icon: String, label: String, action: @escaping () -> Void) -> some View {
+    private func actionRow(icon: String, label: LocalizedStringKey, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 12) {
                 Image(systemName: icon)

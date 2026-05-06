@@ -83,7 +83,7 @@ struct MenuView: View {
                             Button { showModes = true } label: {
                                 HStack(spacing: 8) {
                                     Text("Mode").opacity(0.7)
-                                    Text("\(selectedLanguage.flag) \(selectedVariant.label)")
+                                    Text("\(selectedLanguage.flag) ") + Text(LocalizedStringKey(selectedVariant.label))
                                         .fontWeight(.semibold)
                                     Text("›").opacity(0.6)
                                 }
@@ -345,7 +345,7 @@ struct MenuView: View {
         }
     }
 
-    private func navButton(label: String, icon: String, gradient: [Color], action: @escaping () -> Void) -> some View {
+    private func navButton(label: LocalizedStringKey, icon: String, gradient: [Color], action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 4) {
                 Image(systemName: icon)
