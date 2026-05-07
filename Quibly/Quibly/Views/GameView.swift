@@ -33,7 +33,7 @@ struct GameView: View {
         .onAppear {
             audio.play()
         }
-        .onChange(of: vm.powerUpAnimation) { _, anim in
+        .onChange(of: vm.powerUpAnimation) {anim in
             guard let anim else { return }
             switch anim {
             case .hint:    playHintAnimation()
@@ -75,12 +75,12 @@ struct GameView: View {
             ) { count in vm.shopBuyWilds(count: count) }
             .presentationDetents([.height(360)])
         }
-        .onChange(of: showShop)            { _, showing in if showing { vm.cancelNoWordTimer() } }
-        .onChange(of: showBuyHintSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
-        .onChange(of: showBuyShuffleSheet) { _, showing in if showing { vm.pauseNoWordTimer() } }
-        .onChange(of: showBuyBombSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
-        .onChange(of: showBuyWildSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
-        .onChange(of: vm.noWordCountdown)  { _, countdown in
+        .onChange(of: showShop)            {showing in if showing { vm.cancelNoWordTimer() } }
+        .onChange(of: showBuyHintSheet)    {showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: showBuyShuffleSheet) {showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: showBuyBombSheet)    {showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: showBuyWildSheet)    {showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: vm.noWordCountdown)  {countdown in
             if countdown == 10 {
                 audio.playCountdownSound()
             } else if countdown == nil {

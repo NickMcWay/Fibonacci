@@ -3262,9 +3262,6 @@
         }
       }
     },
-    "R" : {
-
-    },
     "Randomly rearranges all tiles" : {
       "localizations" : {
         "de" : {
@@ -3516,9 +3513,6 @@
           }
         }
       }
-    },
-    "Riley" : {
-
     },
     "Same board worldwide" : {
       "extractionState" : "stale",
