@@ -43,7 +43,7 @@ struct TutorialView: View {
         TutorialStep(
             icon: "person.fill",
             iconColors: [Color.qBubble1, Color.qGrape1],
-            title: "What's your name?",
+            title: "What may I call you?",
             body: "This is how you'll appear in the game."
         ),
         TutorialStep(
