@@ -57,9 +57,10 @@ struct MenuView: View {
                                     gradient: [Color(red: 1, green: 0.85, blue: 0.77), Color(red: 1, green: 0.67, blue: 0.48)]
                                 )
                                 QStatChip(
-                                    icon: "dollarsign.circle.fill", iconColor: Color(red: 0.94, green: 0.65, blue: 0.13),
+                                    icon: "circle.fill", iconColor: Color(red: 0.94, green: 0.65, blue: 0.13),
                                     label: "Coins", value: "\(coins)",
-                                    gradient: [Color(red: 1, green: 0.97, blue: 0.85), Color(red: 1, green: 0.89, blue: 0.60)]
+                                    gradient: [Color(red: 1, green: 0.97, blue: 0.85), Color(red: 1, green: 0.89, blue: 0.60)],
+                                    coinStyle: true
                                 )
                             }
                             .padding(.horizontal, 30)
