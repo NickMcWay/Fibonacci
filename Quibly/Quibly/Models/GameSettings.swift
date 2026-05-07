@@ -12,6 +12,16 @@ enum GameLanguage: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
+    var localeIdentifier: String {
+        switch self {
+        case .english: return "en"
+        case .dutch:   return "nl"
+        case .german:  return "de"
+        case .french:  return "fr"
+        case .spanish: return "es"
+        }
+    }
+
     var flag: String {
         switch self {
         case .english: return "🇬🇧"

@@ -19,8 +19,14 @@ struct FibonacciApp: App {
 // Routes between the menu and the active game.
 struct ContentRouter: View {
     @State private var activeSettings: GameSettings? = nil
-    @AppStorage("SlideWords_DarkMode")       private var darkMode: Bool = false
+    @AppStorage("SlideWords_DarkMode")        private var darkMode: Bool = false
     @AppStorage("SlideWords_HasSeenTutorial") private var hasSeenTutorial: Bool = false
+    @AppStorage("SlideWords_SelectedLanguage") private var selectedLanguageRaw: String = GameLanguage.english.rawValue
+
+    private var appLocale: Locale {
+        let lang = GameLanguage(rawValue: selectedLanguageRaw) ?? .english
+        return Locale(identifier: lang.localeIdentifier)
+    }
 
     var body: some View {
         Group {
@@ -46,6 +52,7 @@ struct ContentRouter: View {
                 ))
             }
         }
+        .environment(\.locale, appLocale)
         .preferredColorScheme(darkMode ? .dark : .light)
         .fullScreenCover(isPresented: .init(
             get: { !hasSeenTutorial },
