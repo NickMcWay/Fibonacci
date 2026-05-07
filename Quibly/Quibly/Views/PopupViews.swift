@@ -652,12 +652,20 @@ struct DailyRewardPopupSheet: View {
 struct QuestsPopupSheet: View {
     @Environment(\.dismiss) private var dismiss
 
+    @AppStorage(QuestManager.scoreGoalKey)       private var dailyBestScore:  Int = 0
+    @AppStorage(QuestManager.longWordsKey)       private var dailyLongWords:  Int = 0
+    @AppStorage(QuestManager.gamesPlayedKey)     private var dailyGames:      Int = 0
+    @AppStorage(QuestManager.weekCompletionsKey) private var weeklyDone:      Int = 0
+
+    @State private var resetText: String = ""
+
     private struct Quest { let name: String; let icon: String; let color: [Color]; let progress: Int; let total: Int; let reward: Int }
-    private let quests: [Quest] = [
-        .init(name: "Score 500 in one game",     icon: "trophy.fill",  color: [Color.qSun1, Color.qSun2],     progress: 320, total: 500, reward: 50),
-        .init(name: "Spell 5 words ≥ 5 letters", icon: "textformat",   color: [Color.qGrape1, Color.qGrape2], progress: 3,   total: 5,   reward: 30),
-        .init(name: "Trigger a ×3 combo",        icon: "flame.fill",   color: [Color.qCoral1, Color.qCoral2], progress: 0,   total: 1,   reward: 75),
-    ]
+
+    private var quests: [Quest] {[
+        .init(name: "Score 500 in one game",     icon: "trophy.fill",          color: [Color.qSun1, Color.qSun2],     progress: min(dailyBestScore, QuestManager.scoreTarget),     total: QuestManager.scoreTarget,     reward: 50),
+        .init(name: "Spell 5 words ≥ 5 letters", icon: "textformat",           color: [Color.qGrape1, Color.qGrape2], progress: min(dailyLongWords, QuestManager.longWordsTarget), total: QuestManager.longWordsTarget, reward: 30),
+        .init(name: "Play 3 games today",        icon: "gamecontroller.fill",  color: [Color.qCoral1, Color.qCoral2], progress: min(dailyGames, QuestManager.gamesTarget),         total: QuestManager.gamesTarget,     reward: 75),
+    ]}
 
     private var completedCount: Int { quests.filter { $0.progress >= $0.total }.count }
 
@@ -700,7 +708,7 @@ struct QuestsPopupSheet: View {
                                 .font(.system(size: 30, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.qInk)
                                 .shadow(color: Color.qInk.opacity(0.12), radius: 0, x: 0, y: 2)
-                            Text("Resets in 6h 42m")
+                            Text("Resets in \(resetText)")
                                 .font(.system(size: 13, weight: .semibold, design: .rounded))
                                 .foregroundStyle(Color.qInk.opacity(0.6))
                         }
@@ -765,6 +773,7 @@ struct QuestsPopupSheet: View {
                     .padding(.bottom, 22)
 
                     // Weekly chest
+                    let weeklyTarget = QuestManager.weeklyTarget
                     VStack(alignment: .leading, spacing: 12) {
                         Text("WEEKLY CHEST")
                             .font(.system(size: 11, weight: .heavy, design: .rounded))
@@ -785,10 +794,10 @@ struct QuestsPopupSheet: View {
                             .frame(width: 68, height: 68)
 
                             VStack(alignment: .leading, spacing: 6) {
-                                Text("Complete 30 quests")
+                                Text("Complete \(weeklyTarget) quests")
                                     .font(.system(size: 15, weight: .semibold, design: .rounded))
                                     .foregroundStyle(Color.qInk)
-                                Text("21 of 30 weekly quests done")
+                                Text("\(weeklyDone) of \(weeklyTarget) weekly quests done")
                                     .font(.system(size: 11, weight: .medium, design: .rounded))
                                     .foregroundStyle(Color.qInk.opacity(0.6))
                                 ZStack(alignment: .leading) {
@@ -798,13 +807,13 @@ struct QuestsPopupSheet: View {
                                     GeometryReader { geo in
                                         RoundedRectangle(cornerRadius: 999)
                                             .fill(LinearGradient(colors: [Color.qSun1, Color.qSun2], startPoint: .leading, endPoint: .trailing))
-                                            .frame(width: geo.size.width * (21.0 / 30.0), height: 8)
+                                            .frame(width: geo.size.width * min(1.0, Double(weeklyDone) / Double(weeklyTarget)), height: 8)
                                     }
                                     .frame(height: 8)
                                 }
                             }
 
-                            Text("21/30")
+                            Text("\(weeklyDone)/\(weeklyTarget)")
                                 .font(.system(size: 20, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.qInk)
                         }
@@ -818,6 +827,10 @@ struct QuestsPopupSheet: View {
         }
         .presentationDetents([.large])
         .presentationDragIndicator(.hidden)
+        .onAppear {
+            QuestManager.shared.checkAndResetIfNeeded()
+            resetText = QuestManager.shared.timeUntilResetString
+        }
     }
 
     private func questCard(_ quest: Quest) -> some View {

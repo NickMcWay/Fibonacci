@@ -23,6 +23,7 @@ final class GameViewModel: ObservableObject {
                 if settings.gameMode == .daily {
                     recordDailyPuzzleCompletion()
                 }
+                QuestManager.shared.recordGameCompleted()
             }
         }
     }
@@ -397,6 +398,11 @@ final class GameViewModel: ObservableObject {
             coins += coinTilesUsed * coinPerCoinTile
             checkMilestones()
 
+            QuestManager.shared.recordScore(score)
+            for word in result.clearedWords where word.count >= 5 {
+                QuestManager.shared.recordLongWord()
+            }
+
             withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
                 syncTiles()
             }
@@ -481,6 +487,9 @@ final class GameViewModel: ObservableObject {
         if resolvedWord.count > prevLongest.count {
             UserDefaults.standard.set(resolvedWord.uppercased(), forKey: longestWordKey)
         }
+
+        QuestManager.shared.recordScore(score)
+        if resolvedWord.count >= 5 { QuestManager.shared.recordLongWord() }
 
         withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
             syncTiles()
