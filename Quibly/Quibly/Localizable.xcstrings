@@ -1,1340 +1,4854 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%lld Day Streak" : {
+    "›" : {
+
+    },
+    "%@ " : {
+
+    },
+    "%@  %@" : {
       "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld-Tage-Serie" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Racha de %lld días" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Série de %lld jours" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "%lld-daagse reeks" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@  %2$@"
+          }
+        }
       }
     },
-    "%lld of %lld done" : {
+    "%@ — %@" : {
       "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld von %lld erledigt" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "%lld de %lld completados" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld sur %lld terminés" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "%lld van %lld gedaan" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ — %2$@"
+          }
+        }
+      }
+    },
+    "%lld" : {
+
+    },
+    "%lld / %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld"
+          }
+        }
       }
     },
     "%lld / %lld unlocked" : {
       "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld / %lld freigeschaltet" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "%lld / %lld desbloqueados" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld / %lld débloqués" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "%lld / %lld ontgrendeld" } }
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld / %lld freigeschaltet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld / %lld desbloqueados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld / %lld débloqués"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld / %lld ontgrendeld"
+          }
+        }
       }
+    },
+    "%lld / %lld xp" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld xp"
+          }
+        }
+      }
+    },
+    "%lld / %lld XP" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld XP"
+          }
+        }
+      }
+    },
+    "%lld Day Streak" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld-Tage-Serie"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Racha de %lld días"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Série de %lld jours"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld-daagse reeks"
+          }
+        }
+      }
+    },
+    "%lld of %lld done" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld von %lld erledigt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld de %lld completados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld sur %lld terminés"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld van %lld gedaan"
+          }
+        }
+      }
+    },
+    "%lld×%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld×%2$lld"
+          }
+        }
+      }
+    },
+    "+%lld" : {
+
+    },
+    "+1" : {
+
+    },
+    "+50 bonus coins" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+50 Bonusmünzen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+50 monedas extra"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+50 pièces bonus"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+50 bonusmunten"
+          }
+        }
+      }
+    },
+    "×%lld" : {
+
     },
     "×%lld owned" : {
       "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "×%lld vorhanden" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "×%lld poseído" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "×%lld possédé" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "×%lld in bezit" } }
-      }
-    },
-    "Account" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Konto" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cuenta" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Compte" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Account" } }
-      }
-    },
-    "Additional backgrounds are coming in a future update!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Weitere Hintergründe kommen bald!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Más fondos próximamente!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "De nouveaux fonds arrivent bientôt !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Extra achtergronden komen eraan!" } }
-      }
-    },
-    "Amazing!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Fantastisch!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Increíble!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Incroyable !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Geweldig!" } }
-      }
-    },
-    "Any previous purchases will be restored to your account." : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Frühere Käufe werden wiederhergestellt." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Las compras anteriores serán restauradas." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Vos achats précédents seront restaurés." } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Eerdere aankopen worden hersteld." } }
-      }
-    },
-    "ARMED" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "AKTIV" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "ARMADO" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "ARMÉ" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "ACTIEF" } }
-      }
-    },
-    "Async vs. friends" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Asynchron vs. Freunde" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Asíncrono vs amigos" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Asynchrone vs amis" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Async vs. vrienden" } }
-      }
-    },
-    "Audio & Haptics" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Audio & Haptik" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Audio y hápticos" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Audio et haptique" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Audio & Haptics" } }
-      }
-    },
-    "Auto-hints" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Automatische Hinweise" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Pistas automáticas" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Indices automatiques" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Automatische hints" } }
-      }
-    },
-    "A word-sliding puzzle game. Slide tiles across the board to form words and score points." : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Ein Wort-Schiebepuzzle. Schiebe Kacheln um Wörter zu bilden und Punkte zu sammeln." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Un puzzle de palabras deslizantes. Desliza fichas para formar palabras y ganar puntos." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Un puzzle de mots glissants. Glissez les tuiles pour former des mots et marquer des points." } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Een woordschuifpuzzel. Schuif tegels om woorden te vormen en punten te scoren." } }
-      }
-    },
-    "Back" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zurück" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Atrás" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Retour" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Terug" } }
-      }
-    },
-    "Background" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Hintergrund" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Fondo" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Arrière-plan" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Achtergrond" } }
-      }
-    },
-    "BEST VALUE" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "BESTER WERT" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "MEJOR VALOR" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "MEILLEUR RAPPORT" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "BESTE DEAL" } }
-      }
-    },
-    "Best" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Beste" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mejor" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Meilleur" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Beste" } }
-      }
-    },
-    "Best Combo" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Beste Kombo" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mejor combo" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Meilleur combo" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Beste combo" } }
-      }
-    },
-    "Blitz King" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Blitz-König" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Rey del Blitz" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Roi du Blitz" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Blitz Koning" } }
-      }
-    },
-    "Bomb" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Bombe" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Bomba" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bombe" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Bom" } }
-      }
-    },
-    "Board Size" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Spielfeldgröße" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tamaño del tablero" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Taille du plateau" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Bordgrootte" } }
-      }
-    },
-    "Buy more to keep going." : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Kaufe mehr um weiterzuspielen." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Compra más para continuar." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Achetez-en plus pour continuer." } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Koop meer om door te gaan." } }
-      }
-    },
-    "Buy coins to spend in the shop" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Kaufe Münzen für den Shop" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Compra monedas para gastar en la tienda" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Achetez des pièces à dépenser dans la boutique" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Koop munten om te besteden in de winkel" } }
-      }
-    },
-    "Cancel" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Abbrechen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cancelar" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Annuler" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Annuleren" } }
-      }
-    },
-    "Centurion! 🏆" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zenturio! 🏆" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Centurión! 🏆" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Centurion ! 🏆" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Centurio! 🏆" } }
-      }
-    },
-    "Challenge" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Herausforderung" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Desafío" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Défi" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Uitdaging" } }
-      }
-    },
-    "Choose Your Language" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wähle deine Sprache" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Elige tu idioma" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Choisissez votre langue" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Kies je taal" } }
-      }
-    },
-    "Choose your game" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wähle dein Spiel" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Elige tu juego" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Choisissez votre jeu" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Kies je spel" } }
-      }
-    },
-    "Claim Today's Reward" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Heutige Belohnung abholen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reclamar la recompensa de hoy" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réclamer la récompense d'aujourd'hui" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Claim de beloning van vandaag" } }
-      }
-    },
-    "Classic" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Klassisch" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Clásico" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Classique" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Klassiek" } }
-      }
-    },
-    "Clears a full row and column" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Löscht eine ganze Zeile und Spalte" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Borra una fila y columna completas" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Efface une ligne et une colonne entières" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Wist een volledige rij en kolom" } }
-      }
-    },
-    "Close Profile" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Profil schließen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cerrar perfil" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fermer le profil" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Profiel sluiten" } }
-      }
-    },
-    "Coin Packs" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Münzpakete" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Paquetes de monedas" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Packs de pièces" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Muntenpakketten" } }
-      }
-    },
-    "Coins" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Münzen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Monedas" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Pièces" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Munten" } }
-      }
-    },
-    "Coming Soon" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Kommt bald" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Próximamente" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bientôt disponible" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Binnenkort" } }
-      }
-    },
-    "Coming soon" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Kommt bald" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Próximamente" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bientôt disponible" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Binnenkort" } }
-      }
-    },
-    "Complete 30 quests" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Schließe 30 Aufgaben ab" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Completa 30 misiones" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Complétez 30 quêtes" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Voltooi 30 opdrachten" } }
-      }
-    },
-    "Converts any tile into a joker" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Verwandelt eine Kachel in einen Joker" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Convierte una ficha en comodín" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Convertit une tuile en joker" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Converteert een tegel naar joker" } }
-      }
-    },
-    "Daily" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Täglich" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Diario" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quotidien" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Dagelijks" } }
-      }
-    },
-    "Daily Puzzle" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Tagesrätsel" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Rompecabezas diario" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Puzzle du jour" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Dagelijkse puzzel" } }
-      }
-    },
-    "Daily Quests" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Tägliche Aufgaben" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Misiones diarias" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quêtes quotidiennes" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Dagelijkse opdrachten" } }
-      }
-    },
-    "Daily Reward" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Tägliche Belohnung" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Recompensa diaria" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Récompense quotidienne" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Dagelijkse beloning" } }
-      }
-    },
-    "Dark mode" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Dunkler Modus" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Modo oscuro" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mode sombre" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Donkere modus" } }
-      }
-    },
-    "Day %lld" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Tag %lld" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Día %lld" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Jour %lld" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Dag %lld" } }
-      }
-    },
-    "Default board" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Standard-Brett" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tablero predeterminado" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Plateau par défaut" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Standaard bord" } }
-      }
-    },
-    "Earn %lld free coins — no purchase needed" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Erhalte %lld Münzen gratis — kein Kauf nötig" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Gana %lld monedas gratis — sin compra" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Gagnez %lld pièces gratuites — sans achat" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Verdien %lld gratis munten — geen aankoop nodig" } }
-      }
-    },
-    "EQUIPPED" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "AUSGERÜSTET" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "EQUIPADO" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "ÉQUIPÉ" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "UITGERUST" } }
-      }
-    },
-    "Extended" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Erweitert" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ampliado" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Étendu" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Uitgebreid" } }
-      }
-    },
-    "Final score: %lld" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Endpunktzahl: %lld" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Puntuación final: %lld" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Score final : %lld" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Eindscore: %lld" } }
-      }
-    },
-    "Find 100 words" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "100 Wörter finden" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Encontrar 100 palabras" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Trouver 100 mots" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "100 woorden vinden" } }
-      }
-    },
-    "First Word" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Erstes Wort" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Primera palabra" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Premier mot" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Eerste woord" } }
-      }
-    },
-    "Form Words" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wörter bilden" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Formar palabras" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Former des mots" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Woorden vormen" } }
-      }
-    },
-    "Fortnight Streak! 💪" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zwei-Wochen-Serie! 💪" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Racha quincenal! 💪" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Série de deux semaines ! 💪" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Twee weken reeks! 💪" } }
-      }
-    },
-    "Friends" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Freunde" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Amigos" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Amis" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Vrienden" } }
-      }
-    },
-    "Friends & duels unlock at Level 15." : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Freunde & Duelle schalten sich bei Level 15 frei." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Amigos y duelos se desbloquean en el nivel 15." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Amis et duels se débloquent au niveau 15." } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Vrienden & duels beschikbaar op niveau 15." } }
-      }
-    },
-    "Game Mode" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Spielmodus" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Modo de juego" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mode de jeu" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Spelmodus" } }
-      }
-    },
-    "Game Over" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Spiel vorbei" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Fin del juego" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Partie terminée" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Spel voorbij" } }
-      }
-    },
-    "Gameplay" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Spielweise" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Jugabilidad" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Gameplay" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Gameplay" } }
-      }
-    },
-    "Games" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Spiele" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Partidas" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Parties" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Spellen" } }
-      }
-    },
-    "Get more →" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Mehr kaufen →" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Obtener más →" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "En obtenir plus →" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Meer halen →" } }
-      }
-    },
-    "Glow tiles after 10s" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Kacheln leuchten nach 10s" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Fichas brillan tras 10s" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tuiles brillent après 10s" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Tegels oplichten na 10s" } }
-      }
-    },
-    "Got it" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Verstanden" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Entendido" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Compris" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Begrepen" } }
-      }
-    },
-    "Haptics" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Haptik" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hápticos" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Haptique" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Haptics" } }
-      }
-    },
-    "Hat-trick! 🎯" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Hat-Trick! 🎯" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Hat-trick! 🎯" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hat-trick ! 🎯" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Hat-trick! 🎯" } }
-      }
-    },
-    "High Score" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Highscore" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Puntuación alta" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Meilleur score" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Highscore" } }
-      }
-    },
-    "Hint" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Hinweis" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Pista" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Indice" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Hint" } }
-      }
-    },
-    "Joker" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Joker" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Comodín" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Joker" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Joker" } }
-      }
-    },
-    "Keep the flame alive!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Halte die Flamme am Leben!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Mantén la llama viva!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Gardez la flamme vive !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Houd de vlam brandend!" } }
-      }
-    },
-    "Game language" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Spielsprache" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Idioma del juego" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Langue du jeu" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Speeltaal" } }
-      }
-    },
-    "Language" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Sprache" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Idioma" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Langue" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Taal" } }
-      }
-    },
-    "Overrides game language for the UI" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Überschreibt Spielsprache für die Oberfläche" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reemplaza el idioma del juego en la interfaz" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Remplace la langue du jeu dans l'interface" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Overschrijft de speeltaal voor de interface" } }
-      }
-    },
-    "Use system language" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Systemsprache verwenden" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Usar idioma del sistema" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Utiliser la langue système" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Systeemtaal gebruiken" } }
-      }
-    },
-    "Let's Play!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Los geht's!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡A jugar!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "C'est parti !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Spelen!" } }
-      }
-    },
-    "LIMITED · 48H" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "BEGRENZT · 48H" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "LIMITADO · 48H" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "LIMITÉ · 48H" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "BEPERKT · 48U" } }
-      }
-    },
-    "Look & Feel" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aussehen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Apariencia" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Apparence" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Uiterlijk" } }
-      }
-    },
-    "Menu" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Menü" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Menú" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Menu" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Menu" } }
-      }
-    },
-    "Mode" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Modus" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Modo" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mode" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Modus" } }
-      }
-    },
-    "Modes" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Modi" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Modos" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modes" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Modi" } }
-      }
-    },
-    "Monthly Master! 👑" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Monatlicher Meister! 👑" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Maestro mensual! 👑" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Maître mensuel ! 👑" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Maandelijkse meester! 👑" } }
-      }
-    },
-    "More tile themes are on their way in a future update!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Mehr Themen kommen bald!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Más temas de fichas próximamente!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "De nouveaux thèmes de tuiles arrivent bientôt !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Meer tegelthema's zijn onderweg!" } }
-      }
-    },
-    "Music" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Musik" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Música" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Musique" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Muziek" } }
-      }
-    },
-    "NEW" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "NEU" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "NUEVO" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "NOUVEAU" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "NIEUW" } }
-      }
-    },
-    "New Best!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Neuer Rekord!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Nuevo récord!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nouveau record !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Nieuw record!" } }
-      }
-    },
-    "New Personal Best!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Neuer persönlicher Rekord!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Nuevo récord personal!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nouveau record personnel !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Nieuw persoonlijk record!" } }
-      }
-    },
-    "Next" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Weiter" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Siguiente" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Suivant" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Volgende" } }
-      }
-    },
-    "No game-over · just vibes" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Kein Game-Over · nur Vibe" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin game-over · solo vibras" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Pas de fin de jeu · pur plaisir" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Geen game-over · gewoon spelen" } }
-      }
-    },
-    "OK" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Aceptar" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "OK" } }
-      }
-    },
-    "On Fire" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Auf Feuer" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "En llamas" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "En feu" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "On Fire" } }
-      }
-    },
-    "Open in Browser" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Im Browser öffnen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Abrir en el navegador" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ouvrir dans le navigateur" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Open in browser" } }
-      }
-    },
-    "Out of %@s!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Keine %@s mehr!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Sin %@s!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Plus de %@s !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Geen %@s meer!" } }
-      }
-    },
-    "PLAY" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "SPIELEN" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "JUGAR" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "JOUER" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "SPELEN" } }
-      }
-    },
-    "PROGRESS TO LEVEL %lld" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "FORTSCHRITT ZU LEVEL %lld" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "PROGRESO AL NIVEL %lld" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "PROGRESSION VERS NIVEAU %lld" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "VOORTGANG NAAR NIVEAU %lld" } }
-      }
-    },
-    "Paused" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Pausiert" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "En pausa" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "En pause" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Gepauzeerd" } }
-      }
-    },
-    "Play Again" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Nochmal" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Jugar de nuevo" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rejouer" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Opnieuw" } }
-      }
-    },
-    "Play 10 games" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "10 Spiele spielen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Jugar 10 partidas" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Jouer 10 parties" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "10 spellen spelen" } }
-      }
-    },
-    "Play tomorrow to keep your streak" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Spiele morgen um deine Serie zu erhalten" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Juega mañana para mantener tu racha" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Jouez demain pour garder votre série" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Speel morgen om je reeks te behouden" } }
-      }
-    },
-    "Play your first word" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Dein erstes Wort spielen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Juega tu primera palabra" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Jouer votre premier mot" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Speel je eerste woord" } }
-      }
-    },
-    "Power-Ups" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Power-ups" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Potenciadores" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Power-ups" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Power-ups" } }
-      }
-    },
-    "Privacy" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Datenschutz" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Privacidad" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Confidentialité" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Privacy" } }
-      }
-    },
-    "Privacy Policy" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Datenschutzrichtlinie" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Política de privacidad" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Politique de confidentialité" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Privacybeleid" } }
-      }
-    },
-    "Purchases are processed by Apple and subject to their Terms of Sale." : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Käufe werden von Apple verarbeitet und unterliegen deren Verkaufsbedingungen." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Las compras son procesadas por Apple y están sujetas a sus Términos de venta." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les achats sont traités par Apple et soumis à leurs Conditions de vente." } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Aankopen worden verwerkt door Apple en zijn onderworpen aan hun verkoopvoorwaarden." } }
-      }
-    },
-    "Quit to Menu" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zum Menü" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Salir al menú" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quitter" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Stoppen" } }
-      }
-    },
-    "Quests" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufgaben" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Misiones" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quêtes" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Opdrachten" } }
-      }
-    },
-    "Randomly rearranges all tiles" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Ordnet alle Kacheln zufällig neu" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reordena aleatoriamente todas las fichas" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réorganise aléatoirement toutes les tuiles" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Herschikt willekeurig alle tegels" } }
-      }
-    },
-    "Re-skin your board" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Dein Brett neu gestalten" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Personaliza tu tablero" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Personnalisez votre plateau" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Personaliseer je bord" } }
-      }
-    },
-    "Resets in 6h 42m" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zurückgesetzt in 6h 42m" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reinicia en 6h 42m" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réinitialise dans 6h 42m" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Resets om 6u 42m" } }
-      }
-    },
-    "Restart" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Neu starten" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reiniciar" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Recommencer" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Herstarten" } }
-      }
-    },
-    "Restore" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wiederherstellen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Restaurar" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Restaurer" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Herstellen" } }
-      }
-    },
-    "Restore Purchases" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Käufe wiederherstellen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Restaurar compras" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Restaurer les achats" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Aankopen herstellen" } }
-      }
-    },
-    "Restore purchases" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Käufe wiederherstellen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Restaurar compras" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Restaurer les achats" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Aankopen herstellen" } }
-      }
-    },
-    "Resume" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Fortfahren" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Continuar" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Reprendre" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Doorgaan" } }
-      }
-    },
-    "Reveals a pending word match" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zeigt einen Worttreffer" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Revela una coincidencia de palabras" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Révèle une correspondance de mot" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Onthult een woordmatch" } }
-      }
-    },
-    "Same board worldwide" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Gleiches Brett weltweit" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mismo tablero mundial" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Même plateau mondial" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Zelfde bord wereldwijd" } }
-      }
-    },
-    "Score" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Punkte" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Puntos" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Score" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Punten" } }
-      }
-    },
-    "Score 500+ pts" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "500+ Punkte sammeln" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Conseguir 500+ pts" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Marquer 500+ points" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "500+ punten scoren" } }
-      }
-    },
-    "Select Board Size" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Spielfeldgröße wählen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Seleccionar tamaño del tablero" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Taille du plateau" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Bordgrootte kiezen" } }
-      }
-    },
-    "Select Language" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Sprache wählen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Seleccionar idioma" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Choisir la langue" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Taal kiezen" } }
-      }
-    },
-    "Settings" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Einstellungen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ajustes" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Paramètres" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Instellingen" } }
-      }
-    },
-    "Shop" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Shop" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tienda" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Boutique" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Winkel" } }
-      }
-    },
-    "Shuffle" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Mischen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mezclar" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mélange" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Schud" } }
-      }
-    },
-    "Skip" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Überspringen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Omitir" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Passer" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Overslaan" } }
-      }
-    },
-    "Sparkle Bundle" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Sparkle-Paket" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Paquete Destellos" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Pack Étincelle" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Sparkle Pakket" } }
-      }
-    },
-    "Spend coins for extra charges" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Münzen für Aufladungen ausgeben" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Gasta monedas en cargas extra" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dépensez des pièces pour des charges supplémentaires" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Besteed munten voor extra ladingen" } }
-      }
-    },
-    "Soon" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Bald" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Pronto" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bientôt" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Binnenkort" } }
-      }
-    },
-    "Sound effects" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Soundeffekte" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Efectos de sonido" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Effets sonores" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Geluidseffecten" } }
-      }
-    },
-    "Start" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Starten" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Comenzar" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Démarrer" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Start" } }
-      }
-    },
-    "Streak" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Serie" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Racha" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Série" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Reeks" } }
-      }
-    },
-    "Stuck? Try Shuffle or Bomb to clear tiles!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Festgefahren? Mische oder Bombe!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Atascado? Usa Mezclar o Bomba" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Coincé ? Essayez Mélange ou Bombe !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Vastgelopen? Probeer Schud of Bom!" } }
-      }
-    },
-    "Swipe or act — game over in %llDs!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wische oder handle — Spiel endet in %llDs!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Desliza o actúa — fin en %llDs!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Swipez ou agissez — fin dans %llDs !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Veeg of handel — spel voorbij in %llDs!" } }
-      }
-    },
-    "Swipe to Slide" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wischen zum Schieben" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Desliza para mover" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Balayer pour glisser" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Veeg om te schuiven" } }
-      }
-    },
-    "Swipe left, right, up, or down to slide all tiles in that direction. A new tile spawns after each valid swipe." : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wische links, rechts, hoch oder runter. Nach jedem gültigen Wisch erscheint eine neue Kachel." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Desliza izquierda, derecha, arriba o abajo. Aparece una nueva ficha tras cada deslizamiento válido." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Balayez gauche, droite, haut ou bas. Une nouvelle tuile apparaît après chaque balayage valide." } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Veeg links, rechts, omhoog of omlaag. Na elke geldige veeg verschijnt een nieuwe tegel." } }
-      }
-    },
-    "Swipe smart, clear the board, and chase the high score. Good luck!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wische clever, leere das Brett und jage den Highscore. Viel Glück!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Desliza con inteligencia, limpia el tablero y persigue la puntuación más alta. ¡Buena suerte!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Balayez intelligemment, videz le plateau et poursuivez le score le plus haut. Bonne chance !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Veeg slim, leeg het bord en jaag op de hoogste score. Veel succes!" } }
-      }
-    },
-    "30 moves · max score" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "30 Züge · maximale Punkte" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "30 movimientos · máx. puntos" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "30 coups · score max" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "30 zetten · maximale score" } }
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "×%lld vorhanden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "×%lld poseído"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "×%lld possédé"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "×%lld in bezit"
+          }
+        }
+      }
+    },
+    "−50%" : {
+
+    },
+    "⚡  LEVEL %lld" : {
+
+    },
+    "✨ Board Cleared! ✨" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✨ Brett geleert! ✨"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✨ ¡Tablero limpio! ✨"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✨ Tableau vidé ! ✨"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✨ Bord leeg! ✨"
+          }
+        }
+      }
+    },
+    "$" : {
+
+    },
+    "$9.99" : {
+
+    },
+    "1,500 coins · 5 of every power-up · Sunset theme" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.500 Münzen · 5 jedes Powerups · Sonnenuntergang-Thema"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.500 monedas · 5 de cada potenciador · Tema Puesta de sol"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 500 pièces · 5 de chaque power-up · Thème Coucher de soleil"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.500 munten · 5 van elk power-up · Zonsondergang thema"
+          }
+        }
       }
     },
     "3-day streak" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "3-Tage-Serie" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Racha de 3 días" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Série de 3 jours" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "3 dagen op rij" } }
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3-Tage-Serie"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Racha de 3 días"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Série de 3 jours"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3 dagen op rij"
+          }
+        }
       }
     },
     "4×4 board · the original" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "4×4 Brett · das Original" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tablero 4×4 · el original" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Plateau 4×4 · l'original" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "4×4 bord · het origineel" } }
-      }
-    },
-    "90 seconds · score sprint" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "90 Sekunden · Sprint" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "90 segundos · sprint de puntos" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "90 secondes · sprint de score" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "90 seconden · scoresprint" } }
-      }
-    },
-    "ACHIEVEMENTS" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "ERFOLGE" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "LOGROS" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "SUCCÈS" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "PRESTATIES" } }
-      }
-    },
-    "TODAY" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "HEUTE" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "HOY" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "AUJOURD'HUI" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "VANDAAG" } }
-      }
-    },
-    "Take a breath. Take a sip. ☕" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Atmen. Einen Schluck nehmen. ☕" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tómate un respiro. ☕" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Respirez. Buvez une gorgée. ☕" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Adem even. Neem een slok. ☕" } }
-      }
-    },
-    "Terms of Service" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Nutzungsbedingungen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Términos de servicio" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Conditions d'utilisation" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Servicevoorwaarden" } }
-      }
-    },
-    "Terms of service" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Nutzungsbedingungen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Términos de servicio" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Conditions d'utilisation" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Servicevoorwaarden" } }
-      }
-    },
-    "The Board" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Brett" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "El tablero" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Le plateau" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Het Bord" } }
-      }
-    },
-    "Tile Themes" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Kachelthemen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Temas de fichas" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Thèmes de tuiles" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Tegelthema's" } }
-      }
-    },
-    "Tile theme" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Kachel-Thema" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tema de ficha" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Thème de tuile" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Tegelthema" } }
-      }
-    },
-    "Tiles sit on a grid. Each tile carries a letter with a point value — rarer letters score more." : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Kacheln stehen auf einem Raster. Seltenere Buchstaben geben mehr Punkte." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Las fichas están en una cuadrícula. Las letras más raras puntúan más." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les tuiles sont sur une grille. Les lettres rares rapportent plus de points." } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Tegels staan op een raster. Zeldzamere letters leveren meer punten op." } }
-      }
-    },
-    "Today's Reward" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Heutige Belohnung" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Recompensa de hoy" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Récompense du jour" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Beloning van vandaag" } }
-      }
-    },
-    "Today's challenges" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Heutige Herausforderungen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Retos de hoy" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Défis du jour" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Uitdagingen van vandaag" } }
-      }
-    },
-    "Top Word" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Topwort" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mejor palabra" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Meilleur mot" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Topwoord" } }
-      }
-    },
-    "Use Hint, Shuffle, Joker, and Bomb to get out of tough spots. Earn coins by clearing tiles to buy more." : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Nutze Hinweis, Mischen, Joker und Bombe in schwierigen Situationen. Verdiene Münzen durch das Löschen von Kacheln." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Usa Pista, Mezclar, Comodín y Bomba para salir de situaciones difíciles. Gana monedas borrando fichas." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Utilisez Indice, Mélange, Joker et Bombe pour vous sortir de situations difficiles. Gagnez des pièces en effaçant des tuiles." } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Gebruik Hint, Schud, Joker en Bom om uit moeilijke situaties te komen. Verdien munten door tegels te wissen." } }
-      }
-    },
-    "Use system setting" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Systemeinstellung" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ajuste del sistema" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Paramètre système" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Systeeminstelling" } }
-      }
-    },
-    "View the full Quibly Privacy Policy in your browser." : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Das Quibly Datenschutz in Ihrem Browser ansehen." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ver la política de privacidad de Quibly en tu navegador." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Voir la politique de confidentialité de Quibly dans votre navigateur." } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Bekijk het Quibly-privacybeleid in je browser." } }
-      }
-    },
-    "View the full Quibly Terms of Service in your browser." : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Quibly Nutzungsbedingungen in Ihrem Browser ansehen." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ver los términos de servicio de Quibly en tu navegador." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Voir les conditions d'utilisation de Quibly dans votre navigateur." } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Bekijk de servicevoorwaarden van Quibly in je browser." } }
-      }
-    },
-    "WEEKLY CHEST" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "WÖCHENTLICHE TRUHE" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "COFRE SEMANAL" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "COFFRE HEBDOMADAIRE" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "WEKELIJKSE KIST" } }
-      }
-    },
-    "Watch an Ad" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Werbung ansehen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ver un anuncio" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Regarder une pub" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Bekijk een advertentie" } }
-      }
-    },
-    "Week Warrior! ⚡" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wochen-Krieger! ⚡" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Guerrero semanal! ⚡" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Guerrier de la semaine ! ⚡" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Week Warrior! ⚡" } }
-      }
-    },
-    "Welcome to Quibly!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Willkommen bei Quibly!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Bienvenido a Quibly!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bienvenue dans Quibly !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Welkom bij Quibly!" } }
-      }
-    },
-    "When sliding tiles creates a valid word in a row or column, those tiles clear and you earn points. Longer words score bigger!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wenn Kacheln ein gültiges Wort bilden, verschwinden sie und du bekommst Punkte. Längere Wörter geben mehr!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cuando las fichas formen una palabra válida, se borran y ganas puntos. ¡Las palabras más largas puntúan más!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quand les tuiles forment un mot valide, elles disparaissent et vous marquez des points. Les mots longs rapportent plus !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Als schuivende tegels een geldig woord vormen, verdwijnen ze en verdien je punten. Langere woorden leveren meer op!" } }
-      }
-    },
-    "Word Master" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wortmeister" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Maestro de palabras" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Maître des mots" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Woordmeester" } }
-      }
-    },
-    "Words" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wörter" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Palabras" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mots" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Woorden" } }
-      }
-    },
-    "Words are validated in your chosen language. You can change this any time in Settings." : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wörter werden in deiner gewählten Sprache validiert. Du kannst dies jederzeit in den Einstellungen ändern." } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Las palabras se validan en tu idioma elegido. Puedes cambiarlo en Ajustes." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les mots sont validés dans la langue choisie. Vous pouvez changer cela dans Paramètres." } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Woorden worden gevalideerd in je gekozen taal. Pas dit aan in Instellingen." } }
-      }
-    },
-    "You beat your record!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Du hast deinen Rekord gebrochen!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Superaste tu récord!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Vous avez battu votre record !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Je hebt je record gebroken!" } }
-      }
-    },
-    "You have %lld coins" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Du hast %lld Münzen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tienes %lld monedas" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Vous avez %lld pièces" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Je hebt %lld munten" } }
-      }
-    },
-    "You're Ready!" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Du bist bereit!" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Estás listo!" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Vous êtes prêt !" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Je bent klaar!" } }
-      }
-    },
-    "1,500 coins · 5 of every power-up · Sunset theme" : {
-      "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "1.500 Münzen · 5 jedes Powerups · Sonnenuntergang-Thema" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "1.500 monedas · 5 de cada potenciador · Tema Puesta de sol" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "1 500 pièces · 5 de chaque power-up · Thème Coucher de soleil" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "1.500 munten · 5 van elk power-up · Zonsondergang thema" } }
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4×4 Brett · das Original"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tablero 4×4 · el original"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plateau 4×4 · l'original"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4×4 bord · het origineel"
+          }
+        }
       }
     },
     "13% off" : {
       "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "13% Rabatt" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "13% de descuento" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "13% de réduction" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "13% korting" } }
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "13% Rabatt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "13% de descuento"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "13% de réduction"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "13% korting"
+          }
+        }
       }
     },
-    "+50 bonus coins" : {
+    "15,000 coins · 5 of every power-up · Sunset theme" : {
+
+    },
+    "21 of 30 weekly quests done" : {
+
+    },
+    "21/30" : {
+
+    },
+    "30 moves · max score" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "+50 Bonusmünzen" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "+50 monedas extra" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "+50 pièces bonus" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "+50 bonusmunten" } }
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 Züge · maximale Punkte"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 movimientos · máx. puntos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 coups · score max"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 zetten · maximale score"
+          }
+        }
       }
     },
-    "✨ Board Cleared! ✨" : {
+    "90 seconds · score sprint" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "✨ Brett geleert! ✨" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "✨ ¡Tablero limpio! ✨" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "✨ Tableau vidé ! ✨" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "✨ Bord leeg! ✨" } }
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "90 Sekunden · Sprint"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "90 segundos · sprint de puntos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "90 secondes · sprint de score"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "90 seconden · scoresprint"
+          }
+        }
+      }
+    },
+    "A word-sliding puzzle game. Slide tiles across the board to form words and score points." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Wort-Schiebepuzzle. Schiebe Kacheln um Wörter zu bilden und Punkte zu sammeln."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un puzzle de palabras deslizantes. Desliza fichas para formar palabras y ganar puntos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un puzzle de mots glissants. Glissez les tuiles pour former des mots et marquer des points."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Een woordschuifpuzzel. Schuif tegels om woorden te vormen en punten te scoren."
+          }
+        }
+      }
+    },
+    "Account" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konto"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuenta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compte"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        }
+      }
+    },
+    "ACHIEVEMENTS" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ERFOLGE"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LOGROS"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SUCCÈS"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PRESTATIES"
+          }
+        }
+      }
+    },
+    "Additional backgrounds are coming in a future update!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weitere Hintergründe kommen bald!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Más fondos próximamente!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De nouveaux fonds arrivent bientôt !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extra achtergronden komen eraan!"
+          }
+        }
+      }
+    },
+    "Amazing!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fantastisch!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Increíble!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incroyable !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geweldig!"
+          }
+        }
+      }
+    },
+    "Any previous purchases will be restored to your account." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frühere Käufe werden wiederhergestellt."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las compras anteriores serán restauradas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos achats précédents seront restaurés."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eerdere aankopen worden hersteld."
+          }
+        }
+      }
+    },
+    "ARMED" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AKTIV"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ARMADO"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ARMÉ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ACTIEF"
+          }
+        }
+      }
+    },
+    "Async vs. friends" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asynchron vs. Freunde"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asíncrono vs amigos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asynchrone vs amis"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Async vs. vrienden"
+          }
+        }
+      }
+    },
+    "Audio & Haptics" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio & Haptik"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio y hápticos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio et haptique"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio & Haptics"
+          }
+        }
+      }
+    },
+    "Auto-hints" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatische Hinweise"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pistas automáticas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indices automatiques"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatische hints"
+          }
+        }
+      }
+    },
+    "Back" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurück"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atrás"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retour"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terug"
+          }
+        }
+      }
+    },
+    "Background" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hintergrund"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fondo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrière-plan"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Achtergrond"
+          }
+        }
+      }
+    },
+    "Best" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beste"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mejor"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meilleur"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beste"
+          }
+        }
+      }
+    },
+    "Best Combo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beste Kombo"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mejor combo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meilleur combo"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beste combo"
+          }
+        }
+      }
+    },
+    "BEST VALUE" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BESTER WERT"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MEJOR VALOR"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MEILLEUR RAPPORT"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BESTE DEAL"
+          }
+        }
+      }
+    },
+    "Blitz King" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blitz-König"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rey del Blitz"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roi du Blitz"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blitz Koning"
+          }
+        }
+      }
+    },
+    "Board Size" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spielfeldgröße"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamaño del tablero"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille du plateau"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bordgrootte"
+          }
+        }
+      }
+    },
+    "Bomb" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bombe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bomba"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bombe"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bom"
+          }
+        }
+      }
+    },
+    "Buy coins to spend in the shop" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaufe Münzen für den Shop"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compra monedas para gastar en la tienda"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Achetez des pièces à dépenser dans la boutique"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koop munten om te besteden in de winkel"
+          }
+        }
+      }
+    },
+    "Buy more to keep going." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaufe mehr um weiterzuspielen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compra más para continuar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Achetez-en plus pour continuer."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koop meer om door te gaan."
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuleren"
+          }
+        }
+      }
+    },
+    "Centurion! 🏆" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zenturio! 🏆"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Centurión! 🏆"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Centurion ! 🏆"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Centurio! 🏆"
+          }
+        }
+      }
+    },
+    "Challenge" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herausforderung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desafío"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Défi"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uitdaging"
+          }
+        }
+      }
+    },
+    "Choose your game" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle dein Spiel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige tu juego"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez votre jeu"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kies je spel"
+          }
+        }
+      }
+    },
+    "Choose Your Language" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle deine Sprache"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige tu idioma"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez votre langue"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kies je taal"
+          }
+        }
+      }
+    },
+    "Claim Today's Reward" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heutige Belohnung abholen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reclamar la recompensa de hoy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réclamer la récompense d'aujourd'hui"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claim de beloning van vandaag"
+          }
+        }
+      }
+    },
+    "Claimed!" : {
+
+    },
+    "Classic" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klassisch"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clásico"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Classique"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klassiek"
+          }
+        }
+      }
+    },
+    "Clears a full row and column" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löscht eine ganze Zeile und Spalte"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borra una fila y columna completas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efface une ligne et une colonne entières"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wist een volledige rij en kolom"
+          }
+        }
+      }
+    },
+    "Close Profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil schließen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar perfil"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer le profil"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profiel sluiten"
+          }
+        }
+      }
+    },
+    "Coin Packs" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Münzpakete"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paquetes de monedas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Packs de pièces"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muntenpakketten"
+          }
+        }
+      }
+    },
+    "Coins" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Münzen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monedas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pièces"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Munten"
+          }
+        }
+      }
+    },
+    "COMBO ×%lld" : {
+
+    },
+    "Come back tomorrow!" : {
+
+    },
+    "Coming soon" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kommt bald"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Próximamente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bientôt disponible"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Binnenkort"
+          }
+        }
+      }
+    },
+    "Coming Soon" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kommt bald"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Próximamente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bientôt disponible"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Binnenkort"
+          }
+        }
+      }
+    },
+    "Complete 30 quests" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schließe 30 Aufgaben ab"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completa 30 misiones"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Complétez 30 quêtes"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voltooi 30 opdrachten"
+          }
+        }
+      }
+    },
+    "Converts any tile into a joker" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwandelt eine Kachel in einen Joker"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Convierte una ficha en comodín"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Convertit une tuile en joker"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Converteert een tegel naar joker"
+          }
+        }
+      }
+    },
+    "Daily" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Täglich"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diario"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quotidien"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dagelijks"
+          }
+        }
+      }
+    },
+    "Daily Puzzle" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tagesrätsel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rompecabezas diario"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puzzle du jour"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dagelijkse puzzel"
+          }
+        }
+      }
+    },
+    "Daily Quests" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tägliche Aufgaben"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misiones diarias"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quêtes quotidiennes"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dagelijkse opdrachten"
+          }
+        }
+      }
+    },
+    "Daily Reward" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tägliche Belohnung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensa diaria"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Récompense quotidienne"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dagelijkse beloning"
+          }
+        }
+      }
+    },
+    "Dark mode" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dunkler Modus"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo oscuro"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode sombre"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Donkere modus"
+          }
+        }
+      }
+    },
+    "Day %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tag %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Día %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jour %lld"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dag %lld"
+          }
+        }
+      }
+    },
+    "Default board" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard-Brett"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tablero predeterminado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plateau par défaut"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standaard bord"
+          }
+        }
+      }
+    },
+    "Earn %lld free coins — no purchase needed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erhalte %lld Münzen gratis — kein Kauf nötig"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gana %lld monedas gratis — sin compra"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gagnez %lld pièces gratuites — sans achat"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verdien %lld gratis munten — geen aankoop nodig"
+          }
+        }
+      }
+    },
+    "Enter your name" : {
+
+    },
+    "EQUIPPED" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AUSGERÜSTET"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EQUIPADO"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ÉQUIPÉ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UITGERUST"
+          }
+        }
+      }
+    },
+    "Extended" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erweitert"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ampliado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Étendu"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uitgebreid"
+          }
+        }
+      }
+    },
+    "Final score: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endpunktzahl: %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puntuación final: %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score final : %lld"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eindscore: %lld"
+          }
+        }
+      }
+    },
+    "Find 100 words" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 Wörter finden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encontrar 100 palabras"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trouver 100 mots"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 woorden vinden"
+          }
+        }
+      }
+    },
+    "First Word" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstes Wort"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primera palabra"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premier mot"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eerste woord"
+          }
+        }
+      }
+    },
+    "Form Words" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wörter bilden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formar palabras"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Former des mots"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Woorden vormen"
+          }
+        }
+      }
+    },
+    "Fortnight Streak! 💪" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwei-Wochen-Serie! 💪"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Racha quincenal! 💪"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Série de deux semaines ! 💪"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Twee weken reeks! 💪"
+          }
+        }
+      }
+    },
+    "Friends" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freunde"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amigos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amis"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vrienden"
+          }
+        }
+      }
+    },
+    "Friends & duels unlock at Level 15." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freunde & Duelle schalten sich bei Level 15 frei."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amigos y duelos se desbloquean en el nivel 15."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amis et duels se débloquent au niveau 15."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vrienden & duels beschikbaar op niveau 15."
+          }
+        }
+      }
+    },
+    "Game language" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spielsprache"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma del juego"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue du jeu"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speeltaal"
+          }
+        }
+      }
+    },
+    "Game Mode" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spielmodus"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo de juego"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode de jeu"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spelmodus"
+          }
+        }
+      }
+    },
+    "Game Over" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spiel vorbei"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fin del juego"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partie terminée"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spel voorbij"
+          }
+        }
+      }
+    },
+    "Gameplay" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spielweise"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugabilidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gameplay"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gameplay"
+          }
+        }
+      }
+    },
+    "Games" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spiele"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parties"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spellen"
+          }
+        }
+      }
+    },
+    "Get more →" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mehr kaufen →"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtener más →"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En obtenir plus →"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meer halen →"
+          }
+        }
+      }
+    },
+    "Glow tiles after 10s" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kacheln leuchten nach 10s"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fichas brillan tras 10s"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuiles brillent après 10s"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tegels oplichten na 10s"
+          }
+        }
+      }
+    },
+    "Got it" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verstanden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entendido"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compris"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Begrepen"
+          }
+        }
+      }
+    },
+    "Haptics" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haptik"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hápticos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haptique"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haptics"
+          }
+        }
+      }
+    },
+    "Hat-trick! 🎯" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hat-Trick! 🎯"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Hat-trick! 🎯"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hat-trick ! 🎯"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hat-trick! 🎯"
+          }
+        }
+      }
+    },
+    "High Score" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Highscore"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puntuación alta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meilleur score"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Highscore"
+          }
+        }
+      }
+    },
+    "Hint" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hinweis"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pista"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint"
+          }
+        }
+      }
+    },
+    "Joker" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Joker"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comodín"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Joker"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Joker"
+          }
+        }
+      }
+    },
+    "Keep the flame alive!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halte die Flamme am Leben!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Mantén la llama viva!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gardez la flamme vive !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Houd de vlam brandend!"
+          }
+        }
+      }
+    },
+    "Language" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprache"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taal"
+          }
+        }
+      }
+    },
+    "left" : {
+
+    },
+    "Let's Play!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los geht's!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡A jugar!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C'est parti !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spelen!"
+          }
+        }
+      }
+    },
+    "LIMITED · 48H" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BEGRENZT · 48H"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LIMITADO · 48H"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LIMITÉ · 48H"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BEPERKT · 48U"
+          }
+        }
+      }
+    },
+    "Look & Feel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aussehen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apariencia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apparence"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uiterlijk"
+          }
+        }
+      }
+    },
+    "Lvl %lld" : {
+
+    },
+    "LVL %lld" : {
+
+    },
+    "Lvl 20" : {
+
+    },
+    "Menu" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menü"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menú"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu"
+          }
+        }
+      }
+    },
+    "Mode" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modus"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modus"
+          }
+        }
+      }
+    },
+    "Modes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modi"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modes"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modi"
+          }
+        }
+      }
+    },
+    "Monthly Master! 👑" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monatlicher Meister! 👑"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Maestro mensual! 👑"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maître mensuel ! 👑"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maandelijkse meester! 👑"
+          }
+        }
+      }
+    },
+    "More tile themes are on their way in a future update!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mehr Themen kommen bald!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Más temas de fichas próximamente!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De nouveaux thèmes de tuiles arrivent bientôt !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meer tegelthema's zijn onderweg!"
+          }
+        }
+      }
+    },
+    "Music" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Musik"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Música"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Musique"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muziek"
+          }
+        }
+      }
+    },
+    "NEW" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NEU"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NUEVO"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NOUVEAU"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NIEUW"
+          }
+        }
+      }
+    },
+    "New Best!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuer Rekord!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Nuevo récord!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveau record !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieuw record!"
+          }
+        }
+      }
+    },
+    "New Personal Best!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuer persönlicher Rekord!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Nuevo récord personal!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveau record personnel !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieuw persoonlijk record!"
+          }
+        }
+      }
+    },
+    "Next" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weiter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siguiente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suivant"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volgende"
+          }
+        }
+      }
+    },
+    "No game-over · just vibes" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Game-Over · nur Vibe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin game-over · solo vibras"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pas de fin de jeu · pur plaisir"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen game-over · gewoon spelen"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aceptar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "On Fire" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf Feuer"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En llamas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En feu"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On Fire"
+          }
+        }
+      }
+    },
+    "Open in Browser" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Im Browser öffnen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir en el navegador"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir dans le navigateur"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open in browser"
+          }
+        }
+      }
+    },
+    "Out of %@s!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine %@s mehr!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Sin %@s!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus de %@s !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen %@s meer!"
+          }
+        }
+      }
+    },
+    "Overrides game language for the UI" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überschreibt Spielsprache für die Oberfläche"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reemplaza el idioma del juego en la interfaz"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remplace la langue du jeu dans l'interface"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overschrijft de speeltaal voor de interface"
+          }
+        }
+      }
+    },
+    "Paused" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausiert"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En pausa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En pause"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gepauzeerd"
+          }
+        }
+      }
+    },
+    "PLAY" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SPIELEN"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "JUGAR"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "JOUER"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SPELEN"
+          }
+        }
+      }
+    },
+    "Play 10 games" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10 Spiele spielen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugar 10 partidas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouer 10 parties"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10 spellen spelen"
+          }
+        }
+      }
+    },
+    "Play Again" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nochmal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugar de nuevo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rejouer"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opnieuw"
+          }
+        }
+      }
+    },
+    "Play tomorrow to keep your streak" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spiele morgen um deine Serie zu erhalten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juega mañana para mantener tu racha"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouez demain pour garder votre série"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speel morgen om je reeks te behouden"
+          }
+        }
+      }
+    },
+    "Play your first word" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein erstes Wort spielen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juega tu primera palabra"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouer votre premier mot"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speel je eerste woord"
+          }
+        }
+      }
+    },
+    "Power-Ups" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power-ups"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Potenciadores"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power-ups"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power-ups"
+          }
+        }
+      }
+    },
+    "Privacy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenschutz"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confidentialité"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy"
+          }
+        }
+      }
+    },
+    "Privacy Policy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenschutzrichtlinie"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de privacidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Politique de confidentialité"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacybeleid"
+          }
+        }
+      }
+    },
+    "PROGRESS TO LEVEL %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FORTSCHRITT ZU LEVEL %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PROGRESO AL NIVEL %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PROGRESSION VERS NIVEAU %lld"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VOORTGANG NAAR NIVEAU %lld"
+          }
+        }
+      }
+    },
+    "Purchases are processed by Apple and subject to their Terms of Sale." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Käufe werden von Apple verarbeitet und unterliegen deren Verkaufsbedingungen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las compras son procesadas por Apple y están sujetas a sus Términos de venta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les achats sont traités par Apple et soumis à leurs Conditions de vente."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aankopen worden verwerkt door Apple en zijn onderworpen aan hun verkoopvoorwaarden."
+          }
+        }
+      }
+    },
+    "Q" : {
+
+    },
+    "Quests" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufgaben"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misiones"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quêtes"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opdrachten"
+          }
+        }
+      }
+    },
+    "Quibly %@ · made with 💜" : {
+
+    },
+    "Quit to Menu" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zum Menü"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salir al menú"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quitter"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stoppen"
+          }
+        }
+      }
+    },
+    "R" : {
+
+    },
+    "Randomly rearranges all tiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordnet alle Kacheln zufällig neu"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reordena aleatoriamente todas las fichas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réorganise aléatoirement toutes les tuiles"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herschikt willekeurig alle tegels"
+          }
+        }
+      }
+    },
+    "Re-skin your board" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Brett neu gestalten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personaliza tu tablero"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personnalisez votre plateau"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personaliseer je bord"
+          }
+        }
+      }
+    },
+    "Resets in 6h 42m" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurückgesetzt in 6h 42m"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reinicia en 6h 42m"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialise dans 6h 42m"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resets om 6u 42m"
+          }
+        }
+      }
+    },
+    "Restart" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu starten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recommencer"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herstarten"
+          }
+        }
+      }
+    },
+    "Restore" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederherstellen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herstellen"
+          }
+        }
+      }
+    },
+    "Restore purchases" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Käufe wiederherstellen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar compras"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer les achats"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aankopen herstellen"
+          }
+        }
+      }
+    },
+    "Restore Purchases" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Käufe wiederherstellen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar compras"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer les achats"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aankopen herstellen"
+          }
+        }
+      }
+    },
+    "Resume" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortfahren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reprendre"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doorgaan"
+          }
+        }
+      }
+    },
+    "Reveals a pending word match" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt einen Worttreffer"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revela una coincidencia de palabras"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révèle une correspondance de mot"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onthult een woordmatch"
+          }
+        }
+      }
+    },
+    "Riley" : {
+
+    },
+    "Same board worldwide" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gleiches Brett weltweit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mismo tablero mundial"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Même plateau mondial"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zelfde bord wereldwijd"
+          }
+        }
+      }
+    },
+    "Score" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkte"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puntos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punten"
+          }
+        }
+      }
+    },
+    "Score 500+ pts" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "500+ Punkte sammeln"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conseguir 500+ pts"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marquer 500+ points"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "500+ punten scoren"
+          }
+        }
+      }
+    },
+    "Select Board Size" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spielfeldgröße wählen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar tamaño del tablero"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille du plateau"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bordgrootte kiezen"
+          }
+        }
+      }
+    },
+    "Select Language" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprache wählen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar idioma"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisir la langue"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taal kiezen"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellingen"
+          }
+        }
+      }
+    },
+    "Shop" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shop"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tienda"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boutique"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Winkel"
+          }
+        }
+      }
+    },
+    "Shuffle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mischen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mezclar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mélange"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schud"
+          }
+        }
+      }
+    },
+    "Skip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überspringen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passer"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overslaan"
+          }
+        }
+      }
+    },
+    "Soon" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bald"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bientôt"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Binnenkort"
+          }
+        }
+      }
+    },
+    "Sound effects" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soundeffekte"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efectos de sonido"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effets sonores"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geluidseffecten"
+          }
+        }
+      }
+    },
+    "Sparkle Bundle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sparkle-Paket"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paquete Destellos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pack Étincelle"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sparkle Pakket"
+          }
+        }
+      }
+    },
+    "Spend coins for extra charges" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Münzen für Aufladungen ausgeben"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasta monedas en cargas extra"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dépensez des pièces pour des charges supplémentaires"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Besteed munten voor extra ladingen"
+          }
+        }
+      }
+    },
+    "Start" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comenzar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrer"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        }
+      }
+    },
+    "Streak" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serie"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Racha"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Série"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reeks"
+          }
+        }
+      }
+    },
+    "Stuck? Try Shuffle or Bomb to clear tiles!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Festgefahren? Mische oder Bombe!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Atascado? Usa Mezclar o Bomba"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coincé ? Essayez Mélange ou Bombe !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vastgelopen? Probeer Schud of Bom!"
+          }
+        }
+      }
+    },
+    "Swipe left, right, up, or down to slide all tiles in that direction. A new tile spawns after each valid swipe." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wische links, rechts, hoch oder runter. Nach jedem gültigen Wisch erscheint eine neue Kachel."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desliza izquierda, derecha, arriba o abajo. Aparece una nueva ficha tras cada deslizamiento válido."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balayez gauche, droite, haut ou bas. Une nouvelle tuile apparaît après chaque balayage valide."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veeg links, rechts, omhoog of omlaag. Na elke geldige veeg verschijnt een nieuwe tegel."
+          }
+        }
+      }
+    },
+    "Swipe or act — game over in %llds!" : {
+
+    },
+    "Swipe or act — game over in %llDs!" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wische oder handle — Spiel endet in %llDs!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Desliza o actúa — fin en %llDs!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swipez ou agissez — fin dans %llDs !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veeg of handel — spel voorbij in %llDs!"
+          }
+        }
+      }
+    },
+    "Swipe smart, clear the board, and chase the high score. Good luck!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wische clever, leere das Brett und jage den Highscore. Viel Glück!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desliza con inteligencia, limpia el tablero y persigue la puntuación más alta. ¡Buena suerte!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balayez intelligemment, videz le plateau et poursuivez le score le plus haut. Bonne chance !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veeg slim, leeg het bord en jaag op de hoogste score. Veel succes!"
+          }
+        }
+      }
+    },
+    "Swipe to Slide" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wischen zum Schieben"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desliza para mover"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balayer pour glisser"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veeg om te schuiven"
+          }
+        }
+      }
+    },
+    "Take a breath. Take a sip. ☕" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atmen. Einen Schluck nehmen. ☕"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tómate un respiro. ☕"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Respirez. Buvez une gorgée. ☕"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adem even. Neem een slok. ☕"
+          }
+        }
+      }
+    },
+    "Terms of service" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutzungsbedingungen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Términos de servicio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conditions d'utilisation"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Servicevoorwaarden"
+          }
+        }
+      }
+    },
+    "Terms of Service" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutzungsbedingungen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Términos de servicio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conditions d'utilisation"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Servicevoorwaarden"
+          }
+        }
+      }
+    },
+    "The Board" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Brett"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El tablero"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le plateau"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het Bord"
+          }
+        }
+      }
+    },
+    "This is how you'll appear in the game." : {
+
+    },
+    "Tile theme" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kachel-Thema"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tema de ficha"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thème de tuile"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tegelthema"
+          }
+        }
+      }
+    },
+    "Tile Themes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kachelthemen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temas de fichas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thèmes de tuiles"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tegelthema's"
+          }
+        }
+      }
+    },
+    "Tiles sit on a grid. Each tile carries a letter with a point value — rarer letters score more." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kacheln stehen auf einem Raster. Seltenere Buchstaben geben mehr Punkte."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las fichas están en una cuadrícula. Las letras más raras puntúan más."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les tuiles sont sur une grille. Les lettres rares rapportent plus de points."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tegels staan op een raster. Zeldzamere letters leveren meer punten op."
+          }
+        }
+      }
+    },
+    "TODAY" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HEUTE"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HOY"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AUJOURD'HUI"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VANDAAG"
+          }
+        }
+      }
+    },
+    "Today's challenges" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heutige Herausforderungen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retos de hoy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Défis du jour"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uitdagingen van vandaag"
+          }
+        }
+      }
+    },
+    "Today's Reward" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heutige Belohnung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensa de hoy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Récompense du jour"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beloning van vandaag"
+          }
+        }
+      }
+    },
+    "Top Word" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Topwort"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mejor palabra"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meilleur mot"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Topwoord"
+          }
+        }
+      }
+    },
+    "Use Hint, Shuffle, Joker, and Bomb to get out of tough spots. Earn coins by clearing tiles to buy more." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutze Hinweis, Mischen, Joker und Bombe in schwierigen Situationen. Verdiene Münzen durch das Löschen von Kacheln."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa Pista, Mezclar, Comodín y Bomba para salir de situaciones difíciles. Gana monedas borrando fichas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez Indice, Mélange, Joker et Bombe pour vous sortir de situations difficiles. Gagnez des pièces en effaçant des tuiles."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebruik Hint, Schud, Joker en Bom om uit moeilijke situaties te komen. Verdien munten door tegels te wissen."
+          }
+        }
+      }
+    },
+    "Use system language" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systemsprache verwenden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar idioma del sistema"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utiliser la langue système"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systeemtaal gebruiken"
+          }
+        }
+      }
+    },
+    "Use system setting" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systemeinstellung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajuste del sistema"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètre système"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systeeminstelling"
+          }
+        }
+      }
+    },
+    "View the full Quibly Privacy Policy in your browser." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Quibly Datenschutz in Ihrem Browser ansehen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver la política de privacidad de Quibly en tu navegador."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir la politique de confidentialité de Quibly dans votre navigateur."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bekijk het Quibly-privacybeleid in je browser."
+          }
+        }
+      }
+    },
+    "View the full Quibly Terms of Service in your browser." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Quibly Nutzungsbedingungen in Ihrem Browser ansehen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver los términos de servicio de Quibly en tu navegador."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir les conditions d'utilisation de Quibly dans votre navigateur."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bekijk de servicevoorwaarden van Quibly in je browser."
+          }
+        }
+      }
+    },
+    "Watch an Ad" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werbung ansehen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver un anuncio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regarder une pub"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bekijk een advertentie"
+          }
+        }
+      }
+    },
+    "Week Warrior! ⚡" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wochen-Krieger! ⚡"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Guerrero semanal! ⚡"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guerrier de la semaine ! ⚡"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Week Warrior! ⚡"
+          }
+        }
+      }
+    },
+    "WEEKLY CHEST" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WÖCHENTLICHE TRUHE"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COFRE SEMANAL"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COFFRE HEBDOMADAIRE"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WEKELIJKSE KIST"
+          }
+        }
+      }
+    },
+    "Welcome to Quibly!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Willkommen bei Quibly!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Bienvenido a Quibly!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenue dans Quibly !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welkom bij Quibly!"
+          }
+        }
+      }
+    },
+    "What may I call you?" : {
+
+    },
+    "When sliding tiles creates a valid word in a row or column, those tiles clear and you earn points. Longer words score bigger!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn Kacheln ein gültiges Wort bilden, verschwinden sie und du bekommst Punkte. Längere Wörter geben mehr!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuando las fichas formen una palabra válida, se borran y ganas puntos. ¡Las palabras más largas puntúan más!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quand les tuiles forment un mot valide, elles disparaissent et vous marquez des points. Les mots longs rapportent plus !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als schuivende tegels een geldig woord vormen, verdwijnen ze en verdien je punten. Langere woorden leveren meer op!"
+          }
+        }
+      }
+    },
+    "Word Master" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wortmeister"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maestro de palabras"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maître des mots"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Woordmeester"
+          }
+        }
+      }
+    },
+    "Words" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wörter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mots"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Woorden"
+          }
+        }
+      }
+    },
+    "Words are validated in your chosen language. You can change this any time in Settings." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wörter werden in deiner gewählten Sprache validiert. Du kannst dies jederzeit in den Einstellungen ändern."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las palabras se validan en tu idioma elegido. Puedes cambiarlo en Ajustes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les mots sont validés dans la langue choisie. Vous pouvez changer cela dans Paramètres."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Woorden worden gevalideerd in je gekozen taal. Pas dit aan in Instellingen."
+          }
+        }
+      }
+    },
+    "You beat your record!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du hast deinen Rekord gebrochen!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Superaste tu récord!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous avez battu votre record !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je hebt je record gebroken!"
+          }
+        }
+      }
+    },
+    "You have %lld coins" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du hast %lld Münzen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tienes %lld monedas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous avez %lld pièces"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je hebt %lld munten"
+          }
+        }
+      }
+    },
+    "You're Ready!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du bist bereit!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Estás listo!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous êtes prêt !"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je bent klaar!"
+          }
+        }
       }
     }
   },
