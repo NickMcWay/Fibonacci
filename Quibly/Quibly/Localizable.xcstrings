@@ -545,12 +545,36 @@
         "nl" : { "stringUnit" : { "state" : "translated", "value" : "Houd de vlam brandend!" } }
       }
     },
+    "Game language" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Spielsprache" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Idioma del juego" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Langue du jeu" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Speeltaal" } }
+      }
+    },
     "Language" : {
       "localizations" : {
         "de" : { "stringUnit" : { "state" : "translated", "value" : "Sprache" } },
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Idioma" } },
         "fr" : { "stringUnit" : { "state" : "translated", "value" : "Langue" } },
         "nl" : { "stringUnit" : { "state" : "translated", "value" : "Taal" } }
+      }
+    },
+    "Overrides game language for the UI" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Überschreibt Spielsprache für die Oberfläche" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reemplaza el idioma del juego en la interfaz" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Remplace la langue du jeu dans l'interface" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Overschrijft de speeltaal voor de interface" } }
+      }
+    },
+    "Use system language" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Systemsprache verwenden" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Usar idioma del sistema" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Utiliser la langue système" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Systeemtaal gebruiken" } }
       }
     },
     "Let's Play!" : {

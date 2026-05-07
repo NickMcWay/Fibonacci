@@ -21,9 +21,11 @@ struct ContentRouter: View {
     @State private var activeSettings: GameSettings? = nil
     @AppStorage("SlideWords_DarkMode")        private var darkMode: Bool = false
     @AppStorage("SlideWords_HasSeenTutorial") private var hasSeenTutorial: Bool = false
-    @AppStorage("SlideWords_SelectedLanguage") private var selectedLanguageRaw: String = GameLanguage.english.rawValue
+    @AppStorage("SlideWords_SelectedLanguage")  private var selectedLanguageRaw: String = GameLanguage.english.rawValue
+    @AppStorage("SlideWords_UseSystemLanguage") private var useSystemLanguage: Bool = false
 
     private var appLocale: Locale {
+        if useSystemLanguage { return .current }
         let lang = GameLanguage(rawValue: selectedLanguageRaw) ?? .english
         return Locale(identifier: lang.localeIdentifier)
     }
