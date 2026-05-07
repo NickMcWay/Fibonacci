@@ -130,8 +130,10 @@ struct MenuView: View {
                 selectedLanguage = GameLanguage(rawValue: selectedLanguageRawValue) ?? .english
                 selectedVariant  = BoardVariant(rawValue: selectedVariantRawValue)  ?? .small
             }
-            .onChange(of: selectedLanguage) { _, v in selectedLanguageRawValue = v.rawValue }
-            .onChange(of: selectedVariant)  { _, v in selectedVariantRawValue  = v.rawValue }
+            .onChange(of: selectedLanguage)        { _, v in selectedLanguageRawValue = v.rawValue }
+            .onChange(of: selectedVariant)         { _, v in selectedVariantRawValue  = v.rawValue }
+            .onChange(of: selectedLanguageRawValue) { _, v in selectedLanguage = GameLanguage(rawValue: v) ?? .english }
+            .onChange(of: selectedVariantRawValue)  { _, v in selectedVariant  = BoardVariant(rawValue: v)  ?? .small }
             .fullScreenCover(isPresented: $showShop)     { ShopView(onBack: { showShop = false }) }
             .fullScreenCover(isPresented: $showModes)    {
                 ModesView(
