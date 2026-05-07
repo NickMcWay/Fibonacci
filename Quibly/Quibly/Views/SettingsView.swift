@@ -26,6 +26,13 @@ struct SettingsView: View {
     private var selectedLanguage: GameLanguage { GameLanguage(rawValue: selectedLanguageRaw) ?? .english }
     private var selectedVariant:  BoardVariant  { BoardVariant(rawValue: selectedVariantRaw)  ?? .small }
 
+    private var appVersion: String {
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            return "v\(version)"
+        }
+        return "v1.0"
+    }
+
     var body: some View {
         NavigationView {
             settingsContent
@@ -135,7 +142,7 @@ struct SettingsView: View {
                                 actionRow(icon: "doc.text.fill",    label: "Terms of service")   { showTermsAlert    = true }
                             }
 
-                            Text("Quibly v1.4.2 · made with 💜")
+                            Text("Quibly \(appVersion) · made with 💜")
                                 .font(.system(size: 11, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.qInk.opacity(0.55))
                                 .multilineTextAlignment(.center)
