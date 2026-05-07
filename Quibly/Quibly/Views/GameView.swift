@@ -30,67 +30,14 @@ struct GameView: View {
     var body: some View {
         DreamBackground {
             ZStack {
-                VStack(spacing: 20) {
-                    topBar
-                        .padding(.horizontal, 16)
-                        .padding(.top, 56)
-                        .padding(.bottom, 8)
-                    
-                        Spacer()
-                            .frame(height: 140)
-                    
-                    scoreHeader
-                        .padding(.horizontal, 18)
-                        .padding(.bottom, 6)
-                        .padding(.horizontal)
-                        .frame(height: 50)
+                mainColumn
 
-                    // Combo ribbon
-                    if vm.comboCount > 0 {
-                        comboRibbon
-                            .padding(.bottom, 4)
-                            .transition(.scale(scale: 0.7).combined(with: .opacity))
-                    }
-
-                    // Board
-                    BoardView(vm: vm)
-                        .padding(.horizontal, 12)
-                        .padding()
-                        .offset(x: bombShake)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 24)
-                                .fill(Color.qSun1.opacity(hintFlash))
-                                .allowsHitTesting(false)
-                                .padding(.horizontal, 12).padding()
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 24)
-                                .fill(Color.qGrape2.opacity(wildFlash))
-                                .allowsHitTesting(false)
-                                .padding(.horizontal, 12).padding()
-                        )
-                        .scaleEffect(shuffleBounce)
-
-                    if vm.showBoardFullWarning {
-                        stuckBanner
-                            .padding(.horizontal, 24)
-                            .padding(.top, 4)
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
-                            .animation(.spring(response: 0.4, dampingFraction: 0.7), value: vm.showBoardFullWarning)
-                    }
-
-                    if let countdown = vm.noWordCountdown {
-                        noWordCountdownBanner(seconds: countdown)
-                            .padding(.horizontal, 24)
-                            .padding(.top, 4)
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
-                            .animation(.spring(response: 0.4, dampingFraction: 0.7), value: countdown)
-                    }
-
-                    powerUpBar
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 28)
-                        .padding(.horizontal)
+                if let countdown = vm.noWordCountdown {
+                    noWordCountdownBanner(seconds: countdown)
+                        .padding(.horizontal, 24)
+                        .padding(.top, 4)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .animation(.spring(response: 0.4, dampingFraction: 0.7), value: countdown)
                 }
 
                 // Score milestone toast
@@ -587,6 +534,70 @@ struct GameView: View {
     private func playWildAnimation() {
         withAnimation(.easeIn(duration: 0.12))        { wildFlash = 0.5 }
         withAnimation(.easeOut(duration: 0.4).delay(0.12)) { wildFlash = 0 }
+    }
+
+    // MARK: - Board Area
+
+    private var boardArea: some View {
+        BoardView(vm: vm)
+            .padding(.horizontal, 12)
+            .padding()
+            .offset(x: bombShake)
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(Color.qSun1.opacity(hintFlash))
+                    .allowsHitTesting(false)
+                    .padding(.horizontal, 12).padding()
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(Color.qGrape2.opacity(wildFlash))
+                    .allowsHitTesting(false)
+                    .padding(.horizontal, 12).padding()
+            )
+            .scaleEffect(shuffleBounce)
+    }
+
+    // MARK: - Main Column
+
+    @ViewBuilder
+    private var mainColumn: some View {
+        VStack(spacing: 20) {
+            topBar
+                .padding(.horizontal, 16)
+                .padding(.top, 56)
+                .padding(.bottom, 8)
+            
+            Spacer()
+                .frame(height: 140)
+            
+            scoreHeader
+                .padding(.horizontal, 18)
+                .padding(.bottom, 6)
+                .padding(.horizontal)
+                .frame(height: 50)
+
+            if vm.comboCount > 0 {
+                comboRibbon
+                    .padding(.bottom, 4)
+                    .transition(.scale(scale: 0.7).combined(with: .opacity))
+            }
+
+            boardArea
+
+            if vm.showBoardFullWarning {
+                stuckBanner
+                    .padding(.horizontal, 24)
+                    .padding(.top, 4)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .animation(.spring(response: 0.4, dampingFraction: 0.7), value: vm.showBoardFullWarning)
+            }
+
+            powerUpBar
+                .padding(.horizontal, 16)
+                .padding(.bottom, 28)
+                .padding(.horizontal)
+        }
     }
 }
 

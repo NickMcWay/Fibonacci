@@ -36,9 +36,6 @@ struct MenuView: View {
         NavigationView{
             DreamBackground {
                 GeometryReader { geo in
-                    let w = geo.size.width
-                    let h = geo.size.height
-                    
                     ZStack(alignment: .top) {
                         // Board preview
                         VStack(spacing: 20){
@@ -131,10 +128,10 @@ struct MenuView: View {
                 selectedLanguage = GameLanguage(rawValue: selectedLanguageRawValue) ?? .english
                 selectedVariant  = BoardVariant(rawValue: selectedVariantRawValue)  ?? .small
             }
-            .onChange(of: selectedLanguage)        { _, v in selectedLanguageRawValue = v.rawValue }
-            .onChange(of: selectedVariant)         { _, v in selectedVariantRawValue  = v.rawValue }
-            .onChange(of: selectedLanguageRawValue) { _, v in selectedLanguage = GameLanguage(rawValue: v) ?? .english }
-            .onChange(of: selectedVariantRawValue)  { _, v in selectedVariant  = BoardVariant(rawValue: v)  ?? .small }
+            .onChange(of: selectedLanguage)        { v in selectedLanguageRawValue = v.rawValue }
+            .onChange(of: selectedVariant)         { v in selectedVariantRawValue  = v.rawValue }
+            .onChange(of: selectedLanguageRawValue) { v in selectedLanguage = GameLanguage(rawValue: v) ?? .english }
+            .onChange(of: selectedVariantRawValue)  { v in selectedVariant  = BoardVariant(rawValue: v)  ?? .small }
             .fullScreenCover(isPresented: $showShop)     { ShopView(onBack: { showShop = false }) }
             .fullScreenCover(isPresented: $showModes)    {
                 ModesView(
@@ -378,3 +375,4 @@ struct MenuView: View {
     MenuView(onStart: { _ in })
         .environmentObject(AudioManager())
 }
+

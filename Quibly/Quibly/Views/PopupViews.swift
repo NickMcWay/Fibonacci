@@ -899,6 +899,7 @@ struct ProfilePopupSheet: View {
     @AppStorage("SlideWords_GamesPlayed") private var gamesPlayed: Int    = 0
     @AppStorage("SlideWords_TotalWords")  private var totalWords:  Int    = 0
     @AppStorage("SlideWords_BestWord") private var longestWord: String = ""
+    @AppStorage("SlideWords_PlayerName") private var playerName: String = ""
     @Environment(\.dismiss) private var dismiss
 
     private let xpPerLevel = 500
@@ -954,16 +955,13 @@ struct ProfilePopupSheet: View {
                                 .fill(LinearGradient(colors: [Color.qBubble1, Color.qGrape1], startPoint: .topLeading, endPoint: .bottomTrailing))
                                 .shadow(color: Color.qInk.opacity(0.35), radius: 0, x: 0, y: 6)
                                 .shadow(color: Color.qGrape2.opacity(0.45), radius: 24, x: 0, y: 12)
-                            Text("R")
-                                .font(.system(size: 54, weight: .bold, design: .rounded))
-                                .foregroundStyle(.white)
-                                .shadow(color: Color.qInk.opacity(0.4), radius: 0, x: 0, y: 2)
+                            Text((playerName.trimmingCharacters(in: .whitespacesAndNewlines).first.map { String($0).uppercased() }) ?? "?")
                         }
                         .frame(width: 114, height: 114)
                         .floatingAnimation(delay: 0, duration: 3.2, distance: 5)
 
                         VStack(spacing: 6) {
-                            Text("Riley")
+                            Text(playerName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Player" : playerName)
                                 .font(.system(size: 30, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.qInk)
                                 .shadow(color: Color.qInk.opacity(0.12), radius: 0, x: 0, y: 2)
@@ -1144,3 +1142,4 @@ struct LockedPopupSheet: View {
         }
     }
 }
+

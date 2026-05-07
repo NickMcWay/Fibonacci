@@ -102,7 +102,7 @@ struct TileView: View {
                 }
             }
         }
-        .onChange(of: tile.isClearing) { _, clearing in
+        .onChange(of: tile.isClearing) { clearing in
             if clearing {
                 withAnimation(.easeOut(duration: 0.2)) {
                     scale = 1.3

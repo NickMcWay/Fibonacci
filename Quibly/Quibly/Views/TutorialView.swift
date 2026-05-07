@@ -134,7 +134,7 @@ struct TutorialView: View {
             }
         }
         .ignoresSafeArea(edges: .top)
-        .onChange(of: currentStep) { _, step in
+        .onChange(of: currentStep) { step in
             if step == nameStepIndex { nameFocused = true }
         }
     }

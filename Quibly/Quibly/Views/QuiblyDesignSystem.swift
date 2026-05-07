@@ -268,7 +268,7 @@ struct WiggleModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .rotationEffect(.degrees(angle))
-            .onChange(of: active) { _, isActive in
+            .onChange(of: active) { isActive in
                 if isActive {
                     withAnimation(.easeInOut(duration: 0.15).repeatForever(autoreverses: true)) {
                         angle = 4
