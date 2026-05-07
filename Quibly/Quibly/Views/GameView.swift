@@ -28,6 +28,70 @@ struct GameView: View {
     }
 
     var body: some View {
+        mainGameView
+            .ignoresSafeArea(edges: .top)
+        .onAppear {
+            audio.play()
+        }
+        .onChange(of: vm.powerUpAnimation) { _, anim in
+            guard let anim else { return }
+            switch anim {
+            case .hint:    playHintAnimation()
+            case .shuffle: playShuffleAnimation()
+            case .bomb:    playBombAnimation()
+            case .wild:    playWildAnimation()
+            }
+        }
+        .fullScreenCover(isPresented: $showShop, onDismiss: { vm.syncFromDefaults() }) { ShopView(onBack: { showShop = false }) }
+        .sheet(isPresented: $showBuyHintSheet, onDismiss: { vm.resumeNoWordTimer() }) {
+            BuyChargePopupSheet(
+                powerUpName: "Hint", icon: "lightbulb.fill",
+                iconGradient: [Color.qSun1, Color.qSun2],
+                singleCost: vm.hintCost, tripleCost: vm.hintCost * 3, coins: vm.coins
+            ) { count in vm.shopBuyHints(count: count) }
+            .presentationDetents([.height(360)])
+        }
+        .sheet(isPresented: $showBuyShuffleSheet, onDismiss: { vm.resumeNoWordTimer() }) {
+            BuyChargePopupSheet(
+                powerUpName: "Shuffle", icon: "shuffle",
+                iconGradient: [Color.qSky1, Color.qSky2],
+                singleCost: vm.shuffleCost, tripleCost: vm.shuffleCost * 3, coins: vm.coins
+            ) { count in vm.shopBuyShuffles(count: count) }
+            .presentationDetents([.height(360)])
+        }
+        .sheet(isPresented: $showBuyBombSheet, onDismiss: { vm.resumeNoWordTimer() }) {
+            BuyChargePopupSheet(
+                powerUpName: "Bomb", icon: "burst.fill",
+                iconGradient: [Color.qCoral1, Color.qCoral2],
+                singleCost: vm.bombCost, tripleCost: vm.bombCost * 3, coins: vm.coins
+            ) { count in vm.shopBuyBombs(count: count) }
+            .presentationDetents([.height(360)])
+        }
+        .sheet(isPresented: $showBuyWildSheet, onDismiss: { vm.resumeNoWordTimer() }) {
+            BuyChargePopupSheet(
+                powerUpName: "Joker", icon: "wand.and.stars",
+                iconGradient: [Color.qGrape1, Color.qGrape2],
+                singleCost: vm.wildCost, tripleCost: vm.wildCost * 3, coins: vm.coins
+            ) { count in vm.shopBuyWilds(count: count) }
+            .presentationDetents([.height(360)])
+        }
+        .onChange(of: showShop)            { _, showing in if showing { vm.cancelNoWordTimer() } }
+        .onChange(of: showBuyHintSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: showBuyShuffleSheet) { _, showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: showBuyBombSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: showBuyWildSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
+        .onChange(of: vm.noWordCountdown)  { _, countdown in
+            if countdown == 10 {
+                audio.playCountdownSound()
+            } else if countdown == nil {
+                audio.fadeOutCountdownSound()
+            }
+        }
+    }
+
+    // MARK: - Main Game View
+
+    private var mainGameView: some View {
         DreamBackground {
             ZStack {
                 mainColumn
@@ -99,64 +163,6 @@ struct GameView: View {
             .animation(.easeInOut(duration: 0.25), value: vm.comboCount > 0)
             .animation(.spring(response: 0.35, dampingFraction: 0.6), value: vm.currentMilestone)
             .animation(.easeInOut(duration: 0.35), value: vm.isNewPersonalBest)
-        }
-        .ignoresSafeArea(edges: .top)
-        .onAppear {
-            audio.play()
-        }
-        .onChange(of: vm.powerUpAnimation) { _, anim in
-            guard let anim else { return }
-            switch anim {
-            case .hint:    playHintAnimation()
-            case .shuffle: playShuffleAnimation()
-            case .bomb:    playBombAnimation()
-            case .wild:    playWildAnimation()
-            }
-        }
-        .fullScreenCover(isPresented: $showShop, onDismiss: { vm.syncFromDefaults() }) { ShopView(onBack: { showShop = false }) }
-        .sheet(isPresented: $showBuyHintSheet, onDismiss: { vm.resumeNoWordTimer() }) {
-            BuyChargePopupSheet(
-                powerUpName: "Hint", icon: "lightbulb.fill",
-                iconGradient: [Color.qSun1, Color.qSun2],
-                singleCost: vm.hintCost, tripleCost: vm.hintCost * 3, coins: vm.coins
-            ) { count in vm.shopBuyHints(count: count) }
-            .presentationDetents([.height(360)])
-        }
-        .sheet(isPresented: $showBuyShuffleSheet, onDismiss: { vm.resumeNoWordTimer() }) {
-            BuyChargePopupSheet(
-                powerUpName: "Shuffle", icon: "shuffle",
-                iconGradient: [Color.qSky1, Color.qSky2],
-                singleCost: vm.shuffleCost, tripleCost: vm.shuffleCost * 3, coins: vm.coins
-            ) { count in vm.shopBuyShuffles(count: count) }
-            .presentationDetents([.height(360)])
-        }
-        .sheet(isPresented: $showBuyBombSheet, onDismiss: { vm.resumeNoWordTimer() }) {
-            BuyChargePopupSheet(
-                powerUpName: "Bomb", icon: "burst.fill",
-                iconGradient: [Color.qCoral1, Color.qCoral2],
-                singleCost: vm.bombCost, tripleCost: vm.bombCost * 3, coins: vm.coins
-            ) { count in vm.shopBuyBombs(count: count) }
-            .presentationDetents([.height(360)])
-        }
-        .sheet(isPresented: $showBuyWildSheet, onDismiss: { vm.resumeNoWordTimer() }) {
-            BuyChargePopupSheet(
-                powerUpName: "Joker", icon: "wand.and.stars",
-                iconGradient: [Color.qGrape1, Color.qGrape2],
-                singleCost: vm.wildCost, tripleCost: vm.wildCost * 3, coins: vm.coins
-            ) { count in vm.shopBuyWilds(count: count) }
-            .presentationDetents([.height(360)])
-        }
-        .onChange(of: showShop)            { _, showing in if showing { vm.cancelNoWordTimer() } }
-        .onChange(of: showBuyHintSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
-        .onChange(of: showBuyShuffleSheet) { _, showing in if showing { vm.pauseNoWordTimer() } }
-        .onChange(of: showBuyBombSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
-        .onChange(of: showBuyWildSheet)    { _, showing in if showing { vm.pauseNoWordTimer() } }
-        .onChange(of: vm.noWordCountdown)  { _, countdown in
-            if countdown == 10 {
-                audio.playCountdownSound()
-            } else if countdown == nil {
-                audio.fadeOutCountdownSound()
-            }
         }
     }
 
