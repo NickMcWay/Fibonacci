@@ -318,9 +318,14 @@ struct BuyChargePopupSheet: View {
             .padding(.top, 16)
 
             HStack(spacing: 10) {
-                Circle()
-                    .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 10))
-                    .frame(width: 22, height: 22)
+                ZStack {
+                    Circle()
+                        .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 10))
+                    Text("$")
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+                }
+                .frame(width: 22, height: 22)
                 Text("You have \(coins) coins")
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.qInk)
@@ -377,9 +382,14 @@ struct BuyChargePopupSheet: View {
                             .foregroundStyle(Color.qMint2)
                     }
                     HStack(spacing: 4) {
-                        Circle()
-                            .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 7))
-                            .frame(width: 14, height: 14)
+                        ZStack {
+                            Circle()
+                                .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 7))
+                            Text("$")
+                                .font(.system(size: 8, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+                        }
+                        .frame(width: 14, height: 14)
                         Text("\(cost)")
                             .font(.system(size: 14, weight: .semibold, design: .rounded))
                             .foregroundStyle(Color.qGoldDeep)
@@ -844,9 +854,14 @@ struct QuestsPopupSheet: View {
                         .shadow(color: Color.qMint2.opacity(0.4), radius: 0, x: 0, y: 2)
                 } else {
                     VStack(spacing: 2) {
-                        Circle()
-                            .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 8))
-                            .frame(width: 18, height: 18)
+                        ZStack {
+                            Circle()
+                                .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 8))
+                            Text("$")
+                                .font(.system(size: 10, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+                        }
+                        .frame(width: 18, height: 18)
                         Text("+\(quest.reward)")
                             .font(.system(size: 13, weight: .bold, design: .rounded))
                             .foregroundStyle(Color.qGoldDeep)

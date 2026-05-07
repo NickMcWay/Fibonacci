@@ -525,9 +525,14 @@ struct GameView: View {
                         .offset(x: 4, y: -4)
                 } else {
                     HStack(spacing: 3) {
-                        Circle()
-                            .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 8))
-                            .frame(width: 10, height: 10)
+                        ZStack {
+                            Circle()
+                                .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 8))
+                            Text("$")
+                                .font(.system(size: 6, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+                        }
+                        .frame(width: 10, height: 10)
                         Text("\(cost)")
                             .font(.system(size: 10, weight: .heavy, design: .rounded))
                             .foregroundStyle(Color.qGoldDeep)
@@ -715,9 +720,14 @@ struct BoardClearedCelebration: View {
                     .shadow(color: Color(red: 0.71, green: 0.43, blue: 0).opacity(0.5), radius: 0, x: 0, y: 2)
 
                 HStack(spacing: 6) {
-                    Circle()
-                        .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 10))
-                        .frame(width: 16, height: 16)
+                    ZStack {
+                        Circle()
+                            .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 10))
+                        Text("$")
+                            .font(.system(size: 9, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+                    }
+                    .frame(width: 16, height: 16)
                     Text("+50 bonus coins")
                         .font(.system(size: 16, weight: .semibold, design: .rounded))
                         .foregroundStyle(Color.qInk)

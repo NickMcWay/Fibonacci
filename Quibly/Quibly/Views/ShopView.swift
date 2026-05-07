@@ -316,9 +316,14 @@ struct ShopView: View {
                 }
             } label: {
                 HStack(spacing: 5) {
-                    Circle()
-                        .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 8))
-                        .frame(width: 14, height: 14)
+                    ZStack {
+                        Circle()
+                            .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 8))
+                        Text("$")
+                            .font(.system(size: 8, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+                    }
+                    .frame(width: 14, height: 14)
                     Text("\(pu.cost)")
                         .font(.system(size: 14, weight: .semibold, design: .rounded))
                         .foregroundStyle(Color.qGoldDeep)
@@ -364,13 +369,18 @@ struct ShopView: View {
 
                 VStack(spacing: 4) {
                     Spacer().frame(height: pack.popular ? 10 : 6)
-                    Circle()
-                        .fill(RadialGradient(
-                            colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)],
-                            center: .topLeading, startRadius: 0, endRadius: 18
-                        ))
-                        .frame(width: 36, height: 36)
-                        .shadow(color: Color(red: 0.55, green: 0.31, blue: 0).opacity(0.4), radius: 0, x: -2, y: -3)
+                    ZStack {
+                        Circle()
+                            .fill(RadialGradient(
+                                colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)],
+                                center: .topLeading, startRadius: 0, endRadius: 18
+                            ))
+                        Text("$")
+                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+                    }
+                    .frame(width: 36, height: 36)
+                    .shadow(color: Color(red: 0.55, green: 0.31, blue: 0).opacity(0.4), radius: 0, x: -2, y: -3)
 
                     Text("+\(pack.amount)")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
@@ -451,9 +461,14 @@ struct ShopView: View {
                             .scaleEffect(0.8)
                     } else if ads.isRewardedAdReady {
                         HStack(spacing: 5) {
-                            Circle()
-                                .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 8))
-                                .frame(width: 14, height: 14)
+                            ZStack {
+                                Circle()
+                                    .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 8))
+                                Text("$")
+                                    .font(.system(size: 8, weight: .bold, design: .rounded))
+                                    .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+                            }
+                            .frame(width: 14, height: 14)
                             Text("+\(ads.rewardedCoinGrant)")
                                 .font(.system(size: 14, weight: .semibold, design: .rounded))
                                 .foregroundStyle(Color.qGoldDeep)
@@ -519,9 +534,14 @@ struct ShopView: View {
                 .foregroundStyle(Color.qInk.opacity(0.6))
             } else {
                 HStack(spacing: 3) {
-                    Circle()
-                        .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 6))
-                        .frame(width: 10, height: 10)
+                    ZStack {
+                        Circle()
+                            .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 6))
+                        Text("$")
+                            .font(.system(size: 6, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+                    }
+                    .frame(width: 10, height: 10)
                     Text("\(cost)")
                         .font(.system(size: 11, weight: .semibold, design: .rounded))
                         .foregroundStyle(Color.qGoldDeep)
