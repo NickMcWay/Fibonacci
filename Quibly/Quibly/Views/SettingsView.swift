@@ -11,7 +11,8 @@ struct SettingsView: View {
     @AppStorage("SlideWords_MusicEnabled")   private var musicOn:   Bool   = true
     @AppStorage("SlideWords_HapticsEnabled") private var hapticsOn: Bool   = true
     @AppStorage("SlideWords_AutoHints")      private var autoHints: Bool   = true
-    @AppStorage("SlideWords_DarkMode")       private var darkMode:  Bool   = false
+    @AppStorage("SlideWords_DarkMode")        private var darkMode:        Bool   = false
+    @AppStorage("SlideWords_UseSystemLanguage") private var useSystemLanguage: Bool = false
     @AppStorage("SlideWords_SelectedLanguage") private var selectedLanguageRaw: String = GameLanguage.english.rawValue
     @AppStorage("SlideWords_SelectedVariant")  private var selectedVariantRaw:  Int    = BoardVariant.small.rawValue
 
@@ -124,7 +125,8 @@ struct SettingsView: View {
 
                             settingsGroup(title: "Gameplay") {
                                 toggleRow(icon: "lightbulb.fill", label: "Auto-hints", sublabel: "Glow tiles after 10s", binding: $autoHints)
-                                pickerRow(icon: "globe", label: "Language",
+                                toggleRow(icon: "globe", label: "Use system language", sublabel: "Overrides game language for the UI", binding: $useSystemLanguage)
+                                pickerRow(icon: "character.bubble", label: "Game language",
                                           value: "\(selectedLanguage.flag) \(selectedLanguage.displayName)") { showLanguagePicker = true }
                                 pickerRow(icon: "square.grid.2x2.fill", label: "Default board",
                                           value: selectedVariant.displayName) { showBoardPicker = true }
