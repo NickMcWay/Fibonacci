@@ -301,12 +301,28 @@ struct QStatChip: View {
     let label: LocalizedStringKey
     let value: String
     let gradient: [Color]
+    var coinStyle: Bool = false
 
     var body: some View {
         HStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 15, weight: .bold))
-                .foregroundStyle(iconColor)
+            if coinStyle {
+                ZStack {
+                    Circle()
+                        .fill(RadialGradient(
+                            colors: [Color(red: 1, green: 0.98, blue: 0.70),
+                                     Color(red: 0.94, green: 0.64, blue: 0.13)],
+                            center: .topLeading, startRadius: 0, endRadius: 10
+                        ))
+                    Text("$")
+                        .font(.system(size: 9, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+                }
+                .frame(width: 18, height: 18)
+            } else {
+                Image(systemName: icon)
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(iconColor)
+            }
             VStack(alignment: .leading, spacing: 1) {
                 Text(label)
                     .font(.system(size: 9, weight: .heavy, design: .rounded))
