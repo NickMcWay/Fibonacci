@@ -166,15 +166,20 @@ struct CoinChip: View {
 
     var body: some View {
         HStack(spacing: 5) {
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [Color(red: 1, green: 0.98, blue: 0.70),
-                                 Color(red: 0.94, green: 0.64, blue: 0.13)],
-                        center: .topLeading, startRadius: 0, endRadius: big ? 14 : 10
+            ZStack {
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [Color(red: 1, green: 0.98, blue: 0.70),
+                                     Color(red: 0.94, green: 0.64, blue: 0.13)],
+                            center: .topLeading, startRadius: 0, endRadius: big ? 14 : 10
+                        )
                     )
-                )
-                .frame(width: big ? 20 : 14, height: big ? 20 : 14)
+                Text("$")
+                    .font(.system(size: big ? 11 : 8, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+            }
+            .frame(width: big ? 20 : 14, height: big ? 20 : 14)
             Text("\(amount)")
                 .font(.system(size: big ? 17 : 14, weight: .semibold, design: .rounded))
                 .foregroundStyle(Color.qInk)
