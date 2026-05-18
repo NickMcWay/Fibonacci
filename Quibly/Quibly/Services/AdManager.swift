@@ -20,7 +20,7 @@ final class AdManager: NSObject, ObservableObject {
     @Published var isLoadingAd = false
     @Published var isBannerVisible = false
 
-    let rewardedCoinGrant = 50
+    let rewardedCoinGrant = 500
 
     private var rewardedAd: RewardedAd?
     private var onDismissCallback: (() -> Void)?
