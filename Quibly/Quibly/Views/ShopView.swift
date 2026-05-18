@@ -41,7 +41,7 @@ struct ShopView: View {
 
     private let themes: [(name: String, bg: [Color], textColor: Color, cost: Int, owned: Bool, locked: Bool)] = [
         ("Cream",    [Color.qCream, Color(red: 1, green: 0.95, blue: 0.88)], Color.qInk,                                    0,   true,  false),
-        ("Mint",     [Color.qMint1, Color.qMint2],                           Color(red: 0.12, green: 0.43, blue: 0.23),     4000, false, false),
+        ("Forest",     [Color.qMint1, Color.qMint2],                           Color(red: 0.12, green: 0.43, blue: 0.23),     4000, false, false),
         ("Galaxy",   [Color(red: 0.35, green: 0.23, blue: 0.64), Color(red: 0.17, green: 0.11, blue: 0.39)], Color.qSun1,   8000, false, false),
         ("Bubble",   [Color.qBubble1, Color.qBubble2],                       Color(red: 0.66, green: 0.24, blue: 0.43),     4000, false, false),
         ("Lemonade", [Color(red: 1, green: 0.97, blue: 0.70), Color(red: 1, green: 0.84, blue: 0.29)], Color(red: 0.65, green: 0.42, blue: 0), 5000, false, false),
