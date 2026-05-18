@@ -21,6 +21,15 @@ final class StoreManager: ObservableObject {
             case .sparkleBundle: return 15000
             }
         }
+
+        var fallbackPrice: String {
+            switch self {
+            case .starterPack:   return "$0.99"
+            case .builderPack:   return "$2.99"
+            case .masterPack:    return "$4.99"
+            case .sparkleBundle: return "$4.99"
+            }
+        }
     }
 
     @Published var products: [Product] = []
@@ -56,7 +65,7 @@ final class StoreManager: ObservableObject {
     }
 
     func displayPrice(for id: ProductID) -> String {
-        product(for: id)?.displayPrice ?? "—"
+        product(for: id)?.displayPrice ?? id.fallbackPrice
     }
 
     // MARK: - Purchasing
