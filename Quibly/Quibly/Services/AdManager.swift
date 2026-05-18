@@ -27,8 +27,12 @@ final class AdManager: NSObject, ObservableObject {
 
     private override init() {
         super.init()
-        MobileAds.shared.start { _ in }
-        Task { await loadRewardedAd() }
+        Task {
+            await withCheckedContinuation { continuation in
+                MobileAds.shared.start { _ in continuation.resume() }
+            }
+            await loadRewardedAd()
+        }
     }
 
     // MARK: - Rewarded Ads
@@ -57,9 +61,7 @@ final class AdManager: NSObject, ObservableObject {
             Task { await loadRewardedAd() }
             return
         }
-        guard let rootVC = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene })
-            .first?.windows.first?.rootViewController else { return }
+        guard let rootVC = topmostViewController() else { return }
 
         onDismissCallback = onDismiss
         isRewardedAdReady = false
@@ -68,6 +70,16 @@ final class AdManager: NSObject, ObservableObject {
             guard let self else { return }
             onReward(self.rewardedCoinGrant)
         }
+    }
+
+    private func topmostViewController() -> UIViewController? {
+        guard let windowScene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first(where: { $0.activationState == .foregroundActive }),
+              let root = windowScene.keyWindow?.rootViewController else { return nil }
+        var top = root
+        while let presented = top.presentedViewController { top = presented }
+        return top
     }
 
     // MARK: - Banner Ads
