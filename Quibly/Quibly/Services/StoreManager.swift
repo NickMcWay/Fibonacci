@@ -25,9 +25,9 @@ final class StoreManager: ObservableObject {
         var fallbackPrice: String {
             switch self {
             case .starterPack:   return "$0.99"
-            case .builderPack:   return "$2.99"
-            case .masterPack:    return "$4.99"
-            case .sparkleBundle: return "$4.99"
+            case .builderPack:   return "$1.99"
+            case .masterPack:    return "$3.99"
+            case .sparkleBundle: return "$9.99"
             }
         }
     }
