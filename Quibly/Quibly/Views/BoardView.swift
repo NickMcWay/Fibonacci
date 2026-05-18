@@ -65,7 +65,7 @@ struct BoardView: View {
                 pendingSwipeConnector(gap: gap, tileSize: tileSize)
 
                 // Word preview / confirmation hint at the bottom of the board
-                if !drawPath.isEmpty || !confirmedPath.isEmpty || acceptedWord != nil || (vm.showMatchHighlights && !vm.pendingSwipeMatches.isEmpty) {
+                if !drawPath.isEmpty || !confirmedPath.isEmpty || acceptedWord != nil || (vm.showMatchHighlights && !vm.hintedMatches.isEmpty) {
                     wordPreview(boardSize: boardSize)
                 }
             }
@@ -117,7 +117,7 @@ struct BoardView: View {
             isGreen = true
         } else if hasPendingSwipe {
             if revealed {
-                text = vm.pendingSwipeMatches.map { $0.word.uppercased() }.joined(separator: " · ")
+                text = vm.hintedMatches.map { $0.word.uppercased() }.joined(separator: " · ")
                 isGreen = true
             } else {
                 text = ""
@@ -280,9 +280,7 @@ struct BoardView: View {
                         return
                     }
                 }
-                if vm.showMatchHighlights && !vm.pendingSwipeMatches.isEmpty {
-                    vm.confirmPendingSwipeWords()
-                }
+                // Hint is showing — user must draw the word; tap-to-confirm is disabled.
             } else {
                 confirmedPath = []
                 guard !vm.isAnimating, !vm.isGameOver else { return }
@@ -313,7 +311,7 @@ struct BoardView: View {
 
     private func isPendingSwipeTile(_ tile: Tile) -> Bool {
         guard vm.showMatchHighlights else { return false }
-        return vm.pendingSwipeMatches.contains { match in
+        return vm.hintedMatches.contains { match in
             match.positions.contains { $0.row == tile.row && $0.col == tile.col }
         }
     }
@@ -369,7 +367,7 @@ struct BoardView: View {
 
     private func pendingSwipeConnector(gap: CGFloat, tileSize: CGFloat) -> some View {
         let points: [CGPoint] = vm.showMatchHighlights
-            ? vm.pendingSwipeMatches.flatMap(\.positions).map {
+            ? vm.hintedMatches.flatMap(\.positions).map {
                 CGPoint(x: tileX(col: $0.col, gap: gap, tileSize: tileSize), y: tileY(row: $0.row, gap: gap, tileSize: tileSize))
             }
             : []
