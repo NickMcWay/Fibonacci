@@ -947,6 +947,9 @@
         }
       }
     },
+    "Bundle" : {
+
+    },
     "Buy coins to spend in the shop" : {
       "localizations" : {
         "de" : {
@@ -1662,6 +1665,9 @@
       }
     },
     "Enter your name" : {
+
+    },
+    "EQUIP" : {
 
     },
     "EQUIPPED" : {
@@ -2433,9 +2439,6 @@
 
     },
     "LVL %lld" : {
-
-    },
-    "Lvl 20" : {
 
     },
     "Menu" : {

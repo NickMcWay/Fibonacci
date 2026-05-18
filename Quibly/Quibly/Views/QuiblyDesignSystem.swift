@@ -51,35 +51,35 @@ struct TileTheme: Identifiable, Equatable {
         tileColors: [Color.qMint1, Color.qMint2],
         letterColor: Color(red: 0.11, green: 0.43, blue: 0.24),
         shadowColor: Color(red: 0.11, green: 0.43, blue: 0.24),
-        cost: 400, unlockLevel: nil, bundleOnly: false
+        cost: 3000, unlockLevel: nil, bundleOnly: false
     )
     static let bubble = TileTheme(
         id: "bubble", displayName: "Bubble",
         tileColors: [Color.qBubble1, Color.qBubble2],
         letterColor: Color(red: 0.66, green: 0.24, blue: 0.43),
         shadowColor: Color(red: 0.66, green: 0.24, blue: 0.43),
-        cost: 400, unlockLevel: nil, bundleOnly: false
+        cost: 4000, unlockLevel: nil, bundleOnly: false
     )
     static let lemonade = TileTheme(
         id: "lemonade", displayName: "Lemonade",
         tileColors: [Color(red: 1, green: 0.980, blue: 0.647), Color(red: 1, green: 0.839, blue: 0.290)],
         letterColor: Color(red: 0.647, green: 0.416, blue: 0.000),
         shadowColor: Color(red: 0.647, green: 0.416, blue: 0.000),
-        cost: 500, unlockLevel: nil, bundleOnly: false
+        cost: 5000, unlockLevel: nil, bundleOnly: false
     )
     static let sky = TileTheme(
         id: "sky", displayName: "Sky",
         tileColors: [Color.qSky1, Color.qSky2],
         letterColor: Color(red: 0.12, green: 0.34, blue: 0.55),
         shadowColor: Color(red: 0.12, green: 0.34, blue: 0.55),
-        cost: 500, unlockLevel: 20, bundleOnly: false
+        cost: 10000, unlockLevel: 20, bundleOnly: false
     )
     static let galaxy = TileTheme(
         id: "galaxy", displayName: "Galaxy",
         tileColors: [Color(red: 0.353, green: 0.231, blue: 0.639), Color(red: 0.169, green: 0.110, blue: 0.392)],
         letterColor: Color.qSun1,
         shadowColor: Color(red: 0.106, green: 0.055, blue: 0.243),
-        cost: 800, unlockLevel: nil, bundleOnly: false
+        cost: 8000, unlockLevel: nil, bundleOnly: false
     )
     static let sunset = TileTheme(
         id: "sunset", displayName: "Sunset",
