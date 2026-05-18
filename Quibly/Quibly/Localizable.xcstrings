@@ -835,6 +835,7 @@
       }
     },
     "BEST VALUE" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

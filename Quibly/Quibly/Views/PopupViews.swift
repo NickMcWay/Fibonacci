@@ -408,15 +408,6 @@ struct BuyChargePopupSheet: View {
                     .padding(.horizontal, 8)
                     .padding(.bottom, 8)
                 }
-
-                if popular {
-                    Text("BEST VALUE")
-                        .font(.system(size: 9, weight: .heavy, design: .rounded))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 8).padding(.vertical, 2)
-                        .background(Capsule().fill(Color.qBubble2))
-                        .offset(y: -8)
-                }
             }
         }
         .buttonStyle(.plain)

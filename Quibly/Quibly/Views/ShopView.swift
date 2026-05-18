@@ -128,7 +128,6 @@ struct ShopView: View {
                                 coinPackCard(pack)
                             }
                         }
-                        .padding(.top, 10)
 
                         // Watch Ad
                         watchAdRow
@@ -417,15 +416,6 @@ struct ShopView: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-
-                if pack.popular {
-                    Text("BEST VALUE")
-                        .font(.system(size: 9, weight: .heavy, design: .rounded))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 8).padding(.vertical, 2)
-                        .background(Capsule().fill(Color.qBubble2).shadow(color: Color(red: 0.63, green: 0.12, blue: 0.35).opacity(0.4), radius: 0, x: 0, y: 2))
-                        .offset(y: -8)
-                }
             }
         }
         .buttonStyle(.plain)
