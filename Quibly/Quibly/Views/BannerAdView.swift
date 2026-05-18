@@ -7,9 +7,7 @@ struct BannerAdView: UIViewRepresentable {
     func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeUIView(context: Context) -> BannerView {
-        let width = UIScreen.main.bounds.width
-        let adSize = currentOrientationAnchoredAdaptiveBannerAdSize(width: width)
-        let banner = BannerView(adSize: adSize)
+        let banner = BannerView(adSize: AdSizeBanner)
         banner.adUnitID = adUnitID
         banner.rootViewController = context.coordinator.rootViewController
         banner.load(Request())
