@@ -54,7 +54,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color(red: 0.11, green: 0.43, blue: 0.24),
         shadowColor: Color(red: 0.11, green: 0.43, blue: 0.24),
         backgroundImage: "Forest Theme",
-        cost: 400, unlockLevel: nil, bundleOnly: false
+        cost: 3000, unlockLevel: nil, bundleOnly: false
     )
     static let bubble = TileTheme(
         id: "bubble", displayName: "Bubble",
@@ -62,7 +62,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color(red: 0.66, green: 0.24, blue: 0.43),
         shadowColor: Color(red: 0.66, green: 0.24, blue: 0.43),
         backgroundImage: "Bubble Theme",
-        cost: 400, unlockLevel: nil, bundleOnly: false
+        cost: 4000, unlockLevel: nil, bundleOnly: false
     )
     static let lemonade = TileTheme(
         id: "lemonade", displayName: "Lemonade",
@@ -70,7 +70,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color(red: 0.647, green: 0.416, blue: 0.000),
         shadowColor: Color(red: 0.647, green: 0.416, blue: 0.000),
         backgroundImage: "Lemonade Theme",
-        cost: 500, unlockLevel: nil, bundleOnly: false
+        cost: 5000, unlockLevel: nil, bundleOnly: false
     )
     static let sky = TileTheme(
         id: "sky", displayName: "Sky",
@@ -78,7 +78,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color(red: 0.12, green: 0.34, blue: 0.55),
         shadowColor: Color(red: 0.12, green: 0.34, blue: 0.55),
         backgroundImage: "Sky Theme",
-        cost: 500, unlockLevel: 20, bundleOnly: false
+        cost: 10000, unlockLevel: 20, bundleOnly: false
     )
     static let galaxy = TileTheme(
         id: "galaxy", displayName: "Galaxy",
@@ -86,7 +86,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color.qSun1,
         shadowColor: Color(red: 0.106, green: 0.055, blue: 0.243),
         backgroundImage: "Space Theme",
-        cost: 800, unlockLevel: nil, bundleOnly: false
+        cost: 8000, unlockLevel: nil, bundleOnly: false
     )
     static let sunset = TileTheme(
         id: "sunset", displayName: "Sunset",
