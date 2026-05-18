@@ -9,10 +9,9 @@ final class AdManager: NSObject, ObservableObject {
     // MARK: - Ad Unit IDs (replace test IDs with production IDs before shipping)
 
     enum AdUnitID {
-        /// Test IDs — swap for production IDs from AdMob dashboard.
-        static let rewardedCoins = "ca-app-pub-3227356584909564/3522574505" // AdMob test rewarded
-        static let banner        = "ca-app-pub-3227356584909564/1379775283" // AdMob test banner
-        static let interstitial  = "ca-app-pub-3227356584909564/2842854598" // AdMob test interstitial
+        static let rewardedCoins = "ca-app-pub-3940256099942544/1712485313"
+        static let banner        = "ca-app-pub-3940256099942544/2934735716"
+        static let interstitial  = "ca-app-pub-3940256099942544/4411468910"
     }
 
     // MARK: - State
@@ -21,15 +20,14 @@ final class AdManager: NSObject, ObservableObject {
     @Published var isLoadingAd = false
     @Published var isBannerVisible = false
 
-    /// Coins awarded for watching a full rewarded ad.
-    let rewardedCoinGrant = 500
+    let rewardedCoinGrant = 50
 
     private var rewardedAd: RewardedAd?
     private var onDismissCallback: (() -> Void)?
 
     private override init() {
         super.init()
-        GADMobileAds.sharedInstance().start { _ in }
+        MobileAds.shared.start { _ in }
         Task { await loadRewardedAd() }
     }
 
@@ -115,4 +113,3 @@ extension AdManager: FullScreenContentDelegate {
         }
     }
 }
-
