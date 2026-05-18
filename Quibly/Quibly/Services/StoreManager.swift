@@ -9,7 +9,7 @@ final class StoreManager: ObservableObject {
 
     enum ProductID: String, CaseIterable {
         case starterPack  = "com.quibly.coins.starter"   // 1000 coins
-        case builderPack  = "com.quibly.coins.builder"   // 3000 coins
+        case builderPack  = "com.quibly.coins.builder2"   // 3000 coins
         case masterPack   = "com.quibly.coins.master"    // 7500 coins
         case sparkleBundle = "com.quibly.bundle.sparkle" // 15000 coins + power-ups
 

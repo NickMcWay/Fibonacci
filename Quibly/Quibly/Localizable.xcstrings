@@ -3200,6 +3200,9 @@
         }
       }
     },
+    "Purchases Restored" : {
+
+    },
     "Q" : {
 
     },
@@ -3401,6 +3404,9 @@
           }
         }
       }
+    },
+    "Restore Failed" : {
+
     },
     "Restore purchases" : {
       "localizations" : {
@@ -4844,6 +4850,9 @@
           }
         }
       }
+    },
+    "Your purchases have been restored successfully." : {
+
     }
   },
   "version" : "1.0"
