@@ -36,6 +36,7 @@ struct TileTheme: Identifiable, Equatable {
     let letterColor: Color    // letter on a normal tile
     let shadowColor: Color    // drop-shadow tint on a normal tile
     let backgroundImage: String  // asset name for the full-screen background
+    let musicTrack: String    // filename (no extension) in "Audio Themes" folder
     let cost: Int             // 0 = free
     let unlockLevel: Int?     // nil = no level gate
     let bundleOnly: Bool      // true = only obtainable via Sparkle Bundle IAP
@@ -46,6 +47,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color.qInk,
         shadowColor: Color.qInk,
         backgroundImage: "Quibly Background",
+        musicTrack: "Main Theme",
         cost: 0, unlockLevel: nil, bundleOnly: false
     )
     static let mint = TileTheme(
@@ -54,6 +56,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color(red: 0.11, green: 0.43, blue: 0.24),
         shadowColor: Color(red: 0.11, green: 0.43, blue: 0.24),
         backgroundImage: "Forest Theme",
+        musicTrack: "Forest Theme",
         cost: 3000, unlockLevel: nil, bundleOnly: false
     )
     static let bubble = TileTheme(
@@ -62,6 +65,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color(red: 0.66, green: 0.24, blue: 0.43),
         shadowColor: Color(red: 0.66, green: 0.24, blue: 0.43),
         backgroundImage: "Bubble Theme",
+        musicTrack: "Bubblegum Theme",
         cost: 4000, unlockLevel: nil, bundleOnly: false
     )
     static let lemonade = TileTheme(
@@ -70,6 +74,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color(red: 0.647, green: 0.416, blue: 0.000),
         shadowColor: Color(red: 0.647, green: 0.416, blue: 0.000),
         backgroundImage: "Lemonade Theme",
+        musicTrack: "Lemonade Theme",
         cost: 5000, unlockLevel: nil, bundleOnly: false
     )
     static let sky = TileTheme(
@@ -78,6 +83,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color(red: 0.12, green: 0.34, blue: 0.55),
         shadowColor: Color(red: 0.12, green: 0.34, blue: 0.55),
         backgroundImage: "Sky Theme",
+        musicTrack: "Sky Theme",
         cost: 10000, unlockLevel: 20, bundleOnly: false
     )
     static let galaxy = TileTheme(
@@ -86,6 +92,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color.qSun1,
         shadowColor: Color(red: 0.106, green: 0.055, blue: 0.243),
         backgroundImage: "Space Theme",
+        musicTrack: "Galaxy Theme",
         cost: 8000, unlockLevel: nil, bundleOnly: false
     )
     static let sunset = TileTheme(
@@ -94,6 +101,7 @@ struct TileTheme: Identifiable, Equatable {
         letterColor: Color(red: 0.541, green: 0.145, blue: 0.000),
         shadowColor: Color(red: 0.541, green: 0.145, blue: 0.000),
         backgroundImage: "Sunset Theme",
+        musicTrack: "Sunset Theme",
         cost: 0, unlockLevel: nil, bundleOnly: true
     )
 

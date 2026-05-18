@@ -37,39 +37,67 @@ final class AudioManager: ObservableObject {
     private var countdownPlayer: AVAudioPlayer?
     private var registerPlayer: AVAudioPlayer?
     private var countdownFadeTask: Task<Void, Never>?
+    private var themeObserver: NSObjectProtocol?
     private let muteKey = "SlideWords_IsMuted"
+    private let themeKey = "SlideWords_ActiveTheme"
 
     init() {
         isMuted        = UserDefaults.standard.bool(forKey: "SlideWords_IsMuted")
         isMusicEnabled = UserDefaults.standard.object(forKey: "SlideWords_MusicEnabled") as? Bool ?? true
         isSoundEnabled = UserDefaults.standard.object(forKey: "SlideWords_SoundEnabled") as? Bool ?? true
-        setupPlayer()
+        let themeID = UserDefaults.standard.string(forKey: "SlideWords_ActiveTheme") ?? "cream"
+        setupPlayer(trackName: trackName(for: themeID))
         setupEffects()
+        observeThemeChanges()
     }
 
-    private func setupPlayer() {
-        // Primary track — teacup metronome loop bundled with the app.
-        // Falls back to any other audio file found in the bundle.
-        let candidates = [
-            ("Main Theme", "mp3"),
-            ("background_music", "mp3"),
-            ("background_music", "wav"),
-            ("background_music", "m4a"),
-            ("music", "mp3"),
-        ]
-        for (name, ext) in candidates {
-            if let url = Bundle.main.url(forResource: name, withExtension: ext) {
-                player = try? AVAudioPlayer(contentsOf: url)
-                player?.numberOfLoops = -1  // loop indefinitely
-                player?.volume = 0.35
-                player?.prepareToPlay()
-                break
-            }
+    private func trackName(for themeID: String) -> String {
+        switch themeID {
+        case "mint":      return "Forest Theme"
+        case "bubble":    return "Bubblegum Theme"
+        case "lemonade":  return "Lemonade Theme"
+        case "sky":       return "Sky Theme"
+        case "galaxy":    return "Galaxy Theme"
+        case "sunset":    return "Sunset Theme"
+        default:          return "Main Theme"
+        }
+    }
+
+    private func observeThemeChanges() {
+        themeObserver = NotificationCenter.default.addObserver(
+            forName: UserDefaults.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self else { return }
+            let themeID = UserDefaults.standard.string(forKey: self.themeKey) ?? "cream"
+            let track = self.trackName(for: themeID)
+            guard track != self.currentTrackName else { return }
+            self.switchTrack(to: track)
+        }
+    }
+
+    private var currentTrackName: String = ""
+
+    private func setupPlayer(trackName: String) {
+        currentTrackName = trackName
+        if let url = Bundle.main.url(forResource: trackName, withExtension: "mp3") {
+            player = try? AVAudioPlayer(contentsOf: url)
+            player?.numberOfLoops = -1
+            player?.volume = 0.35
+            player?.prepareToPlay()
         }
         // Configure audio session so the game music can play alongside or
         // respect the system silent switch.
         try? AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
         try? AVAudioSession.sharedInstance().setActive(true)
+    }
+
+    func switchTrack(to trackName: String) {
+        let wasPlaying = player?.isPlaying ?? false
+        player?.stop()
+        setupPlayer(trackName: trackName)
+        if wasPlaying { play() }
     }
 
     private func setupEffects() {
