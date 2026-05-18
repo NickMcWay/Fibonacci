@@ -16,13 +16,17 @@ struct SettingsView: View {
     @AppStorage("SlideWords_SelectedLanguage") private var selectedLanguageRaw: String = GameLanguage.english.rawValue
     @AppStorage("SlideWords_SelectedVariant")  private var selectedVariantRaw:  Int    = BoardVariant.small.rawValue
 
+    @StateObject private var store = StoreManager.shared
+
     @State private var showLanguagePicker    = false
     @State private var showBoardPicker       = false
     @State private var showThemeAlert        = false
     @State private var showBackgroundAlert   = false
     @State private var showRestoreAlert      = false
+    @State private var showRestoreSuccess    = false
     @State private var showPrivacyAlert      = false
     @State private var showTermsAlert        = false
+    @State private var isRestoring           = false
 
     private var selectedLanguage: GameLanguage { GameLanguage(rawValue: selectedLanguageRaw) ?? .english }
     private var selectedVariant:  BoardVariant  { BoardVariant(rawValue: selectedVariantRaw)  ?? .small }
@@ -80,10 +84,30 @@ struct SettingsView: View {
             }
             // Restore purchases
             .alert("Restore Purchases", isPresented: $showRestoreAlert) {
-                Button("Restore", role: .none) {}
+                Button("Restore", role: .none) {
+                    isRestoring = true
+                    Task {
+                        await store.restorePurchases()
+                        isRestoring = false
+                        showRestoreSuccess = store.purchaseError == nil
+                    }
+                }
                 Button("Cancel", role: .cancel) {}
             } message: {
                 Text("Any previous purchases will be restored to your account.")
+            }
+            .alert("Purchases Restored", isPresented: $showRestoreSuccess) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text("Your purchases have been restored successfully.")
+            }
+            .alert("Restore Failed", isPresented: Binding(
+                get: { store.purchaseError != nil },
+                set: { if !$0 { store.purchaseError = nil } }
+            )) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(store.purchaseError ?? "")
             }
             // Privacy
             .alert("Privacy Policy", isPresented: $showPrivacyAlert) {
