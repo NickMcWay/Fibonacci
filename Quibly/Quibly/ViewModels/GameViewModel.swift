@@ -91,6 +91,12 @@ final class GameViewModel: ObservableObject {
     var language: GameLanguage { settings.language }
     var gameMode: GameMode { settings.gameMode }
 
+    // Joker spawn probability decreases as more words are found this session.
+    // Starts at 8%, drops by 1% for every 10 words, flooring at 1%.
+    var jokerProbability: Double {
+        max(0.01, 0.08 - Double(wordsFoundThisSession / 10) * 0.01)
+    }
+
     func scrabbleValue(for letter: Character) -> Int {
         let lower = Character(String(letter).lowercased())
         return settings.language.scrabbleValues[lower] ?? 1
@@ -206,7 +212,7 @@ final class GameViewModel: ObservableObject {
             spawnDailyTiles()
         } else {
             for _ in 0..<2 {
-                if let t = LetterSpawnEngine.spawnTile(for: board, language: settings.language) {
+                if let t = LetterSpawnEngine.spawnTile(for: board, language: settings.language, jokerProbability: jokerProbability) {
                     board.setTile(t, row: t.row, col: t.col)
                 }
             }
@@ -669,7 +675,7 @@ final class GameViewModel: ObservableObject {
             try? await Task.sleep(nanoseconds: 500_000_000)
             let spawnCount = (board.size * board.size) / 2
             for _ in 0..<spawnCount {
-                guard let newTile = LetterSpawnEngine.spawnTile(for: board, language: settings.language) else { break }
+                guard let newTile = LetterSpawnEngine.spawnTile(for: board, language: settings.language, jokerProbability: jokerProbability) else { break }
                 board.setTile(newTile, row: newTile.row, col: newTile.col)
             }
             withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {

@@ -48,13 +48,13 @@ enum LetterSpawnEngine {
         return weightedRandom(scores)
     }
 
-    static func spawnTile(for board: BoardModel, language: GameLanguage = .english) -> Tile? {
+    static func spawnTile(for board: BoardModel, language: GameLanguage = .english, jokerProbability: Double = 0.08) -> Tile? {
         guard !board.emptyPositions.isEmpty else { return nil }
         let letter = chooseLetter(for: board, language: language)
         let position = choosePosition(for: board, letter: letter, language: language)
         var tile = Tile(letter: letter, row: position.row, col: position.col)
         tile.hasCoin = Double.random(in: 0..<1) < 0.18
-        tile.isJoker = Double.random(in: 0..<1) < 0.08
+        tile.isJoker = Double.random(in: 0..<1) < jokerProbability
         if tile.isJoker {
             tile.letter = "*"
         }
