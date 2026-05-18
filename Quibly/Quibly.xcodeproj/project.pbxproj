@@ -18,8 +18,8 @@
 		C31A6B7D2FABA8DB00F7388E /* Exceptions for "Quibly" folder in "Quibly" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"Audio/Audio Themes/Main Theme.mp3",
 				Audio/Correct.mp3,
-				"Audio/teacup-metronome.mp3",
 				Audio/Wrong.mp3,
 				Info.plist,
 			);

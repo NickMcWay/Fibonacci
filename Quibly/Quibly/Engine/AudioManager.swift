@@ -51,7 +51,7 @@ final class AudioManager: ObservableObject {
         // Primary track — teacup metronome loop bundled with the app.
         // Falls back to any other audio file found in the bundle.
         let candidates = [
-            ("teacup-metronome", "mp3"),
+            ("Main Theme", "mp3"),
             ("background_music", "mp3"),
             ("background_music", "wav"),
             ("background_music", "m4a"),
