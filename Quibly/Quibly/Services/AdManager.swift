@@ -27,7 +27,7 @@ final class AdManager: NSObject, ObservableObject {
 
     private override init() {
         super.init()
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        MobileAds.shared.start { _ in }
         Task { await loadRewardedAd() }
     }
 
