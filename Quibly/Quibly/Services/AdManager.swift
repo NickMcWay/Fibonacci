@@ -104,8 +104,13 @@ final class AdManager: NSObject, ObservableObject {
 extension AdManager: FullScreenContentDelegate {
     nonisolated func adDidRecordImpression(_ ad: FullScreenPresentingAd) {}
     nonisolated func adDidRecordClick(_ ad: FullScreenPresentingAd) {}
-    nonisolated func adWillPresentFullScreenContent(_ ad: FullScreenPresentingAd) {}
-    nonisolated func adWillDismissFullScreenContent(_ ad: FullScreenPresentingAd) {}
+    nonisolated func adWillPresentFullScreenContent(_ ad: FullScreenPresentingAd) {
+        Task { @MainActor in AudioManager.shared.pause() }
+    }
+
+    nonisolated func adWillDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
+        Task { @MainActor in AudioManager.shared.play() }
+    }
 
     nonisolated func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
         Task { @MainActor [weak self] in
