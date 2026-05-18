@@ -18,9 +18,9 @@ final class AdManager: ObservableObject {
 
     enum AdUnitID {
         /// Test IDs — swap for production IDs from AdMob dashboard.
-        static let rewardedCoins = "ca-app-pub-3940256099942544/1712485313" // AdMob test rewarded
-        static let banner        = "ca-app-pub-3940256099942544/2934735716" // AdMob test banner
-        static let interstitial  = "ca-app-pub-3940256099942544/4411468910" // AdMob test interstitial
+        static let rewardedCoins = "ca-app-pub-3227356584909564/3522574505" // AdMob test rewarded
+        static let banner        = "ca-app-pub-3227356584909564/1379775283" // AdMob test banner
+        static let interstitial  = "ca-app-pub-3227356584909564/2842854598" // AdMob test interstitial
     }
 
     // MARK: - State
@@ -30,7 +30,7 @@ final class AdManager: ObservableObject {
     @Published var isBannerVisible = false
 
     /// Coins awarded for watching a full rewarded ad.
-    let rewardedCoinGrant = 50
+    let rewardedCoinGrant = 500
 
     private init() {
         // TODO: Initialize AdMob SDK once the package is added:

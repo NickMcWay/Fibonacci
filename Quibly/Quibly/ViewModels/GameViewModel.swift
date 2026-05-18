@@ -147,10 +147,10 @@ final class GameViewModel: ObservableObject {
         UserDefaults.standard.object(forKey: "SlideWords_AutoHints") as? Bool ?? true
     }
 
-    let shuffleCost: Int = 50
-    let hintCost: Int   = 25
-    let bombCost: Int   = 75
-    let wildCost: Int   = 60
+    let shuffleCost: Int = 500
+    let hintCost: Int   = 250
+    let bombCost: Int   = 750
+    let wildCost: Int   = 600
     private let coinPerCoinTile: Int = 10
 
     // MARK: - Init

@@ -15,10 +15,10 @@ struct ShopView: View {
     @StateObject private var store = StoreManager.shared
     @StateObject private var ads   = AdManager.shared
 
-    private let hintCost    = 25
-    private let shuffleCost = 50
-    private let wildCost    = 60
-    private let bombCost    = 75
+    private let hintCost    = 250
+    private let shuffleCost = 500
+    private let wildCost    = 600
+    private let bombCost    = 750
 
     private struct PowerUp {
         let id: String
@@ -30,19 +30,19 @@ struct ShopView: View {
     }
 
     private let powerUps: [PowerUp] = [
-        .init(id: "hint",    icon: "lightbulb.fill", name: "Hint",    desc: "Reveals a pending word match",       cost: 25, gradient: [Color.qSun1, Color.qSun2]),
-        .init(id: "shuffle", icon: "shuffle",         name: "Shuffle", desc: "Randomly rearranges all tiles",      cost: 50, gradient: [Color.qSky1, Color.qSky2]),
-        .init(id: "joker",   icon: "wand.and.stars",  name: "Joker",   desc: "Converts any tile into a joker",     cost: 60, gradient: [Color.qGrape1, Color.qGrape2]),
-        .init(id: "bomb",    icon: "burst.fill",       name: "Bomb",    desc: "Clears a full row and column",       cost: 75, gradient: [Color.qCoral1, Color.qCoral2]),
+        .init(id: "hint",    icon: "lightbulb.fill", name: "Hint",    desc: "Reveals a pending word match",       cost: 250, gradient: [Color.qSun1, Color.qSun2]),
+        .init(id: "shuffle", icon: "shuffle",         name: "Shuffle", desc: "Randomly rearranges all tiles",      cost: 500, gradient: [Color.qSky1, Color.qSky2]),
+        .init(id: "joker",   icon: "wand.and.stars",  name: "Joker",   desc: "Converts any tile into a joker",     cost: 600, gradient: [Color.qGrape1, Color.qGrape2]),
+        .init(id: "bomb",    icon: "burst.fill",       name: "Bomb",    desc: "Clears a full row and column",       cost: 750, gradient: [Color.qCoral1, Color.qCoral2]),
     ]
 
     private let themes: [(name: String, bg: [Color], textColor: Color, cost: Int, owned: Bool, locked: Bool)] = [
         ("Cream",    [Color.qCream, Color(red: 1, green: 0.95, blue: 0.88)], Color.qInk,                                    0,   true,  false),
-        ("Mint",     [Color.qMint1, Color.qMint2],                           Color(red: 0.12, green: 0.43, blue: 0.23),     400, false, false),
-        ("Galaxy",   [Color(red: 0.35, green: 0.23, blue: 0.64), Color(red: 0.17, green: 0.11, blue: 0.39)], Color.qSun1,   800, false, false),
-        ("Bubble",   [Color.qBubble1, Color.qBubble2],                       Color(red: 0.66, green: 0.24, blue: 0.43),     400, false, false),
-        ("Lemonade", [Color(red: 1, green: 0.97, blue: 0.70), Color(red: 1, green: 0.84, blue: 0.29)], Color(red: 0.65, green: 0.42, blue: 0), 500, false, false),
-        ("Sky",      [Color.qSky1, Color.qSky2],                             Color(red: 0.12, green: 0.34, blue: 0.55),     500, false, true),
+        ("Mint",     [Color.qMint1, Color.qMint2],                           Color(red: 0.12, green: 0.43, blue: 0.23),     4000, false, false),
+        ("Galaxy",   [Color(red: 0.35, green: 0.23, blue: 0.64), Color(red: 0.17, green: 0.11, blue: 0.39)], Color.qSun1,   8000, false, false),
+        ("Bubble",   [Color.qBubble1, Color.qBubble2],                       Color(red: 0.66, green: 0.24, blue: 0.43),     4000, false, false),
+        ("Lemonade", [Color(red: 1, green: 0.97, blue: 0.70), Color(red: 1, green: 0.84, blue: 0.29)], Color(red: 0.65, green: 0.42, blue: 0), 5000, false, false),
+        ("Sky",      [Color.qSky1, Color.qSky2],                             Color(red: 0.12, green: 0.34, blue: 0.55),     5000, false, true),
     ]
 
     private struct CoinPack {
