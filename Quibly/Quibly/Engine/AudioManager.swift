@@ -49,6 +49,8 @@ final class AudioManager: ObservableObject {
         setupPlayer(trackName: trackName(for: themeID))
         setupEffects()
         observeThemeChanges()
+        NotificationCenter.default.addObserver(forName: .adWillPresent, object: nil, queue: .main) { [weak self] _ in self?.pause() }
+        NotificationCenter.default.addObserver(forName: .adDidDismiss,  object: nil, queue: .main) { [weak self] _ in self?.play()  }
     }
 
     private func trackName(for themeID: String) -> String {

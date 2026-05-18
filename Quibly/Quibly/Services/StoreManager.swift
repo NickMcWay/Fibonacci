@@ -109,12 +109,13 @@ final class StoreManager: ObservableObject {
     private func listenForTransactions() -> Task<Void, Error> {
         Task.detached { [weak self] in
             for await result in Transaction.updates {
+                guard let self else { break }
                 do {
-                    let transaction = try await self?.verified(result)
-                    if let id = ProductID(rawValue: transaction?.productID ?? "") {
-                        await MainActor.run { self?.deliverRewards(for: id) }
+                    let transaction = try await MainActor.run { try self.verified(result) }
+                    if let id = ProductID(rawValue: transaction.productID) {
+                        await MainActor.run { [weak self] in self?.deliverRewards(for: id) }
                     }
-                    await transaction?.finish()
+                    await transaction.finish()
                 } catch {
                     print("[StoreManager] Transaction verification failed: \(error)")
                 }

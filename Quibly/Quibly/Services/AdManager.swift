@@ -2,6 +2,11 @@ import GoogleMobileAds
 import SwiftUI
 import Combine
 
+extension Notification.Name {
+    static let adWillPresent = Notification.Name("AdManagerWillPresent")
+    static let adDidDismiss  = Notification.Name("AdManagerDidDismiss")
+}
+
 @MainActor
 final class AdManager: NSObject, ObservableObject {
     static let shared = AdManager()
@@ -105,11 +110,11 @@ extension AdManager: FullScreenContentDelegate {
     nonisolated func adDidRecordImpression(_ ad: FullScreenPresentingAd) {}
     nonisolated func adDidRecordClick(_ ad: FullScreenPresentingAd) {}
     nonisolated func adWillPresentFullScreenContent(_ ad: FullScreenPresentingAd) {
-        Task { @MainActor in AudioManager.shared.pause() }
+        NotificationCenter.default.post(name: .adWillPresent, object: nil)
     }
 
     nonisolated func adWillDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
-        Task { @MainActor in AudioManager.shared.play() }
+        NotificationCenter.default.post(name: .adDidDismiss, object: nil)
     }
 
     nonisolated func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
