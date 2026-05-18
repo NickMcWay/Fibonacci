@@ -6,6 +6,7 @@ struct GameView: View {
 
     @StateObject private var vm: GameViewModel
     @EnvironmentObject private var audio: AudioManager
+    @ObservedObject private var adManager = AdManager.shared
 
     @State private var showPausePopup    = false
     @State private var showGameOverPopup = false
@@ -32,6 +33,10 @@ struct GameView: View {
             .ignoresSafeArea(edges: .top)
         .onAppear {
             audio.play()
+            AdManager.shared.showBanner()
+        }
+        .onDisappear {
+            AdManager.shared.hideBanner()
         }
         .onChange(of: vm.powerUpAnimation) {anim in
             guard let anim else { return }
@@ -75,7 +80,16 @@ struct GameView: View {
             ) { count in vm.shopBuyWilds(count: count) }
             .presentationDetents([.height(360)])
         }
-        .onChange(of: showShop)            {showing in if showing { vm.cancelNoWordTimer() } }
+        .onChange(of: showShop)            { showing in
+            if showing { vm.cancelNoWordTimer() }
+            showing ? AdManager.shared.hideBanner() : AdManager.shared.showBanner()
+        }
+        .onChange(of: showPausePopup)      { showing in
+            showing ? AdManager.shared.hideBanner() : AdManager.shared.showBanner()
+        }
+        .onChange(of: showGameOverPopup)   { showing in
+            if showing { AdManager.shared.hideBanner() }
+        }
         .onChange(of: showBuyHintSheet)    {showing in if showing { vm.pauseNoWordTimer() } }
         .onChange(of: showBuyShuffleSheet) {showing in if showing { vm.pauseNoWordTimer() } }
         .onChange(of: showBuyBombSheet)    {showing in if showing { vm.pauseNoWordTimer() } }
@@ -95,6 +109,7 @@ struct GameView: View {
         DreamBackground {
             ZStack {
                 mainColumn
+                    .padding(.bottom, adManager.isBannerVisible ? 50 : 0)
 
                 if let countdown = vm.noWordCountdown {
                     noWordCountdownBanner(seconds: countdown)
@@ -164,6 +179,14 @@ struct GameView: View {
             .animation(.spring(response: 0.35, dampingFraction: 0.6), value: vm.currentMilestone)
             .animation(.easeInOut(duration: 0.35), value: vm.isNewPersonalBest)
         }
+        .overlay(alignment: .bottom) {
+            if adManager.isBannerVisible {
+                BannerAdView(adUnitID: AdManager.AdUnitID.banner)
+                    .frame(height: 50)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: adManager.isBannerVisible)
     }
 
     // MARK: - Top Bar
