@@ -117,6 +117,7 @@ struct ShopView: View {
                                 coinPackCard(pack)
                             }
                         }
+                        .padding(.top, 10)
 
                         // Watch Ad
                         watchAdRow
