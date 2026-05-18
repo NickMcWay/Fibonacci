@@ -619,6 +619,8 @@ struct MilestoneToast: View {
 
     var body: some View {
         VStack {
+            Spacer()
+
             HStack(spacing: 8) {
                 Image(systemName: "target")
                     .font(.system(size: 15, weight: .bold))
@@ -643,10 +645,8 @@ struct MilestoneToast: View {
             )
             .scaleEffect(visible ? 1.0 : 0.6)
             .opacity(visible ? 1.0 : 0)
-
-            Spacer()
         }
-        .padding(.top, 110)
+        .padding(.bottom, 100)
         .onAppear {
             withAnimation(.spring(response: 0.32, dampingFraction: 0.58)) { visible = true }
         }
