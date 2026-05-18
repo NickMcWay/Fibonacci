@@ -81,6 +81,7 @@ final class GameViewModel: ObservableObject {
     // Hint system
     @Published var showHintButton: Bool = false
     @Published var showMatchHighlights: Bool = false
+    @Published var hintedMatches: [WordValidator.WordMatch] = []
 
     // Animation events
     @Published var powerUpAnimation: PowerUpAnimation? = nil
@@ -346,6 +347,7 @@ final class GameViewModel: ObservableObject {
         hintTimerTask?.cancel()
         hintTimerTask = nil
         hintCharges -= 1
+        hintedMatches = Array(pendingSwipeMatches.prefix(2))
         showMatchHighlights = true
         powerUpAnimation = .hint
         Task {
@@ -572,6 +574,7 @@ final class GameViewModel: ObservableObject {
                 try await Task.sleep(nanoseconds: 5_000_000_000)
                 showHintButton = true
                 try await Task.sleep(nanoseconds: 5_000_000_000)
+                hintedMatches = Array(pendingSwipeMatches.prefix(2))
                 showMatchHighlights = true
             } catch {}
         }
@@ -582,6 +585,7 @@ final class GameViewModel: ObservableObject {
         hintTimerTask = nil
         showHintButton = false
         showMatchHighlights = false
+        hintedMatches = []
     }
 
     // MARK: - Inactivity timer
