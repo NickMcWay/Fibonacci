@@ -11,6 +11,8 @@ struct TileView: View {
     var scrabbleValue: Int? = nil
     var temporaryResolvedLetter: Character? = nil
 
+    @AppStorage("SlideWords_ActiveTheme") private var activeThemeID: String = "cream"
+
     @State private var scale: CGFloat = 1.0
     @State private var opacity: Double = 1.0
     @State private var glowOpacity: Double = 0.5
@@ -125,6 +127,8 @@ struct TileView: View {
         (tile.isJoker && (tile.jokerResolvedLetter != nil || temporaryResolvedLetter != nil)) ? 0.65 : 1.0
     }
 
+    private var activeTheme: TileTheme { TileTheme.find(id: activeThemeID) }
+
     private var tileBackground: LinearGradient {
         if isPending {
             return LinearGradient(
@@ -144,23 +148,22 @@ struct TileView: View {
                 startPoint: .top, endPoint: .bottom
             )
         }
-        // Default cream tile
         return LinearGradient(
-            colors: [Color.qCream, Color(red: 1.0, green: 0.95, blue: 0.88)],
+            colors: activeTheme.tileColors,
             startPoint: .top, endPoint: .bottom
         )
     }
 
     private var letterColor: Color {
-        if isPending   { return Color.qGoldDeep }
+        if isPending    { return Color.qGoldDeep }
         if tile.isJoker { return .white }
-        if isSelected  { return Color.qGoldDeep }
-        return Color.qInk
+        if isSelected   { return Color.qGoldDeep }
+        return activeTheme.letterColor
     }
 
     private var shadowColor: Color {
         if tile.isJoker { return Color.qGrape2 }
-        return Color.qInk
+        return activeTheme.shadowColor
     }
 }
 

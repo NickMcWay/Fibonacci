@@ -4,11 +4,14 @@ import StoreKit
 struct ShopView: View {
     var onBack: (() -> Void)? = nil
 
-    @AppStorage("SlideWords_Coins")          private var coins:          Int = 125
-    @AppStorage("SlideWords_HintCharges")    private var hintCharges:    Int = 2
-    @AppStorage("SlideWords_ShuffleCharges") private var shuffleCharges: Int = 1
-    @AppStorage("SlideWords_BombCharges")    private var bombCharges:    Int = 1
-    @AppStorage("SlideWords_WildCharges")    private var wildCharges:    Int = 1
+    @AppStorage("SlideWords_Coins")          private var coins:          Int    = 125
+    @AppStorage("SlideWords_HintCharges")    private var hintCharges:    Int    = 2
+    @AppStorage("SlideWords_ShuffleCharges") private var shuffleCharges: Int    = 1
+    @AppStorage("SlideWords_BombCharges")    private var bombCharges:    Int    = 1
+    @AppStorage("SlideWords_WildCharges")    private var wildCharges:    Int    = 1
+    @AppStorage("SlideWords_ActiveTheme")    private var activeThemeID:  String = "cream"
+    @AppStorage("SlideWords_OwnedThemes")    private var ownedThemesRaw: String = "cream"
+    @AppStorage("SlideWords_TotalXP")        private var totalXP:        Int    = 0
 
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var audio: AudioManager
@@ -44,6 +47,14 @@ struct ShopView: View {
         ("Lemonade", [Color(red: 1, green: 0.97, blue: 0.70), Color(red: 1, green: 0.84, blue: 0.29)], Color(red: 0.65, green: 0.42, blue: 0), 5000, false, false),
         ("Sky",      [Color.qSky1, Color.qSky2],                             Color(red: 0.12, green: 0.34, blue: 0.55),     5000, false, true),
     ]
+    
+    private var playerLevel: Int { totalXP / 500 + 1 }
+
+    private var ownedThemeSet: Set<String> {
+        var set = Set(ownedThemesRaw.components(separatedBy: ",").filter { !$0.isEmpty })
+        set.insert("cream")
+        return set
+    }
 
     private struct CoinPack {
         let productID: StoreManager.ProductID
@@ -125,9 +136,8 @@ struct ShopView: View {
                         // Tile Themes
                         QSectionHeader(title: "Tile Themes", subtitle: "Re-skin your board")
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                            ForEach(themes.indices, id: \.self) { i in
-                                let t = themes[i]
-                                themeCard(name: LocalizedStringKey(t.name), gradient: t.bg, textColor: t.textColor, cost: t.cost, owned: t.owned, locked: t.locked)
+                            ForEach(TileTheme.all) { theme in
+                                themeCard(theme: theme)
                             }
                         }
 
@@ -500,52 +510,94 @@ struct ShopView: View {
 
     // MARK: - Theme Card
 
-    private func themeCard(name: LocalizedStringKey, gradient: [Color], textColor: Color, cost: Int, owned: Bool, locked: Bool) -> some View {
-        VStack(spacing: 6) {
+    private func themeCard(theme: TileTheme) -> some View {
+        let isOwned   = ownedThemeSet.contains(theme.id)
+        let isActive  = activeThemeID == theme.id
+        let levelLocked = (theme.unlockLevel.map { playerLevel < $0 }) ?? false
+        let canAfford = coins >= theme.cost
+
+        return VStack(spacing: 6) {
+            // Mini tile preview
             HStack(spacing: 4) {
-                ForEach(["Q","U"], id: \.self) { letter in
+                ForEach(["Q", "U"], id: \.self) { letter in
                     ZStack {
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(LinearGradient(colors: gradient, startPoint: .top, endPoint: .bottom))
-                            .shadow(color: Color.qInk.opacity(0.18), radius: 0, x: 0, y: 2)
+                            .fill(LinearGradient(colors: theme.tileColors, startPoint: .top, endPoint: .bottom))
+                            .shadow(color: theme.shadowColor.opacity(0.22), radius: 0, x: 0, y: 2)
                         Text(letter)
                             .font(.system(size: 16, weight: .bold, design: .rounded))
-                            .foregroundStyle(textColor)
+                            .foregroundStyle(theme.letterColor)
                     }
                     .frame(width: 28, height: 28)
-                    .opacity(locked ? 0.5 : 1)
+                    .opacity((levelLocked || (theme.bundleOnly && !isOwned)) ? 0.45 : 1)
                 }
             }
 
-            Text(name)
+            Text(LocalizedStringKey(theme.displayName))
                 .font(.system(size: 13, weight: .semibold, design: .rounded))
                 .foregroundStyle(Color.qInk)
 
-            if owned {
-                Text("EQUIPPED")
-                    .font(.system(size: 11, weight: .heavy, design: .rounded))
-                    .foregroundStyle(Color.qMint2)
-            } else if locked {
-                HStack(spacing: 3) {
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 10, weight: .bold))
-                    Text("Lvl 20")
-                        .font(.system(size: 11, weight: .semibold, design: .rounded))
-                }
-                .foregroundStyle(Color.qInk.opacity(0.6))
-            } else {
-                HStack(spacing: 3) {
-                    ZStack {
-                        Circle()
-                            .fill(RadialGradient(colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)], center: .topLeading, startRadius: 0, endRadius: 6))
-                        Text("$")
-                            .font(.system(size: 6, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+            // State label / action
+            Group {
+                if isActive {
+                    Text("EQUIPPED")
+                        .font(.system(size: 11, weight: .heavy, design: .rounded))
+                        .foregroundStyle(Color.qMint2)
+                } else if isOwned {
+                    Button {
+                        activeThemeID = theme.id
+                        audio.playRegisterSound()
+                    } label: {
+                        Text("EQUIP")
+                            .font(.system(size: 11, weight: .heavy, design: .rounded))
+                            .foregroundStyle(Color.qGrape2)
                     }
-                    .frame(width: 10, height: 10)
-                    Text("\(cost)")
-                        .font(.system(size: 11, weight: .semibold, design: .rounded))
-                        .foregroundStyle(Color.qGoldDeep)
+                    .buttonStyle(.plain)
+                } else if theme.bundleOnly {
+                    HStack(spacing: 3) {
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 9, weight: .bold))
+                        Text("Bundle")
+                            .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    }
+                    .foregroundStyle(Color.qBubble2)
+                } else if levelLocked {
+                    HStack(spacing: 3) {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 10, weight: .bold))
+                        Text("Lvl \(theme.unlockLevel!)")
+                            .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    }
+                    .foregroundStyle(Color.qInk.opacity(0.55))
+                } else {
+                    Button {
+                        guard canAfford else { audio.playWrongSelectionFeedback(); return }
+                        coins -= theme.cost
+                        var owned = ownedThemeSet
+                        owned.insert(theme.id)
+                        ownedThemesRaw = owned.joined(separator: ",")
+                        activeThemeID = theme.id
+                        audio.playRegisterSound()
+                    } label: {
+                        HStack(spacing: 3) {
+                            ZStack {
+                                Circle()
+                                    .fill(RadialGradient(
+                                        colors: [Color(red: 1, green: 0.96, blue: 0.7), Color(red: 0.94, green: 0.64, blue: 0.13)],
+                                        center: .topLeading, startRadius: 0, endRadius: 6
+                                    ))
+                                Text("$")
+                                    .font(.system(size: 6, weight: .bold, design: .rounded))
+                                    .foregroundStyle(Color(red: 0.71, green: 0.43, blue: 0))
+                            }
+                            .frame(width: 10, height: 10)
+                            Text("\(theme.cost)")
+                                .font(.system(size: 11, weight: .semibold, design: .rounded))
+                                .foregroundStyle(canAfford ? Color.qGoldDeep : Color.qInk.opacity(0.4))
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .opacity(canAfford ? 1 : 0.6)
                 }
             }
         }
@@ -553,8 +605,11 @@ struct ShopView: View {
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 18)
-                .fill(Color.white.opacity(0.55))
-                .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white.opacity(0.85), lineWidth: 1))
+                .fill(isActive ? Color.qGrape1.opacity(0.22) : Color.white.opacity(0.55))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18)
+                        .stroke(isActive ? Color.qGrape2.opacity(0.45) : Color.white.opacity(0.85), lineWidth: isActive ? 2 : 1)
+                )
                 .shadow(color: Color.qInk.opacity(0.15), radius: 0, x: 0, y: 3)
         )
     }

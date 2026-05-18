@@ -23,6 +23,77 @@ extension Color {
     static let qSky2     = Color(red: 0.200, green: 0.596, blue: 1.000)  // #3398ff
     static let qGoldDeep = Color(red: 0.478, green: 0.271, blue: 0.000)  // #7a4500
     static let qCream    = Color(red: 1.000, green: 0.980, blue: 0.941)  // tile base
+    static let qSunset1  = Color(red: 1.000, green: 0.847, blue: 0.608)  // #FFD89B warm amber
+    static let qSunset2  = Color(red: 1.000, green: 0.557, blue: 0.325)  // #FF8E53 sunset orange
+}
+
+// MARK: - Tile Theme
+
+struct TileTheme: Identifiable, Equatable {
+    let id: String
+    let displayName: String
+    let tileColors: [Color]   // normal tile gradient (top → bottom)
+    let letterColor: Color    // letter on a normal tile
+    let shadowColor: Color    // drop-shadow tint on a normal tile
+    let cost: Int             // 0 = free
+    let unlockLevel: Int?     // nil = no level gate
+    let bundleOnly: Bool      // true = only obtainable via Sparkle Bundle IAP
+
+    static let cream = TileTheme(
+        id: "cream", displayName: "Cream",
+        tileColors: [Color.qCream, Color(red: 1, green: 0.95, blue: 0.88)],
+        letterColor: Color.qInk,
+        shadowColor: Color.qInk,
+        cost: 0, unlockLevel: nil, bundleOnly: false
+    )
+    static let mint = TileTheme(
+        id: "mint", displayName: "Mint",
+        tileColors: [Color.qMint1, Color.qMint2],
+        letterColor: Color(red: 0.11, green: 0.43, blue: 0.24),
+        shadowColor: Color(red: 0.11, green: 0.43, blue: 0.24),
+        cost: 400, unlockLevel: nil, bundleOnly: false
+    )
+    static let bubble = TileTheme(
+        id: "bubble", displayName: "Bubble",
+        tileColors: [Color.qBubble1, Color.qBubble2],
+        letterColor: Color(red: 0.66, green: 0.24, blue: 0.43),
+        shadowColor: Color(red: 0.66, green: 0.24, blue: 0.43),
+        cost: 400, unlockLevel: nil, bundleOnly: false
+    )
+    static let lemonade = TileTheme(
+        id: "lemonade", displayName: "Lemonade",
+        tileColors: [Color(red: 1, green: 0.980, blue: 0.647), Color(red: 1, green: 0.839, blue: 0.290)],
+        letterColor: Color(red: 0.647, green: 0.416, blue: 0.000),
+        shadowColor: Color(red: 0.647, green: 0.416, blue: 0.000),
+        cost: 500, unlockLevel: nil, bundleOnly: false
+    )
+    static let sky = TileTheme(
+        id: "sky", displayName: "Sky",
+        tileColors: [Color.qSky1, Color.qSky2],
+        letterColor: Color(red: 0.12, green: 0.34, blue: 0.55),
+        shadowColor: Color(red: 0.12, green: 0.34, blue: 0.55),
+        cost: 500, unlockLevel: 20, bundleOnly: false
+    )
+    static let galaxy = TileTheme(
+        id: "galaxy", displayName: "Galaxy",
+        tileColors: [Color(red: 0.353, green: 0.231, blue: 0.639), Color(red: 0.169, green: 0.110, blue: 0.392)],
+        letterColor: Color.qSun1,
+        shadowColor: Color(red: 0.106, green: 0.055, blue: 0.243),
+        cost: 800, unlockLevel: nil, bundleOnly: false
+    )
+    static let sunset = TileTheme(
+        id: "sunset", displayName: "Sunset",
+        tileColors: [Color.qSunset1, Color.qSunset2],
+        letterColor: Color(red: 0.541, green: 0.145, blue: 0.000),
+        shadowColor: Color(red: 0.541, green: 0.145, blue: 0.000),
+        cost: 0, unlockLevel: nil, bundleOnly: true
+    )
+
+    static let all: [TileTheme] = [.cream, .mint, .bubble, .lemonade, .sky, .galaxy, .sunset]
+
+    static func find(id: String) -> TileTheme {
+        all.first { $0.id == id } ?? .cream
+    }
 }
 
 // MARK: - Sky Background

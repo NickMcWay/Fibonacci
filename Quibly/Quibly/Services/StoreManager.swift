@@ -126,7 +126,16 @@ final class StoreManager: ObservableObject {
         deliverCoins(productID.coinReward)
         if productID == .sparkleBundle {
             deliverPowerUps(5)
+            deliverTheme("sunset")
         }
+    }
+
+    private func deliverTheme(_ themeID: String) {
+        let key = "SlideWords_OwnedThemes"
+        let current = UserDefaults.standard.string(forKey: key) ?? "cream"
+        var owned = Set(current.components(separatedBy: ",").filter { !$0.isEmpty })
+        owned.insert(themeID)
+        UserDefaults.standard.set(owned.joined(separator: ","), forKey: key)
     }
 
     private func deliverCoins(_ amount: Int) {

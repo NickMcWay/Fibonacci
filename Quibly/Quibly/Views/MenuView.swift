@@ -11,6 +11,7 @@ struct MenuView: View {
     @AppStorage("SlideWords_SelectedLanguage")  private var selectedLanguageRawValue: String = GameLanguage.english.rawValue
     @AppStorage("SlideWords_SelectedVariant")   private var selectedVariantRawValue:  Int    = BoardVariant.small.rawValue
     @AppStorage("SlideWords_PlayerName")        private var playerName: String = ""
+    @AppStorage("SlideWords_ActiveTheme")       private var activeThemeID: String = "cream"
 
     private var profileLevel: Int { totalXP / 500 + 1 }
     private var profileXPProgress: Double { Double(totalXP % 500) / 500.0 }
@@ -266,20 +267,21 @@ struct MenuView: View {
     }
 
     private func previewTile(letter: String, highlighted: Bool) -> some View {
-        ZStack {
+        let theme = TileTheme.find(id: activeThemeID)
+        return ZStack {
             RoundedRectangle(cornerRadius: 11)
                 .fill(highlighted
                     ? LinearGradient(colors: [Color.qSun1, Color.qSun2], startPoint: .top, endPoint: .bottom)
-                    : LinearGradient(colors: [Color.qCream, Color(red: 1, green: 0.95, blue: 0.88)], startPoint: .top, endPoint: .bottom)
+                    : LinearGradient(colors: theme.tileColors, startPoint: .top, endPoint: .bottom)
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 11)
                         .stroke(Color.white.opacity(0.75), lineWidth: 1)
                 )
-                .shadow(color: Color.qInk.opacity(0.18), radius: 0, x: 0, y: 2)
+                .shadow(color: theme.shadowColor.opacity(0.18), radius: 0, x: 0, y: 2)
             Text(letter)
                 .font(.system(size: 20, weight: .bold, design: .rounded))
-                .foregroundStyle(highlighted ? Color.qGoldDeep : Color.qInk)
+                .foregroundStyle(highlighted ? Color.qGoldDeep : theme.letterColor)
         }
         .frame(width: 50, height: 50)
     }
