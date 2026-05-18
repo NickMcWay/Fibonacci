@@ -29,7 +29,7 @@ final class AdManager: NSObject, ObservableObject {
 
     private override init() {
         super.init()
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        GADMobileAds.sharedInstance().start { _ in }
         Task { await loadRewardedAd() }
     }
 
@@ -115,3 +115,4 @@ extension AdManager: FullScreenContentDelegate {
         }
     }
 }
+
