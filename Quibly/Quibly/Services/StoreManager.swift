@@ -73,7 +73,7 @@ final class StoreManager: ObservableObject {
             switch result {
             case .success(let verification):
                 let transaction = try verified(verification)
-                deliverCoins(productID.coinReward)
+                deliverRewards(for: productID)
                 await transaction.finish()
                 return true
             case .pending, .userCancelled:
@@ -87,6 +87,14 @@ final class StoreManager: ObservableObject {
         }
     }
 
+    func restorePurchases() async {
+        do {
+            try await AppStore.sync()
+        } catch {
+            purchaseError = error.localizedDescription
+        }
+    }
+
     // MARK: - Transaction Listener
 
     private func listenForTransactions() -> Task<Void, Error> {
@@ -95,7 +103,7 @@ final class StoreManager: ObservableObject {
                 do {
                     let transaction = try await self?.verified(result)
                     if let id = ProductID(rawValue: transaction?.productID ?? "") {
-                        await MainActor.run { self?.deliverCoins(id.coinReward) }
+                        await MainActor.run { self?.deliverRewards(for: id) }
                     }
                     await transaction?.finish()
                 } catch {
@@ -114,10 +122,25 @@ final class StoreManager: ObservableObject {
         }
     }
 
+    private func deliverRewards(for productID: ProductID) {
+        deliverCoins(productID.coinReward)
+        if productID == .sparkleBundle {
+            deliverPowerUps(5)
+        }
+    }
+
     private func deliverCoins(_ amount: Int) {
         let key = "SlideWords_Coins"
         let current = UserDefaults.standard.integer(forKey: key)
         UserDefaults.standard.set(current + amount, forKey: key)
+    }
+
+    private func deliverPowerUps(_ amount: Int) {
+        let ud = UserDefaults.standard
+        for key in ["SlideWords_HintCharges", "SlideWords_ShuffleCharges",
+                    "SlideWords_BombCharges", "SlideWords_WildCharges"] {
+            ud.set(ud.integer(forKey: key) + amount, forKey: key)
+        }
     }
 }
 
