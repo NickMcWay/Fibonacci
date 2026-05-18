@@ -1,20 +1,12 @@
+import GoogleMobileAds
 import SwiftUI
 import Combine
 
-// Ad infrastructure ready for Google AdMob (or any provider).
-//
-// Integration steps:
-//  1. Add the GoogleMobileAds Swift Package:
-//     https://github.com/googleads/swift-package-manager-google-mobile-ads
-//  2. Add your App ID to Info.plist under GADApplicationIdentifier.
-//  3. Replace stub implementations below with real GAD calls (marked TODO).
-//  4. Enable SKAdNetworkItems in Info.plist per AdMob requirements.
-//  5. Request ATT permission (AppTrackingTransparency) on first launch.
 @MainActor
-final class AdManager: ObservableObject {
+final class AdManager: NSObject, ObservableObject {
     static let shared = AdManager()
 
-    // MARK: - Ad Unit IDs (replace with real IDs before shipping)
+    // MARK: - Ad Unit IDs (replace test IDs with production IDs before shipping)
 
     enum AdUnitID {
         /// Test IDs — swap for production IDs from AdMob dashboard.
@@ -32,70 +24,94 @@ final class AdManager: ObservableObject {
     /// Coins awarded for watching a full rewarded ad.
     let rewardedCoinGrant = 500
 
-    private init() {
-        // TODO: Initialize AdMob SDK once the package is added:
-        // GADMobileAds.sharedInstance().start(completionHandler: nil)
-        loadRewardedAd()
+    private var rewardedAd: RewardedAd?
+    private var onDismissCallback: (() -> Void)?
+
+    private override init() {
+        super.init()
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        Task { await loadRewardedAd() }
     }
 
     // MARK: - Rewarded Ads
 
-    func loadRewardedAd() {
+    func loadRewardedAd() async {
         guard !isLoadingAd else { return }
         isLoadingAd = true
-
-        // TODO: Replace with real AdMob load:
-        // GADRewardedAd.load(withAdUnitID: AdUnitID.rewardedCoins, request: GADRequest()) { [weak self] ad, error in
-        //     self?.isLoadingAd = false
-        //     if let ad { self?.rewardedAd = ad; self?.isRewardedAdReady = true }
-        // }
-
-        // Stub: simulate a brief network load then mark ready.
-        Task {
-            try? await Task.sleep(nanoseconds: 800_000_000)
-            isLoadingAd = false
+        isRewardedAdReady = false
+        do {
+            rewardedAd = try await RewardedAd.load(
+                with: AdUnitID.rewardedCoins, request: Request())
+            rewardedAd?.fullScreenContentDelegate = self
             isRewardedAdReady = true
+        } catch {
+            print("[AdManager] Rewarded ad failed to load: \(error.localizedDescription)")
+            Task {
+                try? await Task.sleep(nanoseconds: 5_000_000_000)
+                await loadRewardedAd()
+            }
         }
+        isLoadingAd = false
     }
 
-    /// Present a rewarded ad. Calls `onReward` with coin amount if the user
-    /// completes it, or `onDismiss` if they skip. Always reloads a new ad after.
     func showRewardedAd(onReward: @escaping (Int) -> Void, onDismiss: (() -> Void)? = nil) {
-        guard isRewardedAdReady else {
-            loadRewardedAd()
+        guard isRewardedAdReady, let ad = rewardedAd else {
+            Task { await loadRewardedAd() }
             return
         }
+        guard let rootVC = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first?.windows.first?.rootViewController else { return }
+
+        onDismissCallback = onDismiss
         isRewardedAdReady = false
 
-        // TODO: Present real AdMob rewarded ad:
-        // guard let rootVC = UIApplication.shared.connectedScenes
-        //     .compactMap({ $0 as? UIWindowScene })
-        //     .first?.windows.first?.rootViewController else { return }
-        // rewardedAd?.present(fromRootViewController: rootVC, userDidEarnRewardHandler: {
-        //     onReward(self.rewardedCoinGrant)
-        // })
-
-        // Stub: immediately grant reward.
-        onReward(rewardedCoinGrant)
-        loadRewardedAd()
+        ad.present(from: rootVC) { [weak self] in
+            guard let self else { return }
+            onReward(self.rewardedCoinGrant)
+        }
     }
 
     // MARK: - Banner Ads
 
     func showBanner() {
-        // TODO: Create and attach GADBannerView to the window.
         isBannerVisible = true
     }
 
     func hideBanner() {
-        // TODO: Remove GADBannerView from the window.
         isBannerVisible = false
     }
 
     // MARK: - Interstitial Ads
 
     func showInterstitialIfReady() {
-        // TODO: Load and present GADInterstitialAd at natural break points
-        // (e.g., after every 3 completed games).
+        // TODO: load and present GADInterstitialAd at natural break points
+    }
+}
+
+// MARK: - FullScreenContentDelegate
+
+extension AdManager: FullScreenContentDelegate {
+    nonisolated func adDidRecordImpression(_ ad: FullScreenPresentingAd) {}
+    nonisolated func adDidRecordClick(_ ad: FullScreenPresentingAd) {}
+    nonisolated func adWillPresentFullScreenContent(_ ad: FullScreenPresentingAd) {}
+    nonisolated func adWillDismissFullScreenContent(_ ad: FullScreenPresentingAd) {}
+
+    nonisolated func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            rewardedAd = nil
+            onDismissCallback?()
+            onDismissCallback = nil
+            await loadRewardedAd()
+        }
+    }
+
+    nonisolated func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+        print("[AdManager] Ad failed to present: \(error.localizedDescription)")
+        Task { @MainActor [weak self] in
+            self?.rewardedAd = nil
+            await self?.loadRewardedAd()
+        }
     }
 }
