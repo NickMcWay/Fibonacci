@@ -42,6 +42,8 @@ final class AudioManager: ObservableObject {
         isSoundEnabled = UserDefaults.standard.object(forKey: "SlideWords_SoundEnabled") as? Bool ?? true
         setupPlayer()
         setupEffects()
+        NotificationCenter.default.addObserver(forName: .adWillPresent, object: nil, queue: .main) { [weak self] _ in self?.pause() }
+        NotificationCenter.default.addObserver(forName: .adDidDismiss,  object: nil, queue: .main) { [weak self] _ in self?.play()  }
     }
 
     private func setupPlayer() {
