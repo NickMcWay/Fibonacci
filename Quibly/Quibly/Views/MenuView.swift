@@ -25,6 +25,7 @@ struct MenuView: View {
     @State private var showDaily     = false
     @State private var showQuests    = false
     @State private var showLocked    = false
+    @State private var shopBadgePulse = false
 
     private let previewLetters: [[String]] = [
         ["Q","U","I","B"],
@@ -324,6 +325,25 @@ struct MenuView: View {
                 icon: "cart.fill",
                 gradient: [Color(red: 1.0, green: 0.70, blue: 0.85), Color(red: 1.0, green: 0.44, blue: 0.68)]
             ) { showShop = true }
+            .overlay(alignment: .topTrailing) {
+                ZStack {
+                    Circle()
+                        .fill(Color.red.opacity(0.35))
+                        .frame(width: 16, height: 16)
+                        .scaleEffect(shopBadgePulse ? 1.6 : 1.0)
+                        .opacity(shopBadgePulse ? 0.0 : 0.7)
+                    Circle()
+                        .fill(Color.red)
+                        .frame(width: 10, height: 10)
+                        .overlay(Circle().stroke(Color.white, lineWidth: 1.5))
+                }
+                .offset(x: -4, y: 4)
+                .onAppear {
+                    withAnimation(.easeOut(duration: 1.1).repeatForever(autoreverses: false)) {
+                        shopBadgePulse = true
+                    }
+                }
+            }
 
             navButton(
                 label: "Quests",
