@@ -8,9 +8,10 @@ struct GameView: View {
     @EnvironmentObject private var audio: AudioManager
     @ObservedObject private var adManager = AdManager.shared
 
-    @State private var showPausePopup    = false
-    @State private var showGameOverPopup = false
-    @State private var showShop          = false
+    @State private var showPausePopup         = false
+    @State private var showGameOverPopup      = false
+    @State private var showLevelCompletePopup = false
+    @State private var showShop               = false
     @State private var showBuyHintSheet  = false
     @State private var showBuyShuffleSheet = false
     @State private var showBuyBombSheet  = false
@@ -90,6 +91,9 @@ struct GameView: View {
         .onChange(of: showGameOverPopup)   { showing in
             if showing { AdManager.shared.hideBanner() }
         }
+        .onChange(of: showLevelCompletePopup) { showing in
+            if showing { AdManager.shared.hideBanner() }
+        }
         .onChange(of: showBuyHintSheet)    {showing in if showing { vm.pauseNoWordTimer() } }
         .onChange(of: showBuyShuffleSheet) {showing in if showing { vm.pauseNoWordTimer() } }
         .onChange(of: showBuyBombSheet)    {showing in if showing { vm.pauseNoWordTimer() } }
@@ -139,8 +143,8 @@ struct GameView: View {
                         .allowsHitTesting(false)
                 }
 
-                // Game over popup
-                if vm.isGameOver && !showGameOverPopup {
+                // Game over popup (not shown for sweep — that uses LevelCompletePopup)
+                if vm.isGameOver && !showGameOverPopup && !vm.isSweep {
                     Color.clear
                         .onAppear { withAnimation { showGameOverPopup = true } }
                 }
@@ -158,6 +162,28 @@ struct GameView: View {
                         onPlayAgain: {
                             showGameOverPopup = false
                             withAnimation { vm.startNewGame() }
+                        }
+                    )
+                    .transition(.opacity)
+                }
+
+                // Campaign level complete popup
+                if vm.levelComplete && !showLevelCompletePopup {
+                    Color.clear.onAppear { withAnimation { showLevelCompletePopup = true } }
+                }
+                if showLevelCompletePopup {
+                    LevelCompletePopup(
+                        level: vm.campaignLevel,
+                        score: vm.score,
+                        targetScore: vm.campaignTargetScore,
+                        sweepStars: vm.isSweep ? vm.sweepStars : nil,
+                        onNext: {
+                            showLevelCompletePopup = false
+                            vm.advanceCampaignLevel()
+                        },
+                        onMenu: {
+                            showLevelCompletePopup = false
+                            onReturnToMenu()
                         }
                     )
                     .transition(.opacity)
@@ -220,6 +246,44 @@ struct GameView: View {
                 modePill
             }
         }
+    }
+
+    // MARK: - Campaign Strip
+
+    private var campaignStrip: some View {
+        VStack(spacing: 4) {
+            HStack {
+                Text(vm.isSweep ? "SWEEP · LVL \(vm.campaignLevel)" : "CAMPAIGN · LVL \(vm.campaignLevel)")
+                    .font(.system(size: 11, weight: .heavy, design: .rounded))
+                    .foregroundStyle(Color.white.opacity(0.85))
+                Spacer()
+                if vm.isCampaign {
+                    Text("\(vm.score) / \(vm.campaignTargetScore)")
+                        .font(.system(size: 11, weight: .heavy, design: .rounded))
+                        .foregroundStyle(Color.white.opacity(0.85))
+                } else {
+                    Text("\(vm.sweepTilesCleared) tiles cleared")
+                        .font(.system(size: 11, weight: .heavy, design: .rounded))
+                        .foregroundStyle(Color.white.opacity(0.85))
+                }
+            }
+            if vm.isCampaign {
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color.white.opacity(0.2))
+                            .frame(height: 6)
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color.white.opacity(0.85))
+                            .frame(width: geo.size.width * vm.campaignProgress, height: 6)
+                            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: vm.campaignProgress)
+                    }
+                }
+                .frame(height: 6)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
     }
 
     // MARK: - Mode Pill
@@ -600,6 +664,10 @@ struct GameView: View {
             Spacer()
                 .frame(height: 140)
             
+            if vm.isCampaign || vm.isSweep {
+                campaignStrip
+            }
+
             scoreHeader
                 .padding(.horizontal, 18)
                 .padding(.bottom, 6)

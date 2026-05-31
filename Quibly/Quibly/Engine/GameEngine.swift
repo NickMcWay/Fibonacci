@@ -104,19 +104,20 @@ enum GameEngine {
 
     // MARK: - Two-phase turn helpers (slide-then-confirm flow)
 
-    static func slideAndSpawn(board: BoardModel, direction: SwipeDirection, language: GameLanguage = .english)
+    static func slideAndSpawn(board: BoardModel, direction: SwipeDirection, language: GameLanguage = .english, spawnConfig: SpawnConfig = SpawnConfig())
         -> (board: BoardModel, matches: [WordValidator.WordMatch], spawnedPosition: (row: Int, col: Int)?)?
     {
         let (slid, moved) = board.sliding(direction: direction)
         guard moved else { return nil }
 
-        guard let spawnedTile = LetterSpawnEngine.spawnTile(for: slid, language: language) else {
+        guard let spawnedTile = LetterSpawnEngine.spawnTile(for: slid, language: language, allowedLetters: spawnConfig.allowedLetters) else {
             return (slid, [], nil)
         }
         var current = slid
         current.setTile(spawnedTile, row: spawnedTile.row, col: spawnedTile.col)
 
-        if let secondTile = LetterSpawnEngine.spawnTile(for: current, language: language) {
+        if spawnConfig.tilesPerSwipe >= 2,
+           let secondTile = LetterSpawnEngine.spawnTile(for: current, language: language, allowedLetters: spawnConfig.allowedLetters) {
             current.setTile(secondTile, row: secondTile.row, col: secondTile.col)
         }
 
@@ -124,6 +125,17 @@ enum GameEngine {
             WordValidator.findMatches(in: current, language: language)
         )
         return (current, matches, (spawnedTile.row, spawnedTile.col))
+    }
+
+    static func slideOnly(board: BoardModel, direction: SwipeDirection, language: GameLanguage = .english)
+        -> (board: BoardModel, matches: [WordValidator.WordMatch])?
+    {
+        let (slid, moved) = board.sliding(direction: direction)
+        guard moved else { return nil }
+        let matches = WordValidator.deduplicateMatches(
+            WordValidator.findMatches(in: slid, language: language)
+        )
+        return (slid, matches)
     }
 
     static func clearMatches(board: BoardModel, matches: [WordValidator.WordMatch],

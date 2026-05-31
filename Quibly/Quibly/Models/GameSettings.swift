@@ -123,6 +123,8 @@ enum GameMode {
     case blitz
     case daily
     case swipeLimited
+    case campaign
+    case sweep
 }
 
 // MARK: - Game Settings
@@ -133,6 +135,51 @@ struct GameSettings {
     var gameMode: GameMode = .classic
 
     static let `default` = GameSettings()
+}
+
+// MARK: - Spawn Config
+
+struct SpawnConfig {
+    var tilesPerSwipe: Int = 2
+    var allowedLetters: Set<Character>? = nil  // nil = full alphabet
+}
+
+// MARK: - Campaign / Sweep level helpers
+
+enum LevelDifficulty {
+    static func spawnConfig(level: Int) -> SpawnConfig {
+        let easy: Set<Character> = ["a","e","i","o","u","r","t","n","s","l","c","d","h","m","p"]
+        let medium: Set<Character> = ["a","e","i","o","u","r","t","n","s","l","c","d","h","m","p","b","f","g","k","w","y","v"]
+        switch level {
+        case 1...4:  return SpawnConfig(tilesPerSwipe: 1, allowedLetters: easy)
+        case 5...8:  return SpawnConfig(tilesPerSwipe: 1, allowedLetters: medium)
+        case 9...12: return SpawnConfig(tilesPerSwipe: 1, allowedLetters: nil)
+        default:     return SpawnConfig(tilesPerSwipe: 2, allowedLetters: nil)
+        }
+    }
+
+    static func campaignTargetScore(level: Int) -> Int {
+        let base = [0, 250, 400, 600, 850, 1150, 1500, 1900, 2400, 3000, 3700, 4500, 5400]
+        if level < base.count { return base[level] }
+        return 5400 + (level - 12) * 900
+    }
+
+    /// How full the board starts for Sweep (fraction of cells filled).
+    static func sweepFillRatio(level: Int) -> Double {
+        switch level {
+        case 1:  return 0.50
+        case 2:  return 0.60
+        case 3:  return 0.70
+        case 4:  return 0.75
+        case 5:  return 0.80
+        case 6:  return 0.85
+        default: return min(0.95, 0.85 + Double(level - 6) * 0.02)
+        }
+    }
+
+    static func sweepStarThresholds(totalTiles: Int) -> (two: Int, three: Int) {
+        return (two: totalTiles * 50 / 100, three: totalTiles * 80 / 100)
+    }
 }
 
 // MARK: - Seeded RNG (for Daily Puzzle)

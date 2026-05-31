@@ -1090,6 +1090,84 @@ struct ProfilePopupSheet: View {
     }
 }
 
+// MARK: - Level Complete Popup
+
+struct LevelCompletePopup: View {
+    let level: Int
+    let score: Int
+    let targetScore: Int
+    let sweepStars: Int?
+    let onNext: () -> Void
+    let onMenu: () -> Void
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.55).ignoresSafeArea()
+            VStack(spacing: 0) {
+                Spacer()
+                VStack(spacing: 20) {
+                    // Icon
+                    Text(sweepStars != nil ? "🧹" : "🏆")
+                        .font(.system(size: 56))
+
+                    VStack(spacing: 6) {
+                        Text("LEVEL \(level) COMPLETE!")
+                            .font(.system(size: 24, weight: .heavy, design: .rounded))
+                            .foregroundStyle(Color.qGoldDeep)
+                        if let stars = sweepStars {
+                            HStack(spacing: 4) {
+                                ForEach(1...3, id: \.self) { i in
+                                    Text(i <= stars ? "⭐️" : "☆")
+                                        .font(.system(size: 28))
+                                }
+                            }
+                        } else {
+                            Text("\(score) pts")
+                                .font(.system(size: 18, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Color.qInk.opacity(0.7))
+                        }
+                    }
+
+                    VStack(spacing: 10) {
+                        Button(action: onNext) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "arrow.right.circle.fill")
+                                    .font(.system(size: 18, weight: .bold))
+                                Text("Level \(level + 1)")
+                                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                            }
+                            .foregroundStyle(Color.qGoldDeep)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(
+                            RoundedRectangle(cornerRadius: 18)
+                                .fill(LinearGradient(colors: [Color.qSun1, Color.qSun2], startPoint: .top, endPoint: .bottom))
+                                .shadow(color: Color.qSun2.opacity(0.4), radius: 8, x: 0, y: 4)
+                        )
+                        .buttonStyle(.plain)
+
+                        Button(action: onMenu) {
+                            Text("Back to Menu")
+                                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Color.qInk.opacity(0.6))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(28)
+                .background(
+                    RoundedRectangle(cornerRadius: 28)
+                        .fill(Color.white)
+                        .shadow(color: Color.black.opacity(0.18), radius: 24, x: 0, y: 8)
+                )
+                .padding(.horizontal, 24)
+                Spacer()
+            }
+        }
+    }
+}
+
 // MARK: - Locked Feature Sheet
 
 struct LockedPopupSheet: View {
