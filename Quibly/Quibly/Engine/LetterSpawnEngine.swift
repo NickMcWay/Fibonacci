@@ -77,13 +77,14 @@ enum LetterSpawnEngine {
             let count = letterCounts[letter] ?? 0
             if count > 2 { score -= (count - 2) * 5 }
 
-            let emptyPos = board.emptyPositions
-            var bestPositionBonus = 0
-            for pos in emptyPos {
-                let bonus = scoreLetterAtPosition(letter: letter, row: pos.row, col: pos.col, board: board, language: language)
-                if bonus > bestPositionBonus { bestPositionBonus = bonus }
-            }
-            score += bestPositionBonus
+            // DISABLED: letter-matching bonus — was making the game too easy
+            // let emptyPos = board.emptyPositions
+            // var bestPositionBonus = 0
+            // for pos in emptyPos {
+            //     let bonus = scoreLetterAtPosition(letter: letter, row: pos.row, col: pos.col, board: board, language: language)
+            //     if bonus > bestPositionBonus { bestPositionBonus = bonus }
+            // }
+            // score += bestPositionBonus
             scores[letter] = max(1, score)
         }
         return scores
@@ -195,13 +196,15 @@ enum LetterSpawnEngine {
     private static func choosePosition(for board: BoardModel, letter: Character, language: GameLanguage) -> (row: Int, col: Int) {
         let empty = board.emptyPositions
         guard !empty.isEmpty else { return (0, 0) }
-        var best = empty[0]
-        var bestScore = -999
-        for pos in empty {
-            let s = scoreLetterAtPosition(letter: letter, row: pos.row, col: pos.col, board: board, language: language)
-            if s > bestScore { bestScore = s; best = pos }
-        }
-        return Double.random(in: 0..<1) < 0.70 ? best : (empty.randomElement() ?? best)
+        // DISABLED: letter-matching position bias — was making the game too easy
+        // var best = empty[0]
+        // var bestScore = -999
+        // for pos in empty {
+        //     let s = scoreLetterAtPosition(letter: letter, row: pos.row, col: pos.col, board: board, language: language)
+        //     if s > bestScore { bestScore = s; best = pos }
+        // }
+        // return Double.random(in: 0..<1) < 0.70 ? best : (empty.randomElement() ?? best)
+        return empty.randomElement() ?? empty[0]
     }
 
     /// Uses per-language letter frequencies from the in-app dictionaries to adjust spawn distribution.
