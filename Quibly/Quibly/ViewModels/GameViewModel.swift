@@ -94,6 +94,10 @@ final class GameViewModel: ObservableObject {
     // Animation events
     @Published var powerUpAnimation: PowerUpAnimation? = nil
 
+    // Word preview (set by BoardView, read by GameView to display over powerup bar)
+    @Published var wordPreviewText: String = ""
+    @Published var wordPreviewIsGreen: Bool = false
+
     // MARK: - Accessors for Views
 
     var boardSize: Int { board.size }
