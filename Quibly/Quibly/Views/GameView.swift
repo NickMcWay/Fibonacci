@@ -160,8 +160,7 @@ struct GameView: View {
                             onReturnToMenu()
                         },
                         onPlayAgain: {
-                            showGameOverPopup = false
-                            withAnimation { vm.startNewGame() }
+                            withAnimation { vm.startNewGame(); showGameOverPopup = false }
                         }
                     )
                     .transition(.opacity)
