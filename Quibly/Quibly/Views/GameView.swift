@@ -322,6 +322,8 @@ struct GameView: View {
                 Text("left")
                     .font(.system(size: 12, weight: .medium, design: .rounded))
                     .foregroundStyle(urgent ? Color.qCoral2.opacity(0.8) : Color.qInk.opacity(0.65))
+            case .campaign, .sweep:
+                EmptyView()
             }
         }
         .padding(.horizontal, 12).padding(.vertical, 5)
