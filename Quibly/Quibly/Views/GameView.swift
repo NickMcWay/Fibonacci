@@ -363,12 +363,8 @@ struct GameView: View {
                 }
             }
             .padding(.horizontal, 14)
-            .padding(.top, 10)
+            .padding(.vertical, 10)
 
-            // XP progress bar
-            XPBarView()
-            .padding(.horizontal, 14)
-            .padding(.bottom, 10)
         }
         .qCard(cornerRadius: 22)
     }
