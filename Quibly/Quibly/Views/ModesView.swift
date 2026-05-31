@@ -42,11 +42,13 @@ struct ModesView: View {
     }
 
     private var modes: [ModeConfig] {[
-        .init(id: "classic",   icon: "🟪", label: "Classic",      desc: "4×4 board · the original",       gradient: [Color.qGrape1, Color.qGrape2],     locked: false, badge: nil,          unlock: nil),
-        .init(id: "blitz",     icon: "⚡", label: "Blitz",        desc: "90 seconds · score sprint",      gradient: [Color.qSky1, Color.qSky2],         locked: false, badge: "NEW",        unlock: nil),
+        .init(id: "classic",   icon: "🟪", label: "Classic",      desc: "Score as high as you can",       gradient: [Color.qGrape1, Color.qGrape2],     locked: false, badge: nil,          unlock: nil),
+        .init(id: "campaign",  icon: "🏆", label: "Campaign",     desc: "Level by level · rising stakes",  gradient: [Color(red:0.98,green:0.55,blue:0.25), Color(red:0.88,green:0.28,blue:0.18)], locked: false, badge: "NEW", unlock: nil),
+        .init(id: "blitz",     icon: "⚡", label: "Blitz",        desc: "90 seconds · score sprint",      gradient: [Color.qSky1, Color.qSky2],         locked: false, badge: nil,          unlock: nil),
+        .init(id: "sweep",     icon: "🧹", label: "Sweep",        desc: "Clear the board · earn stars",   gradient: [Color(red:0.28,green:0.72,blue:0.52), Color(red:0.14,green:0.54,blue:0.40)], locked: false, badge: "NEW", unlock: nil),
         .init(id: "zen",       icon: "🍃", label: "Zen",          desc: "No game-over · just vibes",      gradient: [Color.qMint1, Color.qMint2],       locked: false, badge: nil,          unlock: nil),
         .init(id: "daily",     icon: "📅", label: "Daily Puzzle", desc: dailyDesc,                        gradient: [Color.qSun1, Color(red: 1, green: 0.69, blue: 0.23)], locked: false, badge: dailyBadge, unlock: nil),
-        .init(id: "sprint",    icon: "🎯", label: "Sprint",       desc: "30 moves · max score",           gradient: [Color(red: 0.38, green: 0.88, blue: 0.82), Color(red: 0.10, green: 0.68, blue: 0.72)], locked: false, badge: "NEW", unlock: nil),
+        .init(id: "sprint",    icon: "🎯", label: "Sprint",       desc: "30 moves · max score",           gradient: [Color(red: 0.38, green: 0.88, blue: 0.82), Color(red: 0.10, green: 0.68, blue: 0.72)], locked: false, badge: nil, unlock: nil),
         .init(id: "duel",      icon: "⚔️", label: "Duel",         desc: "Async vs. friends",              gradient: [Color.qCoral1, Color.qCoral2],     locked: true,  badge: nil,          unlock: "Lvl 15"),
     ]}
 
@@ -54,11 +56,13 @@ struct ModesView: View {
 
     private var derivedGameMode: GameMode {
         switch selectedModeId {
-        case "blitz":  return .blitz
-        case "zen":    return .zen
-        case "daily":  return .daily
-        case "sprint": return .swipeLimited
-        default:       return .classic
+        case "blitz":    return .blitz
+        case "zen":      return .zen
+        case "daily":    return .daily
+        case "sprint":   return .swipeLimited
+        case "campaign": return .campaign
+        case "sweep":    return .sweep
+        default:         return .classic
         }
     }
 
@@ -207,6 +211,8 @@ struct ModesView: View {
             case "blitz":     selectedVariant = .small
             case "daily":     selectedVariant = .small
             case "sprint":    selectedVariant = .small
+            case "campaign":  selectedVariant = .small
+            case "sweep":     selectedVariant = .small
             default: break
             }
         } label: {

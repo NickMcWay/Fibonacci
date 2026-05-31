@@ -22,6 +22,8 @@ final class GameViewModel: ObservableObject {
                 UserDefaults.standard.set(played, forKey: gamesPlayedKey)
                 if settings.gameMode == .daily {
                     recordDailyPuzzleCompletion()
+                } else if settings.gameMode == .sweep {
+                    levelComplete = true
                 }
             }
         }
@@ -51,6 +53,12 @@ final class GameViewModel: ObservableObject {
     }
     @Published var isBombArmed: Bool = false
     @Published var isWildArmed: Bool = false
+
+    // Campaign / Sweep level state
+    @Published var campaignLevel: Int = 1
+    @Published var levelComplete: Bool = false
+    @Published var sweepTilesCleared: Int = 0
+    @Published var sweepTotalTiles: Int = 0
 
     // Streak / session
     @Published var wordsFoundThisSession: Int = 0
@@ -92,6 +100,25 @@ final class GameViewModel: ObservableObject {
     var language: GameLanguage { settings.language }
     var gameMode: GameMode { settings.gameMode }
 
+    var isCampaign: Bool { settings.gameMode == .campaign }
+    var isSweep: Bool    { settings.gameMode == .sweep }
+
+    var campaignTargetScore: Int { LevelDifficulty.campaignTargetScore(level: campaignLevel) }
+    var campaignProgress: Double { min(1.0, Double(score) / Double(campaignTargetScore)) }
+
+    var currentSpawnConfig: SpawnConfig {
+        if isCampaign { return LevelDifficulty.spawnConfig(level: campaignLevel) }
+        return SpawnConfig()
+    }
+
+    var sweepStars: Int {
+        let thresholds = LevelDifficulty.sweepStarThresholds(totalTiles: sweepTotalTiles)
+        if sweepTilesCleared >= thresholds.three { return 3 }
+        if sweepTilesCleared >= thresholds.two   { return 2 }
+        if sweepTilesCleared > 0                 { return 1 }
+        return 0
+    }
+
     // Joker spawn probability decreases as more words are found this session.
     // Starts at 8%, drops by 1% for every 10 words, flooring at 1%.
     var jokerProbability: Double {
@@ -120,6 +147,8 @@ final class GameViewModel: ObservableObject {
     private let longestWordKey       = "SlideWords_LongestWord"
     private let dailyCompletedKey    = "DailyPuzzle_CompletedDate"
     private let dailyBestScoreKey    = "DailyPuzzle_BestScore"
+    private let campaignLevelKey     = "SlideWords_CampaignLevel"
+    private let sweepLevelKey        = "SlideWords_SweepLevel"
 
     var hasDailyPuzzleBeenCompletedToday: Bool {
         guard let date = UserDefaults.standard.object(forKey: dailyCompletedKey) as? Date else { return false }
@@ -165,6 +194,11 @@ final class GameViewModel: ObservableObject {
         self.bombCharges   = (UserDefaults.standard.object(forKey: "SlideWords_BombCharges")    as? Int) ?? 1
         self.shuffleCharges = (UserDefaults.standard.object(forKey: "SlideWords_ShuffleCharges") as? Int) ?? 1
         self.wildCharges   = (UserDefaults.standard.object(forKey: "SlideWords_WildCharges")    as? Int) ?? 1
+        if settings.gameMode == .campaign {
+            self.campaignLevel = max(1, UserDefaults.standard.integer(forKey: campaignLevelKey))
+        } else if settings.gameMode == .sweep {
+            self.campaignLevel = max(1, UserDefaults.standard.integer(forKey: sweepLevelKey))
+        }
         startNewGame()
     }
 
@@ -209,11 +243,17 @@ final class GameViewModel: ObservableObject {
         cancelNoWordTimer()
         resetHintState()
 
+        levelComplete = false
+        sweepTilesCleared = 0
+
         if settings.gameMode == .daily {
             spawnDailyTiles()
+        } else if settings.gameMode == .sweep {
+            spawnSweepTiles()
         } else {
+            let config = currentSpawnConfig
             for _ in 0..<2 {
-                if let t = LetterSpawnEngine.spawnTile(for: board, language: settings.language, jokerProbability: jokerProbability) {
+                if let t = LetterSpawnEngine.spawnTile(for: board, language: settings.language, jokerProbability: jokerProbability, allowedLetters: config.allowedLetters) {
                     board.setTile(t, row: t.row, col: t.col)
                 }
             }
@@ -266,6 +306,20 @@ final class GameViewModel: ObservableObject {
         }
     }
 
+    private func spawnSweepTiles() {
+        let size = board.size
+        let total = size * size
+        let config = LevelDifficulty.spawnConfig(level: campaignLevel)
+        let fillCount = Int((LevelDifficulty.sweepFillRatio(level: campaignLevel) * Double(total)).rounded())
+        sweepTotalTiles = fillCount
+        sweepTilesCleared = 0
+        for _ in 0..<fillCount {
+            if let t = LetterSpawnEngine.spawnTile(for: board, language: settings.language, jokerProbability: 0.0, allowedLetters: config.allowedLetters) {
+                board.setTile(t, row: t.row, col: t.col)
+            }
+        }
+    }
+
     func loadDebugBoard(_ name: String) {
         guard let preset = GameEngine.debugBoards[name] else { return }
         board = preset
@@ -290,7 +344,30 @@ final class GameViewModel: ObservableObject {
         cancelNoWordTimer()
         resetHintState()
 
-        guard let slideResult = GameEngine.slideAndSpawn(board: board, direction: direction, language: settings.language) else {
+        if isSweep {
+            guard let slideResult = GameEngine.slideOnly(board: board, direction: direction, language: settings.language) else {
+                triggerHaptic(.error)
+                return
+            }
+            isAnimating = true
+            board = slideResult.board
+            withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) { syncTiles() }
+            triggerHaptic(.light)
+            Task {
+                try? await Task.sleep(nanoseconds: 350_000_000)
+                isAnimating = false
+                if slideResult.matches.isEmpty {
+                    if GameEngine.isGameOver(board: board) { isGameOver = true; return }
+                } else {
+                    pendingSwipeMatches = slideResult.matches
+                    pendingSwipeDirection = direction
+                    startHintTimer()
+                }
+                startInactivityTimer()
+            }
+            return
+        }
+        guard let slideResult = GameEngine.slideAndSpawn(board: board, direction: direction, language: settings.language, spawnConfig: currentSpawnConfig) else {
             triggerHaptic(.error)
             return
         }
@@ -405,6 +482,13 @@ final class GameViewModel: ObservableObject {
             coins += coinTilesUsed * coinPerCoinTile
             checkMilestones()
 
+            if isCampaign && score >= campaignTargetScore && !levelComplete {
+                levelComplete = true
+            }
+            if isSweep {
+                sweepTilesCleared += matches.flatMap(\.positions).count
+            }
+
             withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
                 syncTiles()
             }
@@ -424,7 +508,13 @@ final class GameViewModel: ObservableObject {
             try? await Task.sleep(nanoseconds: 120_000_000)
             isAnimating = false
 
-            if board.isEmpty {
+            if isSweep {
+                if board.isEmpty || result.isGameOver {
+                    isGameOver = true
+                } else {
+                    startInactivityTimer()
+                }
+            } else if board.isEmpty {
                 triggerEmptyBoardEffect()
             } else if result.isGameOver && settings.gameMode != .zen {
                 isGameOver = true
@@ -482,6 +572,12 @@ final class GameViewModel: ObservableObject {
         wordsFoundThisSession += 1
         comboCount = 0
         checkMilestones()
+        if isCampaign && score >= campaignTargetScore && !levelComplete {
+            levelComplete = true
+        }
+        if isSweep {
+            sweepTilesCleared += path.count
+        }
 
         let newTotal = UserDefaults.standard.integer(forKey: totalWordsKey) + 1
         UserDefaults.standard.set(newTotal, forKey: totalWordsKey)
@@ -508,6 +604,12 @@ final class GameViewModel: ObservableObject {
 
             if settings.gameMode == .swipeLimited && swipesRemaining == 0 {
                 isGameOver = true
+            } else if isSweep {
+                if board.isEmpty || GameEngine.isGameOver(board: board) {
+                    isGameOver = true
+                } else {
+                    startInactivityTimer()
+                }
             } else if board.isEmpty {
                 triggerEmptyBoardEffect()
             } else if settings.gameMode != .zen && GameEngine.isGameOver(board: board) {
@@ -894,6 +996,21 @@ final class GameViewModel: ObservableObject {
     }
 
     // MARK: - Haptic Feedback
+
+    // MARK: - Campaign / Sweep Level Progression
+
+    func advanceCampaignLevel() {
+        campaignLevel += 1
+        let key = isSweep ? sweepLevelKey : campaignLevelKey
+        UserDefaults.standard.set(campaignLevel, forKey: key)
+        levelComplete = false
+        withAnimation { startNewGame() }
+    }
+
+    func retryCampaignLevel() {
+        levelComplete = false
+        withAnimation { startNewGame() }
+    }
 
     private enum HapticStyle { case light, medium, heavy, error }
 

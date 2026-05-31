@@ -43,21 +43,23 @@ enum LetterSpawnEngine {
 
     // MARK: - Public API
 
-    static func chooseLetter(for board: BoardModel, language: GameLanguage = .english) -> Character {
-        let scores = scoredCandidates(for: board, language: language)
+    static func chooseLetter(for board: BoardModel, language: GameLanguage = .english, allowedLetters: Set<Character>? = nil) -> Character {
+        var scores = scoredCandidates(for: board, language: language)
+        if let allowed = allowedLetters {
+            scores = scores.filter { allowed.contains($0.key) }
+        }
+        guard !scores.isEmpty else { return "e" }
         return weightedRandom(scores)
     }
 
-    static func spawnTile(for board: BoardModel, language: GameLanguage = .english, jokerProbability: Double = 0.08) -> Tile? {
+    static func spawnTile(for board: BoardModel, language: GameLanguage = .english, jokerProbability: Double = 0.08, allowedLetters: Set<Character>? = nil) -> Tile? {
         guard !board.emptyPositions.isEmpty else { return nil }
-        let letter = chooseLetter(for: board, language: language)
+        let letter = chooseLetter(for: board, language: language, allowedLetters: allowedLetters)
         let position = choosePosition(for: board, letter: letter, language: language)
         var tile = Tile(letter: letter, row: position.row, col: position.col)
         tile.hasCoin = Double.random(in: 0..<1) < 0.18
         tile.isJoker = Double.random(in: 0..<1) < jokerProbability
-        if tile.isJoker {
-            tile.letter = "*"
-        }
+        if tile.isJoker { tile.letter = "*" }
         tile.isNew = true
         return tile
     }
