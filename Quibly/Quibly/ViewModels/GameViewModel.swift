@@ -653,8 +653,8 @@ final class GameViewModel: ObservableObject {
         noWordTimerPhaseStart = Date()
         noWordTimerTask = Task {
             do {
-                // 5 s silent window
-                try await Task.sleep(nanoseconds: 5_000_000_000)
+                // 10 s silent window
+                try await Task.sleep(nanoseconds: 10_000_000_000)
                 // 10 s visible countdown
                 for seconds in stride(from: 10, through: 1, by: -1) {
                     guard !Task.isCancelled else { return }
