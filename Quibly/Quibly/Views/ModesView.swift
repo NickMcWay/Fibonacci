@@ -8,7 +8,7 @@ struct ModesView: View {
     var onStart: (GameSettings) -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @State private var selectedModeId: String = "classic"
+    @AppStorage("SlideWords_SelectedModeId") private var selectedModeId: String = "classic"
 
     private struct ModeConfig {
         let id: String
@@ -92,10 +92,13 @@ struct ModesView: View {
                 }
             }
             .onAppear {
-                switch selectedVariant {
-                case .small:  selectedModeId = "classic"
-                case .medium: selectedModeId = "extended"
-                case .large:  selectedModeId = "challenge"
+                // Only fall back to variant-based default if no explicit mode is stored.
+                if selectedModeId == "classic" || selectedModeId == "extended" || selectedModeId == "challenge" {
+                    switch selectedVariant {
+                    case .small:  selectedModeId = "classic"
+                    case .medium: selectedModeId = "extended"
+                    case .large:  selectedModeId = "challenge"
+                    }
                 }
             }
             .toolbar{
