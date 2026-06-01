@@ -221,11 +221,6 @@ struct ShopView: View {
                     .allowsHitTesting(false)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("LIMITED · 48H")
-                        .font(.system(size: 11, weight: .heavy, design: .rounded))
-                        .foregroundStyle(Color.white.opacity(0.9))
-                        .tracking(1)
-
                     Text("Sparkle Bundle")
                         .font(.system(size: 26, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.white)
