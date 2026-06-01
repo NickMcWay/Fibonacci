@@ -9,6 +9,8 @@ struct ModesView: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var selectedModeId: String = "classic"
+    @State private var showCampaignOverview: Bool = false
+    @State private var showSweepOverview: Bool = false
 
     private struct ModeConfig {
         let id: String
@@ -118,6 +120,22 @@ struct ModesView: View {
                             .shadow(color: Color.qInk.opacity(0.3), radius: 0, x: 0, y: 1)
                     }
                 }
+            }
+            .fullScreenCover(isPresented: $showCampaignOverview) {
+                CampaignOverviewView(
+                    language: selectedLanguage,
+                    isSweep: false,
+                    onBack: { showCampaignOverview = false },
+                    onStart: { settings in showCampaignOverview = false; dismiss(); onStart(settings) }
+                )
+            }
+            .fullScreenCover(isPresented: $showSweepOverview) {
+                CampaignOverviewView(
+                    language: selectedLanguage,
+                    isSweep: true,
+                    onBack: { showSweepOverview = false },
+                    onStart: { settings in showSweepOverview = false; dismiss(); onStart(settings) }
+                )
             }
         }
     }
@@ -366,11 +384,17 @@ struct ModesView: View {
 
     private var startButton: some View {
         Button {
-            onStart(GameSettings(
-                language: selectedLanguage,
-                boardVariant: selectedVariant,
-                gameMode: derivedGameMode
-            ))
+            if selectedModeId == "campaign" {
+                showCampaignOverview = true
+            } else if selectedModeId == "sweep" {
+                showSweepOverview = true
+            } else {
+                onStart(GameSettings(
+                    language: selectedLanguage,
+                    boardVariant: selectedVariant,
+                    gameMode: derivedGameMode
+                ))
+            }
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "play.fill")

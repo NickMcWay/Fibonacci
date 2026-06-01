@@ -24,6 +24,7 @@ final class GameViewModel: ObservableObject {
                     recordDailyPuzzleCompletion()
                 } else if settings.gameMode == .sweep {
                     levelComplete = true
+                    CampaignProgress.saveCompletion(level: campaignLevel, score: sweepTilesCleared, sweep: true)
                 }
             }
         }
@@ -147,8 +148,6 @@ final class GameViewModel: ObservableObject {
     private let longestWordKey       = "SlideWords_LongestWord"
     private let dailyCompletedKey    = "DailyPuzzle_CompletedDate"
     private let dailyBestScoreKey    = "DailyPuzzle_BestScore"
-    private let campaignLevelKey     = "SlideWords_CampaignLevel"
-    private let sweepLevelKey        = "SlideWords_SweepLevel"
 
     var hasDailyPuzzleBeenCompletedToday: Bool {
         guard let date = UserDefaults.standard.object(forKey: dailyCompletedKey) as? Date else { return false }
@@ -194,10 +193,8 @@ final class GameViewModel: ObservableObject {
         self.bombCharges   = (UserDefaults.standard.object(forKey: "SlideWords_BombCharges")    as? Int) ?? 1
         self.shuffleCharges = (UserDefaults.standard.object(forKey: "SlideWords_ShuffleCharges") as? Int) ?? 1
         self.wildCharges   = (UserDefaults.standard.object(forKey: "SlideWords_WildCharges")    as? Int) ?? 1
-        if settings.gameMode == .campaign {
-            self.campaignLevel = max(1, UserDefaults.standard.integer(forKey: campaignLevelKey))
-        } else if settings.gameMode == .sweep {
-            self.campaignLevel = max(1, UserDefaults.standard.integer(forKey: sweepLevelKey))
+        if settings.gameMode == .campaign || settings.gameMode == .sweep {
+            self.campaignLevel = settings.campaignLevel
         }
         startNewGame()
     }
@@ -484,6 +481,7 @@ final class GameViewModel: ObservableObject {
 
             if isCampaign && score >= campaignTargetScore && !levelComplete {
                 levelComplete = true
+                CampaignProgress.saveCompletion(level: campaignLevel, score: score, sweep: false)
             }
             if isSweep {
                 sweepTilesCleared += matches.flatMap(\.positions).count
@@ -574,6 +572,7 @@ final class GameViewModel: ObservableObject {
         checkMilestones()
         if isCampaign && score >= campaignTargetScore && !levelComplete {
             levelComplete = true
+            CampaignProgress.saveCompletion(level: campaignLevel, score: score, sweep: false)
         }
         if isSweep {
             sweepTilesCleared += path.count
@@ -1001,8 +1000,6 @@ final class GameViewModel: ObservableObject {
 
     func advanceCampaignLevel() {
         campaignLevel += 1
-        let key = isSweep ? sweepLevelKey : campaignLevelKey
-        UserDefaults.standard.set(campaignLevel, forKey: key)
         levelComplete = false
         withAnimation { startNewGame() }
     }

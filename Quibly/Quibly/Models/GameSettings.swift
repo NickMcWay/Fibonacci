@@ -133,8 +133,41 @@ struct GameSettings {
     var language: GameLanguage = .english
     var boardVariant: BoardVariant = .small
     var gameMode: GameMode = .classic
+    var campaignLevel: Int = 1
 
     static let `default` = GameSettings()
+}
+
+// MARK: - Campaign Progress
+
+struct CampaignProgress {
+    private static let maxLevelKey   = "SlideWords_CampaignMaxLevel"
+    private static let sweepMaxKey   = "SlideWords_SweepMaxLevel"
+    private static let bestScoreKey  = "SlideWords_CampaignBestScore_"
+    private static let sweepStarsKey = "SlideWords_SweepBestStars_"
+
+    static func maxUnlockedLevel(sweep: Bool) -> Int {
+        let key = sweep ? sweepMaxKey : maxLevelKey
+        return max(1, UserDefaults.standard.integer(forKey: key))
+    }
+
+    static func bestScore(level: Int, sweep: Bool) -> Int {
+        let key = (sweep ? sweepStarsKey : bestScoreKey) + "\(level)"
+        return UserDefaults.standard.integer(forKey: key)
+    }
+
+    static func saveCompletion(level: Int, score: Int, sweep: Bool) {
+        let maxKey  = sweep ? sweepMaxKey : maxLevelKey
+        let bestKey = (sweep ? sweepStarsKey : bestScoreKey) + "\(level)"
+        let current = max(1, UserDefaults.standard.integer(forKey: maxKey))
+        if level >= current {
+            UserDefaults.standard.set(level + 1, forKey: maxKey)
+        }
+        let prev = UserDefaults.standard.integer(forKey: bestKey)
+        if score > prev {
+            UserDefaults.standard.set(score, forKey: bestKey)
+        }
+    }
 }
 
 // MARK: - Spawn Config
