@@ -182,6 +182,9 @@ struct GameView: View {
                         },
                         onMenu: {
                             showLevelCompletePopup = false
+                            if vm.isCampaign {
+                                CampaignProgress.markCompleted(level: vm.campaignLevel)
+                            }
                             onReturnToMenu()
                         }
                     )

@@ -40,6 +40,7 @@ struct MenuView: View {
     @State private var showDaily     = false
     @State private var showQuests    = false
     @State private var showLocked    = false
+    @State private var showCampaignOverview = false
 
     private let previewLetters: [[String]] = [
         ["Q","U","I","B"],
@@ -154,7 +155,24 @@ struct MenuView: View {
                     selectedLanguage: $selectedLanguage,
                     selectedVariant: $selectedVariant,
                     onBack: { showModes = false },
-                    onStart: { settings in showModes = false; onStart(settings) }
+                    onStart: { settings in
+                        showModes = false
+                        if settings.gameMode == .campaign {
+                            showCampaignOverview = true
+                        } else {
+                            onStart(settings)
+                        }
+                    }
+                )
+            }
+            .fullScreenCover(isPresented: $showCampaignOverview) {
+                CampaignOverviewView(
+                    language: selectedLanguage,
+                    onBack: { showCampaignOverview = false },
+                    onStartLevel: { settings in
+                        showCampaignOverview = false
+                        onStart(settings)
+                    }
                 )
             }
             .fullScreenCover(isPresented: $showSettings) { SettingsView(onBack: { showSettings = false }) }

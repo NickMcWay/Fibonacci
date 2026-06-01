@@ -200,7 +200,11 @@ final class GameViewModel: ObservableObject {
         self.shuffleCharges = (UserDefaults.standard.object(forKey: "SlideWords_ShuffleCharges") as? Int) ?? 1
         self.wildCharges   = (UserDefaults.standard.object(forKey: "SlideWords_WildCharges")    as? Int) ?? 1
         if settings.gameMode == .campaign {
-            self.campaignLevel = max(1, UserDefaults.standard.integer(forKey: campaignLevelKey))
+            let saved = max(1, UserDefaults.standard.integer(forKey: campaignLevelKey))
+            let start = settings.campaignStartLevel > 1 ? settings.campaignStartLevel : saved
+            self.campaignLevel = start
+            // Keep highestReached in sync so overview unlocks correctly
+            if start > saved { UserDefaults.standard.set(start, forKey: campaignLevelKey) }
         } else if settings.gameMode == .sweep {
             self.campaignLevel = max(1, UserDefaults.standard.integer(forKey: sweepLevelKey))
         }
@@ -1005,6 +1009,9 @@ final class GameViewModel: ObservableObject {
     // MARK: - Campaign / Sweep Level Progression
 
     func advanceCampaignLevel() {
+        if isCampaign {
+            CampaignProgress.markCompleted(level: campaignLevel)
+        }
         campaignLevel += 1
         let key = isSweep ? sweepLevelKey : campaignLevelKey
         UserDefaults.standard.set(campaignLevel, forKey: key)

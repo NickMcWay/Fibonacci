@@ -133,6 +133,7 @@ struct GameSettings {
     var language: GameLanguage = .english
     var boardVariant: BoardVariant = .small
     var gameMode: GameMode = .classic
+    var campaignStartLevel: Int = 1
 
     static let `default` = GameSettings()
 }
