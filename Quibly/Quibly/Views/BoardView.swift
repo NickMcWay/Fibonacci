@@ -146,6 +146,7 @@ struct BoardView: View {
 
     private func onChanged(_ v: DragGesture.Value, gap: CGFloat, tileSize: CGFloat) {
         guard !vm.isGameOver else { return }
+        vm.isSwiping = true
 
         let distance = hypot(v.translation.width, v.translation.height)
 
@@ -206,7 +207,10 @@ struct BoardView: View {
     // MARK: - Gesture: onEnded
 
     private func onEnded(_ v: DragGesture.Value, gap: CGFloat, tileSize: CGFloat) {
-        defer { dragMode = .undecided }
+        defer {
+            dragMode = .undecided
+            vm.isSwiping = false
+        }
 
         switch dragMode {
 

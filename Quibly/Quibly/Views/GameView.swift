@@ -614,7 +614,7 @@ struct GameView: View {
             .wiggle(active: armed)
         }
         .buttonStyle(.plain)
-        .disabled(!enabled)
+        .disabled(!enabled || vm.isSwiping)
         .opacity(enabled ? 1 : 0.6)
     }
 

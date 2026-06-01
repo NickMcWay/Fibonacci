@@ -97,6 +97,7 @@ final class GameViewModel: ObservableObject {
     // Word preview (set by BoardView, read by GameView to display over powerup bar)
     @Published var wordPreviewText: String = ""
     @Published var wordPreviewIsGreen: Bool = false
+    @Published var isSwiping: Bool = false
 
     // MARK: - Accessors for Views
 
