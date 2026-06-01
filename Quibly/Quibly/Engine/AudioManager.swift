@@ -37,9 +37,7 @@ final class AudioManager: ObservableObject {
     private var countdownPlayer: AVAudioPlayer?
     private var registerPlayer: AVAudioPlayer?
     private var countdownFadeTask: Task<Void, Never>?
-    private var themeObserver: NSObjectProtocol?
     private let muteKey = "SlideWords_IsMuted"
-    private let themeKey = "SlideWords_ActiveTheme"
 
     init() {
         isMuted        = UserDefaults.standard.bool(forKey: "SlideWords_IsMuted")
@@ -48,7 +46,6 @@ final class AudioManager: ObservableObject {
         let themeID = UserDefaults.standard.string(forKey: "SlideWords_ActiveTheme") ?? "cream"
         setupPlayer(trackName: trackName(for: themeID))
         setupEffects()
-        observeThemeChanges()
         NotificationCenter.default.addObserver(forName: .adWillPresent, object: nil, queue: .main) { [weak self] _ in self?.pause() }
         NotificationCenter.default.addObserver(forName: .adDidDismiss,  object: nil, queue: .main) { [weak self] _ in self?.play()  }
     }
@@ -62,20 +59,6 @@ final class AudioManager: ObservableObject {
         case "galaxy":    return "Galaxy Theme"
         case "sunset":    return "Sunset Theme"
         default:          return "Main Theme"
-        }
-    }
-
-    private func observeThemeChanges() {
-        themeObserver = NotificationCenter.default.addObserver(
-            forName: UserDefaults.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self else { return }
-            let themeID = UserDefaults.standard.string(forKey: self.themeKey) ?? "cream"
-            let track = self.trackName(for: themeID)
-            guard track != self.currentTrackName else { return }
-            self.switchTrack(to: track)
         }
     }
 
@@ -100,6 +83,12 @@ final class AudioManager: ObservableObject {
         player?.stop()
         setupPlayer(trackName: trackName)
         if wasPlaying { play() }
+    }
+
+    func changeTheme(to themeID: String) {
+        let track = trackName(for: themeID)
+        guard track != currentTrackName else { return }
+        switchTrack(to: track)
     }
 
     private func setupEffects() {

@@ -23,6 +23,8 @@ struct ContentRouter: View {
     @AppStorage("SlideWords_HasSeenTutorial") private var hasSeenTutorial: Bool = false
     @AppStorage("SlideWords_SelectedLanguage")  private var selectedLanguageRaw: String = GameLanguage.english.rawValue
     @AppStorage("SlideWords_UseSystemLanguage") private var useSystemLanguage: Bool = false
+    @AppStorage("SlideWords_ActiveTheme")     private var activeThemeID: String = "cream"
+    @EnvironmentObject private var audio: AudioManager
 
     private var appLocale: Locale {
         if useSystemLanguage { return .current }
@@ -56,6 +58,7 @@ struct ContentRouter: View {
         }
         .environment(\.locale, appLocale)
         .preferredColorScheme(darkMode ? .dark : .light)
+        .onChange(of: activeThemeID) { themeID in audio.changeTheme(to: themeID) }
         .fullScreenCover(isPresented: .init(
             get: { !hasSeenTutorial },
             set: { if !$0 { hasSeenTutorial = true } }
