@@ -712,7 +712,7 @@ struct GameView: View {
                 .overlay(alignment: .top) {
                     if !vm.wordPreviewText.isEmpty {
                         wordPreviewBadge
-                            .offset(y: -28)
+                            .offset(y: 28)
                             .allowsHitTesting(false)
                     }
                 }

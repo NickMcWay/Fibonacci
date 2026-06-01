@@ -66,11 +66,11 @@ struct BoardView: View {
 
             }
             .frame(width: boardSize, height: boardSize)
-            .onChange(of: drawPath.count)               { updateWordPreview() }
-            .onChange(of: confirmedPath.count)          { updateWordPreview() }
-            .onChange(of: acceptedWord)                 { updateWordPreview() }
-            .onChange(of: vm.showMatchHighlights)       { updateWordPreview() }
-            .onChange(of: vm.pendingSwipeMatches.count) { updateWordPreview() }
+            .onChange(of: drawPath.count) { _ in updateWordPreview() }
+            .onChange(of: confirmedPath.count) { _ in updateWordPreview() }
+            .onChange(of: acceptedWord) { _ in updateWordPreview() }
+            .onChange(of: vm.showMatchHighlights) { _ in updateWordPreview() }
+            .onChange(of: vm.pendingSwipeMatches.count) { _ in updateWordPreview() }
             .background(
                 RoundedRectangle(cornerRadius: boardSize * 0.05)
                     .fill(Color.white.opacity(0.08))
@@ -396,3 +396,4 @@ struct BoardView: View {
         .padding()
         .background(Color(red: 0.97, green: 0.97, blue: 0.98))
 }
+
