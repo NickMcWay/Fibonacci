@@ -12,9 +12,24 @@ struct MenuView: View {
     @AppStorage("SlideWords_SelectedVariant")   private var selectedVariantRawValue:  Int    = BoardVariant.small.rawValue
     @AppStorage("SlideWords_PlayerName")        private var playerName: String = ""
     @AppStorage("SlideWords_ActiveTheme")       private var activeThemeID: String = "cream"
+    @AppStorage("SlideWords_SelectedModeId")    private var selectedModeId: String = "classic"
 
     private var profileLevel: Int { totalXP / 500 + 1 }
     private var profileXPProgress: Double { Double(totalXP % 500) / 500.0 }
+
+    private var modeLabelForChip: String {
+        switch selectedModeId {
+        case "blitz":    return "Blitz"
+        case "zen":      return "Zen"
+        case "daily":    return "Daily Puzzle"
+        case "sprint":   return "Sprint"
+        case "campaign": return "Campaign"
+        case "sweep":    return "Sweep"
+        case "extended": return "Extended"
+        case "challenge":return "Challenge"
+        default:         return "Classic"
+        }
+    }
 
     @State private var selectedLanguage: GameLanguage = .english
     @State private var selectedVariant:  BoardVariant = .small
@@ -82,7 +97,7 @@ struct MenuView: View {
                             Button { showModes = true } label: {
                                 HStack(spacing: 8) {
                                     Text("Mode").opacity(0.7)
-                                    Text("\(selectedLanguage.flag) ") + Text(LocalizedStringKey(selectedVariant.label))
+                                    Text("\(selectedLanguage.flag) ") + Text(modeLabelForChip)
                                         .fontWeight(.semibold)
                                     Text("›").opacity(0.6)
                                 }
