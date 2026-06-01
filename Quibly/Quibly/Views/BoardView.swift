@@ -64,12 +64,13 @@ struct BoardView: View {
                 drawPathConnector(gap: gap, tileSize: tileSize)
                 pendingSwipeConnector(gap: gap, tileSize: tileSize)
 
-                // Word preview / confirmation hint at the bottom of the board
-                if !drawPath.isEmpty || !confirmedPath.isEmpty || acceptedWord != nil || (vm.showMatchHighlights && !vm.hintedMatches.isEmpty) {
-                    wordPreview(boardSize: boardSize)
-                }
             }
             .frame(width: boardSize, height: boardSize)
+            .onChange(of: drawPath.count)               { updateWordPreview() }
+            .onChange(of: confirmedPath.count)          { updateWordPreview() }
+            .onChange(of: acceptedWord)                 { updateWordPreview() }
+            .onChange(of: vm.showMatchHighlights)       { updateWordPreview() }
+            .onChange(of: vm.pendingSwipeMatches.count) { updateWordPreview() }
             .background(
                 RoundedRectangle(cornerRadius: boardSize * 0.05)
                     .fill(Color.white.opacity(0.08))
@@ -105,7 +106,7 @@ struct BoardView: View {
 
     // MARK: - Word Preview
 
-    private func wordPreview(boardSize: CGFloat) -> some View {
+    private func updateWordPreview() {
         let hasPendingSwipe = !vm.pendingSwipeMatches.isEmpty
         let revealed = vm.showMatchHighlights
 
@@ -137,25 +138,8 @@ struct BoardView: View {
             isGreen = isDrawPending || isValid
         }
 
-        let wordColor: Color = isGreen
-            ? Color(red: 0.10, green: 0.72, blue: 0.42)
-            : Color(red: 0.35, green: 0.35, blue: 0.40)
-
-        return VStack(spacing: 2) {
-            Text(text)
-                .font(.system(size: boardSize * 0.10, weight: .heavy, design: .rounded))
-                .foregroundColor(wordColor)
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 8)
-        .background(
-            Capsule()
-                .fill(Color.white.opacity(0.92))
-                .shadow(color: .black.opacity(0.14), radius: 6, x: 0, y: 3)
-        )
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-        .padding(.bottom, boardSize * 0.06)
-        .allowsHitTesting(false)
+        vm.wordPreviewText = text
+        vm.wordPreviewIsGreen = isGreen
     }
 
     // MARK: - Gesture: onChanged

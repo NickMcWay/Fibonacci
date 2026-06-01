@@ -437,6 +437,24 @@ struct GameView: View {
         .qCard(cornerRadius: 14)
     }
 
+    // MARK: - Word Preview Badge (floats above power-up bar)
+
+    private var wordPreviewBadge: some View {
+        let wordColor: Color = vm.wordPreviewIsGreen
+            ? Color(red: 0.10, green: 0.72, blue: 0.42)
+            : Color(red: 0.35, green: 0.35, blue: 0.40)
+        return Text(vm.wordPreviewText)
+            .font(.system(size: 22, weight: .heavy, design: .rounded))
+            .foregroundColor(wordColor)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(
+                Capsule()
+                    .fill(Color.white.opacity(0.92))
+                    .shadow(color: .black.opacity(0.14), radius: 6, x: 0, y: 3)
+            )
+    }
+
     // MARK: - Power-up Bar
 
     private var powerUpBar: some View {
@@ -691,6 +709,13 @@ struct GameView: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 28)
                 .padding(.horizontal)
+                .overlay(alignment: .top) {
+                    if !vm.wordPreviewText.isEmpty {
+                        wordPreviewBadge
+                            .offset(y: -28)
+                            .allowsHitTesting(false)
+                    }
+                }
         }
     }
 }
