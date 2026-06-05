@@ -433,7 +433,7 @@ final class GameViewModel: ObservableObject {
         hintTimerTask?.cancel()
         hintTimerTask = nil
         hintCharges -= 1
-        hintedMatches = Array(pendingSwipeMatches.prefix(2))
+        revealSingleHintMatch()
         showMatchHighlights = true
         powerUpAnimation = .hint
         Task {
@@ -685,10 +685,14 @@ final class GameViewModel: ObservableObject {
                 try await Task.sleep(nanoseconds: 5_000_000_000)
                 showHintButton = true
                 try await Task.sleep(nanoseconds: 5_000_000_000)
-                hintedMatches = Array(pendingSwipeMatches.prefix(2))
+                revealSingleHintMatch()
                 showMatchHighlights = true
             } catch {}
         }
+    }
+
+    private func revealSingleHintMatch() {
+        hintedMatches = Array(pendingSwipeMatches.prefix(1))
     }
 
     private func resetHintState() {

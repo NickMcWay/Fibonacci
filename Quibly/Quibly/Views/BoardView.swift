@@ -118,7 +118,7 @@ struct BoardView: View {
             isGreen = true
         } else if hasPendingSwipe {
             if revealed {
-                text = vm.hintedMatches.map { $0.word.uppercased() }.joined(separator: " · ")
+                text = hintedMatches.map { $0.word.uppercased() }.joined(separator: " · ")
                 isGreen = true
             } else {
                 text = ""
@@ -299,7 +299,7 @@ struct BoardView: View {
 
     private func isPendingSwipeTile(_ tile: Tile) -> Bool {
         guard vm.showMatchHighlights else { return false }
-        return vm.hintedMatches.contains { match in
+        return hintedMatches.contains { match in
             match.positions.contains { $0.row == tile.row && $0.col == tile.col }
         }
     }
@@ -355,7 +355,7 @@ struct BoardView: View {
 
     private func pendingSwipeConnector(gap: CGFloat, tileSize: CGFloat) -> some View {
         let points: [CGPoint] = vm.showMatchHighlights
-            ? vm.hintedMatches.flatMap(\.positions).map {
+            ? hintedMatches.flatMap(\.positions).map {
                 CGPoint(x: tileX(col: $0.col, gap: gap, tileSize: tileSize), y: tileY(row: $0.row, gap: gap, tileSize: tileSize))
             }
             : []
@@ -383,6 +383,10 @@ struct BoardView: View {
             ? (t.width  > 0 ? .right : .left)
             : (t.height > 0 ? .down  : .up)
     }
+
+    private var hintedMatches: ArraySlice<WordValidator.WordMatch> {
+        vm.hintedMatches.prefix(1)
+    }
 }
 
 #Preview("Board 4×4") {
@@ -396,4 +400,3 @@ struct BoardView: View {
         .padding()
         .background(Color(red: 0.97, green: 0.97, blue: 0.98))
 }
-
