@@ -6,42 +6,37 @@
 Quibly
 
 ## Subtitle (30 characters max)
-Slide tiles. Spell words. Win.
+Slide tiles. Spell words.
 
 ---
 
 ## Description (4,000 characters max)
 
-Quibly is the word game that rewards how you think — not just what you know.
+Quibly is a word puzzle game for iPhone.
 
-Swipe to slide letter tiles across the board. When tiles line up to spell a word, confirm it for points and open up new possibilities. Every move is a decision: take the safe word now, or keep shaping the board for a longer, higher-scoring word?
+Swipe to slide letter tiles across the board and form words in rows or columns. Confirm a valid word to score points and make room for new letters. Longer words and rarer letters are worth more.
 
 **HOW TO PLAY**
-Each swipe — up, down, left, or right — sends all tiles sliding to that edge and spawns a new letter in an empty spot. Spot a word in any row or column and confirm it to clear those tiles. The remaining tiles collapse back in the direction you swiped, giving you fresh space to keep building.
+Each swipe — up, down, left, or right — sends all tiles sliding to that edge. After a valid move, new letters appear in empty spaces. Spot a word, select it, and confirm it for points. The game ends when the board is full and no move is possible.
 
-Want more control? Switch to drawn-word mode and trace a path across any adjacent tiles to spell and score a word directly — no waiting for a swipe to line things up.
+You can also form words by connecting adjacent tiles.
 
-The board fills up one tile at a time. The game ends when it's completely full and no swipe can budge anything. Your goal: score as high as you can before that moment arrives.
-
-**SCORE BIG**
-Letter values follow Scrabble conventions — common vowels like E and A are worth 1 point, while rare letters like Q and Z score up to 10. Longer words are worth more, so smart board planning can turn a small opening into a big score.
+**SCORING**
+Letter values follow familiar word-game conventions. Common letters are worth less, while rarer letters are worth more. Word length also affects the score.
 
 **FEATURES**
 
-- Three board sizes — Classic (4×4) for quick games, Extended (5×5) for more room to build, Challenge (6×6) for maximum depth
-- Five languages — English, Dutch, German, French, and Spanish, each with authentic letter frequencies and point values tuned to that language
-- Hint system — stuck? After 5 seconds a power-up button appears; after 10 seconds the matching tiles glow so you never stay stuck for long
-- Drawn-word mode — trace any connected path of tiles on the board to score a word instantly
-- Best-score tracking — your all-time high score is saved across every session
-- Haptic feedback — subtle taps make every confirm, clear, and game-over feel satisfying in your hand
-- Dark mode support — play comfortably any time of day
+- Multiple modes: Classic, Campaign, Blitz, Sweep, Zen, Daily Puzzle, and Sprint
+- Three board sizes: 4×4, 5×5, and 6×6
+- Five languages: English, Dutch, German, French, and Spanish
+- Power-ups: Hint, Shuffle, Joker, and Bomb
+- Daily puzzle, quests, streaks, XP, coins, and best scores
+- Themes, music, sound effects, and haptic feedback
 
 **WHO IT'S FOR**
-Quibly is for anyone who loves word games but wants more than a crossword or a daily puzzle. It's for people who like strategy — who want to feel clever, not just lucky. Beginners can rely on the hint system; experts will plan for longer words and push their high scores further every session.
+Quibly is for short sessions, slower puzzle play, and daily word challenges. Choose the mode that fits the moment.
 
-No subscriptions. No energy bars. No limits on how many times you can play. Just you, the board, and the next word.
-
-Download Quibly and see how high you can go.
+No account is required.
 
 ---
 
@@ -51,14 +46,14 @@ word game,puzzle,scrabble,tiles,swipe,slide,vocabulary,letters,brain,spelling,wo
 ---
 
 ## Promotional Text (170 characters max — can be updated without a new review)
-Five languages. Three board sizes. Endless replays. Slide tiles, spell words, and chase a new high score — download free today.
+Slide letters across the board and form words in rows or columns. Play multiple modes in English, Dutch, German, French, or Spanish.
 
 ---
 
 ## What's New (version release notes)
 
 ### Version 1.0
-Welcome to Quibly! Slide tiles to spell words and play in English, Dutch, German, French, or Spanish. Three board sizes let you choose your challenge. See how high you can go.
+First release of Quibly. Slide tiles and form words in Classic, Campaign, Blitz, Sweep, Zen, Daily Puzzle, and Sprint. Available in five languages.
 
 ---
 
@@ -74,4 +69,4 @@ Welcome to Quibly! Slide tiles to spell words and play in English, Dutch, German
 ---
 
 ## Support URL copy (for the App Store support field)
-Have a question or found a bug? Reach out and we'll get back to you as quickly as we can.
+Questions, problems, or suggestions? Send an email from the support page.
