@@ -139,21 +139,21 @@ final class GameViewModel: ObservableObject {
 
     private let settings: GameSettings
     private var board: BoardModel
-    private let bestScoreKey         = "SlideWords_BestScore"
-    private let coinsKey             = "SlideWords_Coins"
-    private let totalXPKey           = "SlideWords_TotalXP"
+    private let bestScoreKey         = "Quibly_BestScore"
+    private let coinsKey             = "Quibly_Coins"
+    private let totalXPKey           = "Quibly_TotalXP"
     static let xpPerLevel: Int       = 500
-    private let hintChargesKey       = "SlideWords_HintCharges"
-    private let bombChargesKey       = "SlideWords_BombCharges"
-    private let shuffleChargesKey    = "SlideWords_ShuffleCharges"
-    private let wildChargesKey       = "SlideWords_WildCharges"
-    private let gamesPlayedKey       = "SlideWords_GamesPlayed"
-    private let totalWordsKey        = "SlideWords_TotalWords"
-    private let longestWordKey       = "SlideWords_LongestWord"
+    private let hintChargesKey       = "Quibly_HintCharges"
+    private let bombChargesKey       = "Quibly_BombCharges"
+    private let shuffleChargesKey    = "Quibly_ShuffleCharges"
+    private let wildChargesKey       = "Quibly_WildCharges"
+    private let gamesPlayedKey       = "Quibly_GamesPlayed"
+    private let totalWordsKey        = "Quibly_TotalWords"
+    private let longestWordKey       = "Quibly_LongestWord"
     private let dailyCompletedKey    = "DailyPuzzle_CompletedDate"
     private let dailyBestScoreKey    = "DailyPuzzle_BestScore"
-    private let campaignLevelKey     = "SlideWords_CampaignLevel"
-    private let sweepLevelKey        = "SlideWords_SweepLevel"
+    private let campaignLevelKey     = "Quibly_CampaignLevel"
+    private let sweepLevelKey        = "Quibly_SweepLevel"
 
     var hasDailyPuzzleBeenCompletedToday: Bool {
         guard let date = UserDefaults.standard.object(forKey: dailyCompletedKey) as? Date else { return false }
@@ -176,10 +176,10 @@ final class GameViewModel: ObservableObject {
 
     // Settings read from UserDefaults on each action (no need to observe changes live)
     private var isHapticsEnabled: Bool {
-        UserDefaults.standard.object(forKey: "SlideWords_HapticsEnabled") as? Bool ?? true
+        UserDefaults.standard.object(forKey: "Quibly_HapticsEnabled") as? Bool ?? true
     }
     private var isAutoHintsEnabled: Bool {
-        UserDefaults.standard.object(forKey: "SlideWords_AutoHints") as? Bool ?? true
+        UserDefaults.standard.object(forKey: "Quibly_AutoHints") as? Bool ?? true
     }
 
     let shuffleCost: Int = 500
@@ -194,11 +194,11 @@ final class GameViewModel: ObservableObject {
         self.settings = settings
         self.board = BoardModel(size: settings.boardVariant.rawValue)
         self.bestScore = UserDefaults.standard.integer(forKey: bestScoreKey)
-        self.coins         = (UserDefaults.standard.object(forKey: "SlideWords_Coins")          as? Int) ?? 125
-        self.hintCharges   = (UserDefaults.standard.object(forKey: "SlideWords_HintCharges")    as? Int) ?? 2
-        self.bombCharges   = (UserDefaults.standard.object(forKey: "SlideWords_BombCharges")    as? Int) ?? 1
-        self.shuffleCharges = (UserDefaults.standard.object(forKey: "SlideWords_ShuffleCharges") as? Int) ?? 1
-        self.wildCharges   = (UserDefaults.standard.object(forKey: "SlideWords_WildCharges")    as? Int) ?? 1
+        self.coins         = (UserDefaults.standard.object(forKey: "Quibly_Coins")          as? Int) ?? 125
+        self.hintCharges   = (UserDefaults.standard.object(forKey: "Quibly_HintCharges")    as? Int) ?? 2
+        self.bombCharges   = (UserDefaults.standard.object(forKey: "Quibly_BombCharges")    as? Int) ?? 1
+        self.shuffleCharges = (UserDefaults.standard.object(forKey: "Quibly_ShuffleCharges") as? Int) ?? 1
+        self.wildCharges   = (UserDefaults.standard.object(forKey: "Quibly_WildCharges")    as? Int) ?? 1
         if settings.gameMode == .campaign {
             let saved = max(1, UserDefaults.standard.integer(forKey: campaignLevelKey))
             let start = settings.campaignStartLevel > 1 ? settings.campaignStartLevel : saved

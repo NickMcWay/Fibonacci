@@ -8,7 +8,7 @@ struct ModesView: View {
     var onStart: (GameSettings) -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @AppStorage("SlideWords_SelectedModeId") private var selectedModeId: String = "classic"
+    @AppStorage("Quibly_SelectedModeId") private var selectedModeId: String = "classic"
 
     private struct ModeConfig {
         let id: String

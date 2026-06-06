@@ -4,14 +4,14 @@ import StoreKit
 struct ShopView: View {
     var onBack: (() -> Void)? = nil
 
-    @AppStorage("SlideWords_Coins")          private var coins:          Int    = 125
-    @AppStorage("SlideWords_HintCharges")    private var hintCharges:    Int    = 2
-    @AppStorage("SlideWords_ShuffleCharges") private var shuffleCharges: Int    = 1
-    @AppStorage("SlideWords_BombCharges")    private var bombCharges:    Int    = 1
-    @AppStorage("SlideWords_WildCharges")    private var wildCharges:    Int    = 1
-    @AppStorage("SlideWords_ActiveTheme")    private var activeThemeID:  String = "cream"
-    @AppStorage("SlideWords_OwnedThemes")    private var ownedThemesRaw: String = "cream"
-    @AppStorage("SlideWords_TotalXP")        private var totalXP:        Int    = 0
+    @AppStorage("Quibly_Coins")          private var coins:          Int    = 125
+    @AppStorage("Quibly_HintCharges")    private var hintCharges:    Int    = 2
+    @AppStorage("Quibly_ShuffleCharges") private var shuffleCharges: Int    = 1
+    @AppStorage("Quibly_BombCharges")    private var bombCharges:    Int    = 1
+    @AppStorage("Quibly_WildCharges")    private var wildCharges:    Int    = 1
+    @AppStorage("Quibly_ActiveTheme")    private var activeThemeID:  String = "cream"
+    @AppStorage("Quibly_OwnedThemes")    private var ownedThemesRaw: String = "cream"
+    @AppStorage("Quibly_TotalXP")        private var totalXP:        Int    = 0
 
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var audio: AudioManager

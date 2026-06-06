@@ -41,7 +41,7 @@ No account is required.
 ---
 
 ## Keywords (100 characters max)
-word game,puzzle,scrabble,tiles,swipe,slide,vocabulary,letters,brain,spelling,word puzzle,score
+word game,puzzle,tiles,swipe,slide,vocabulary,letters,brain,daily puzzle,spelling,chain,quibly
 
 ---
 

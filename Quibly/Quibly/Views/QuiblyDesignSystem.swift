@@ -115,7 +115,7 @@ struct TileTheme: Identifiable, Equatable {
 // MARK: - Dream Background (theme-aware)
 
 struct DreamBackground<Content: View>: View {
-    @AppStorage("SlideWords_ActiveTheme") private var activeThemeID: String = "cream"
+    @AppStorage("Quibly_ActiveTheme") private var activeThemeID: String = "cream"
     let content: Content
     init(@ViewBuilder content: () -> Content) { self.content = content() }
 
@@ -487,7 +487,7 @@ struct QModal<Content: View>: View {
 // MARK: - XP Bar
 
 struct XPBarView: View {
-    @AppStorage("SlideWords_TotalXP") private var totalXP: Int = 0
+    @AppStorage("Quibly_TotalXP") private var totalXP: Int = 0
 
     private let xpPerLevel = 500
 

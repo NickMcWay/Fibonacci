@@ -17,7 +17,7 @@ struct GameOverPopup: View {
     let onMenu: () -> Void
     let onPlayAgain: () -> Void
 
-    @AppStorage("SlideWords_BestScore") private var bestScore: Int = 0
+    @AppStorage("Quibly_BestScore") private var bestScore: Int = 0
 
     var body: some View {
         ZStack {
@@ -419,7 +419,7 @@ struct BuyChargePopupSheet: View {
 
 struct DailyRewardPopupSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @AppStorage("SlideWords_Coins") private var coins: Int = 125
+    @AppStorage("Quibly_Coins") private var coins: Int = 125
 
     private let manager = DailyRewardManager.shared
     @State private var claimedToday: Bool = DailyRewardManager.shared.hasClaimedToday
@@ -883,14 +883,14 @@ struct QuestsPopupSheet: View {
 // MARK: - Profile Sheet
 
 struct ProfilePopupSheet: View {
-    @AppStorage("SlideWords_BestScore")   private var bestScore:   Int    = 0
-    @AppStorage("SlideWords_TotalXP")     private var totalXP:     Int    = 0
-    @AppStorage("SlideWords_Coins")       private var coins:       Int    = 125
-    @AppStorage("SlideWords_Streak")      private var streak:      Int    = 0
-    @AppStorage("SlideWords_GamesPlayed") private var gamesPlayed: Int    = 0
-    @AppStorage("SlideWords_TotalWords")  private var totalWords:  Int    = 0
-    @AppStorage("SlideWords_BestWord") private var longestWord: String = ""
-    @AppStorage("SlideWords_PlayerName") private var playerName: String = ""
+    @AppStorage("Quibly_BestScore")   private var bestScore:   Int    = 0
+    @AppStorage("Quibly_TotalXP")     private var totalXP:     Int    = 0
+    @AppStorage("Quibly_Coins")       private var coins:       Int    = 125
+    @AppStorage("Quibly_Streak")      private var streak:      Int    = 0
+    @AppStorage("Quibly_GamesPlayed") private var gamesPlayed: Int    = 0
+    @AppStorage("Quibly_TotalWords")  private var totalWords:  Int    = 0
+    @AppStorage("Quibly_BestWord") private var longestWord: String = ""
+    @AppStorage("Quibly_PlayerName") private var playerName: String = ""
     @Environment(\.dismiss) private var dismiss
 
     private let xpPerLevel = 500

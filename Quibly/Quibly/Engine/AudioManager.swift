@@ -20,14 +20,14 @@ final class AudioManager: ObservableObject {
 
     @Published var isMusicEnabled: Bool {
         didSet {
-            UserDefaults.standard.set(isMusicEnabled, forKey: "SlideWords_MusicEnabled")
+            UserDefaults.standard.set(isMusicEnabled, forKey: "Quibly_MusicEnabled")
             if isMusicEnabled && !isMuted { player?.play() } else { player?.pause() }
         }
     }
 
     @Published var isSoundEnabled: Bool {
         didSet {
-            UserDefaults.standard.set(isSoundEnabled, forKey: "SlideWords_SoundEnabled")
+            UserDefaults.standard.set(isSoundEnabled, forKey: "Quibly_SoundEnabled")
         }
     }
 
@@ -37,13 +37,13 @@ final class AudioManager: ObservableObject {
     private var countdownPlayer: AVAudioPlayer?
     private var registerPlayer: AVAudioPlayer?
     private var countdownFadeTask: Task<Void, Never>?
-    private let muteKey = "SlideWords_IsMuted"
+    private let muteKey = "Quibly_IsMuted"
 
     init() {
-        isMuted        = UserDefaults.standard.bool(forKey: "SlideWords_IsMuted")
-        isMusicEnabled = UserDefaults.standard.object(forKey: "SlideWords_MusicEnabled") as? Bool ?? true
-        isSoundEnabled = UserDefaults.standard.object(forKey: "SlideWords_SoundEnabled") as? Bool ?? true
-        let themeID = UserDefaults.standard.string(forKey: "SlideWords_ActiveTheme") ?? "cream"
+        isMuted        = UserDefaults.standard.bool(forKey: "Quibly_IsMuted")
+        isMusicEnabled = UserDefaults.standard.object(forKey: "Quibly_MusicEnabled") as? Bool ?? true
+        isSoundEnabled = UserDefaults.standard.object(forKey: "Quibly_SoundEnabled") as? Bool ?? true
+        let themeID = UserDefaults.standard.string(forKey: "Quibly_ActiveTheme") ?? "cream"
         setupPlayer(trackName: trackName(for: themeID))
         setupEffects()
         NotificationCenter.default.addObserver(forName: .adWillPresent, object: nil, queue: .main) { [weak self] _ in self?.pause() }

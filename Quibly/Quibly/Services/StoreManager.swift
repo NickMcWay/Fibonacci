@@ -141,7 +141,7 @@ final class StoreManager: ObservableObject {
     }
 
     private func deliverTheme(_ themeID: String) {
-        let key = "SlideWords_OwnedThemes"
+        let key = "Quibly_OwnedThemes"
         let current = UserDefaults.standard.string(forKey: key) ?? "cream"
         var owned = Set(current.components(separatedBy: ",").filter { !$0.isEmpty })
         owned.insert(themeID)
@@ -149,15 +149,15 @@ final class StoreManager: ObservableObject {
     }
 
     private func deliverCoins(_ amount: Int) {
-        let key = "SlideWords_Coins"
+        let key = "Quibly_Coins"
         let current = UserDefaults.standard.integer(forKey: key)
         UserDefaults.standard.set(current + amount, forKey: key)
     }
 
     private func deliverPowerUps(_ amount: Int) {
         let ud = UserDefaults.standard
-        for key in ["SlideWords_HintCharges", "SlideWords_ShuffleCharges",
-                    "SlideWords_BombCharges", "SlideWords_WildCharges"] {
+        for key in ["Quibly_HintCharges", "Quibly_ShuffleCharges",
+                    "Quibly_BombCharges", "Quibly_WildCharges"] {
             ud.set(ud.integer(forKey: key) + amount, forKey: key)
         }
     }

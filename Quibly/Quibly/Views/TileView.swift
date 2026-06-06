@@ -11,7 +11,7 @@ struct TileView: View {
     var scrabbleValue: Int? = nil
     var temporaryResolvedLetter: Character? = nil
 
-    @AppStorage("SlideWords_ActiveTheme") private var activeThemeID: String = "cream"
+    @AppStorage("Quibly_ActiveTheme") private var activeThemeID: String = "cream"
 
     @State private var scale: CGFloat = 1.0
     @State private var opacity: Double = 1.0

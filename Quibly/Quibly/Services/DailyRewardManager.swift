@@ -110,11 +110,11 @@ final class DailyRewardManager {
         let reward = rewards[rewardIndex]
         let d = UserDefaults.standard
 
-        d.set((d.object(forKey: "SlideWords_Coins")          as? Int ?? 125) + reward.coins,          forKey: "SlideWords_Coins")
-        if reward.hintCharges > 0    { d.set((d.object(forKey: "SlideWords_HintCharges")    as? Int ?? 2) + reward.hintCharges,    forKey: "SlideWords_HintCharges") }
-        if reward.shuffleCharges > 0 { d.set((d.object(forKey: "SlideWords_ShuffleCharges") as? Int ?? 1) + reward.shuffleCharges, forKey: "SlideWords_ShuffleCharges") }
-        if reward.bombCharges > 0    { d.set((d.object(forKey: "SlideWords_BombCharges")    as? Int ?? 1) + reward.bombCharges,    forKey: "SlideWords_BombCharges") }
-        if reward.wildCharges > 0    { d.set((d.object(forKey: "SlideWords_WildCharges")    as? Int ?? 1) + reward.wildCharges,    forKey: "SlideWords_WildCharges") }
+        d.set((d.object(forKey: "Quibly_Coins")          as? Int ?? 125) + reward.coins,          forKey: "Quibly_Coins")
+        if reward.hintCharges > 0    { d.set((d.object(forKey: "Quibly_HintCharges")    as? Int ?? 2) + reward.hintCharges,    forKey: "Quibly_HintCharges") }
+        if reward.shuffleCharges > 0 { d.set((d.object(forKey: "Quibly_ShuffleCharges") as? Int ?? 1) + reward.shuffleCharges, forKey: "Quibly_ShuffleCharges") }
+        if reward.bombCharges > 0    { d.set((d.object(forKey: "Quibly_BombCharges")    as? Int ?? 1) + reward.bombCharges,    forKey: "Quibly_BombCharges") }
+        if reward.wildCharges > 0    { d.set((d.object(forKey: "Quibly_WildCharges")    as? Int ?? 1) + reward.wildCharges,    forKey: "Quibly_WildCharges") }
 
         streak += 1
         lastClaimedDate = Date()

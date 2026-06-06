@@ -4,15 +4,15 @@ struct MenuView: View {
     var onStart: (GameSettings) -> Void
 
     @EnvironmentObject private var audio: AudioManager
-    @AppStorage("SlideWords_BestScore")         private var bestScore: Int    = 0
-    @AppStorage("SlideWords_Coins")             private var coins: Int        = 125
-    @AppStorage("SlideWords_Streak")            private var streak: Int       = 7
-    @AppStorage("SlideWords_TotalXP")           private var totalXP: Int      = 0
-    @AppStorage("SlideWords_SelectedLanguage")  private var selectedLanguageRawValue: String = GameLanguage.english.rawValue
-    @AppStorage("SlideWords_SelectedVariant")   private var selectedVariantRawValue:  Int    = BoardVariant.small.rawValue
-    @AppStorage("SlideWords_PlayerName")        private var playerName: String = ""
-    @AppStorage("SlideWords_ActiveTheme")       private var activeThemeID: String = "cream"
-    @AppStorage("SlideWords_SelectedModeId")    private var selectedModeId: String = "classic"
+    @AppStorage("Quibly_BestScore")         private var bestScore: Int    = 0
+    @AppStorage("Quibly_Coins")             private var coins: Int        = 125
+    @AppStorage("Quibly_Streak")            private var streak: Int       = 7
+    @AppStorage("Quibly_TotalXP")           private var totalXP: Int      = 0
+    @AppStorage("Quibly_SelectedLanguage")  private var selectedLanguageRawValue: String = GameLanguage.english.rawValue
+    @AppStorage("Quibly_SelectedVariant")   private var selectedVariantRawValue:  Int    = BoardVariant.small.rawValue
+    @AppStorage("Quibly_PlayerName")        private var playerName: String = ""
+    @AppStorage("Quibly_ActiveTheme")       private var activeThemeID: String = "cream"
+    @AppStorage("Quibly_SelectedModeId")    private var selectedModeId: String = "classic"
 
     private var profileLevel: Int { totalXP / 500 + 1 }
     private var profileXPProgress: Double { Double(totalXP % 500) / 500.0 }

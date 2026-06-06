@@ -25,8 +25,8 @@ struct TutorialView: View {
 
     @State private var currentStep = 0
     @State private var direction: Int = 1  // 1 = forward, -1 = back
-    @AppStorage("SlideWords_SelectedLanguage") private var selectedLanguageRaw: String = GameLanguage.english.rawValue
-    @AppStorage("SlideWords_PlayerName") private var playerName: String = ""
+    @AppStorage("Quibly_SelectedLanguage") private var selectedLanguageRaw: String = GameLanguage.english.rawValue
+    @AppStorage("Quibly_PlayerName") private var playerName: String = ""
     @State private var nameInput: String = ""
     @FocusState private var nameFocused: Bool
 

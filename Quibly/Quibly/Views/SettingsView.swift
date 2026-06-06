@@ -7,14 +7,14 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
-    @AppStorage("SlideWords_SoundEnabled")   private var soundOn:   Bool   = true
-    @AppStorage("SlideWords_MusicEnabled")   private var musicOn:   Bool   = true
-    @AppStorage("SlideWords_HapticsEnabled") private var hapticsOn: Bool   = true
-    @AppStorage("SlideWords_AutoHints")      private var autoHints: Bool   = true
-    @AppStorage("SlideWords_DarkMode")        private var darkMode:        Bool   = false
-    @AppStorage("SlideWords_UseSystemLanguage") private var useSystemLanguage: Bool = false
-    @AppStorage("SlideWords_SelectedLanguage") private var selectedLanguageRaw: String = GameLanguage.english.rawValue
-    @AppStorage("SlideWords_SelectedVariant")  private var selectedVariantRaw:  Int    = BoardVariant.small.rawValue
+    @AppStorage("Quibly_SoundEnabled")   private var soundOn:   Bool   = true
+    @AppStorage("Quibly_MusicEnabled")   private var musicOn:   Bool   = true
+    @AppStorage("Quibly_HapticsEnabled") private var hapticsOn: Bool   = true
+    @AppStorage("Quibly_AutoHints")      private var autoHints: Bool   = true
+    @AppStorage("Quibly_DarkMode")        private var darkMode:        Bool   = false
+    @AppStorage("Quibly_UseSystemLanguage") private var useSystemLanguage: Bool = false
+    @AppStorage("Quibly_SelectedLanguage") private var selectedLanguageRaw: String = GameLanguage.english.rawValue
+    @AppStorage("Quibly_SelectedVariant")  private var selectedVariantRaw:  Int    = BoardVariant.small.rawValue
 
     @StateObject private var store = StoreManager.shared
 

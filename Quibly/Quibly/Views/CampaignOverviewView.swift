@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Campaign Progress Persistence
 
 enum CampaignProgress {
-    private static let key = "SlideWords_CompletedCampaignLevels"
+    private static let key = "Quibly_CompletedCampaignLevels"
 
     static var completedLevels: Set<Int> {
         let arr = UserDefaults.standard.array(forKey: key) as? [Int] ?? []
@@ -17,7 +17,7 @@ enum CampaignProgress {
     }
 
     static var highestReached: Int {
-        (UserDefaults.standard.integer(forKey: "SlideWords_CampaignLevel")).clamped(to: 1...999)
+        (UserDefaults.standard.integer(forKey: "Quibly_CampaignLevel")).clamped(to: 1...999)
     }
 }
 

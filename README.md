@@ -1,6 +1,6 @@
-# SlideWords
+# Quibly
 
-**SlideWords** is an iOS word-puzzle game that blends the satisfying tile-sliding of 2048 with the vocabulary challenge of Scrabble.
+**Quibly** is an iOS word-puzzle game that blends the satisfying tile-sliding of 2048 with the vocabulary challenge of a classic letter game.
 
 ## How it works
 

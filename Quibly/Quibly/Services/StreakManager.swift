@@ -3,9 +3,9 @@ import Foundation
 final class StreakManager {
     static let shared = StreakManager()
 
-    private let streakKey     = "SlideWords_Streak"
-    private let bestStreakKey = "SlideWords_BestStreak"
-    private let lastPlayedKey = "SlideWords_LastPlayedDate"
+    private let streakKey     = "Quibly_Streak"
+    private let bestStreakKey = "Quibly_BestStreak"
+    private let lastPlayedKey = "Quibly_LastPlayedDate"
 
     var currentStreak: Int { max(1, UserDefaults.standard.integer(forKey: streakKey)) }
     var bestStreak: Int    { UserDefaults.standard.integer(forKey: bestStreakKey) }
