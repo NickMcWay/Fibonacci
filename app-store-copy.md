@@ -68,5 +68,15 @@ First release of Quibly. Slide tiles and form words in Classic, Campaign, Blitz,
 
 ---
 
+## Support URL
+https://nickmcway.github.io/Fibonacci/support.html
+
+---
+
+## Privacy Policy URL
+https://nickmcway.github.io/Fibonacci/privacy.html
+
+---
+
 ## Support URL copy (for the App Store support field)
 Questions, problems, or suggestions? Send an email from the support page.

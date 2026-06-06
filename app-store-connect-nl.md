@@ -57,6 +57,9 @@ Eerste versie van Quibly. Schuif letters en vorm woorden in Classic, Campaign, B
 ## App Review notes
 Quibly is a word puzzle game. It includes optional consumable in-app purchases for coins and power-ups. All core gameplay modes are available without a purchase. The app does not require account creation.
 
+## Support URL
+https://nickmcway.github.io/Fibonacci/support.html
+
 ## Support URL tekst
 Heb je een vraag, probleem of suggestie? Stuur een e-mail via de supportpagina.
 
